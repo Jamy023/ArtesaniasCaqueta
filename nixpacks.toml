@@ -5,7 +5,7 @@ nixPkgs = ["php82", "php82Extensions.pdo", "php82Extensions.pdo_mysql", "php82Ex
 cmds = ["composer install --no-dev --optimize-autoloader"]
 
 [phases.build]
-cmds = ["echo 'Skipping npm build - using pre-built assets'"]
+cmds = ["echo 'Skipping npm build - using pre-built assets'", "rm -rf public/storage", "php artisan storage:link"]
 
 [start]
 cmd = "php artisan serve --host=0.0.0.0 --port=$PORT"
