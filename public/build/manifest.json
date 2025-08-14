@@ -1,0 +1,189 @@
+{
+  "_QForm-CWS-nfM2.js": {
+    "file": "assets/QForm-CWS-nfM2.js",
+    "name": "QForm",
+    "imports": [
+      "resources/js/app.js",
+      "_use-quasar-DvpJf046.js",
+      "_QList-tIK3QmkE.js"
+    ]
+  },
+  "_QList-tIK3QmkE.js": {
+    "file": "assets/QList-tIK3QmkE.js",
+    "name": "QList",
+    "imports": [
+      "resources/js/app.js"
+    ]
+  },
+  "_use-quasar-DvpJf046.js": {
+    "file": "assets/use-quasar-DvpJf046.js",
+    "name": "use-quasar",
+    "imports": [
+      "resources/js/app.js"
+    ]
+  },
+  "node_modules/@quasar/extras/fontawesome-v6/fa-brands-400.ttf": {
+    "file": "assets/fa-brands-400-D1LuMI3I.ttf",
+    "src": "node_modules/@quasar/extras/fontawesome-v6/fa-brands-400.ttf"
+  },
+  "node_modules/@quasar/extras/fontawesome-v6/fa-brands-400.woff2": {
+    "file": "assets/fa-brands-400-D_cYUPeE.woff2",
+    "src": "node_modules/@quasar/extras/fontawesome-v6/fa-brands-400.woff2"
+  },
+  "node_modules/@quasar/extras/fontawesome-v6/fa-regular-400.ttf": {
+    "file": "assets/fa-regular-400-DZaxPHgR.ttf",
+    "src": "node_modules/@quasar/extras/fontawesome-v6/fa-regular-400.ttf"
+  },
+  "node_modules/@quasar/extras/fontawesome-v6/fa-regular-400.woff2": {
+    "file": "assets/fa-regular-400-BjRzuEpd.woff2",
+    "src": "node_modules/@quasar/extras/fontawesome-v6/fa-regular-400.woff2"
+  },
+  "node_modules/@quasar/extras/fontawesome-v6/fa-solid-900.ttf": {
+    "file": "assets/fa-solid-900-D0aA9rwL.ttf",
+    "src": "node_modules/@quasar/extras/fontawesome-v6/fa-solid-900.ttf"
+  },
+  "node_modules/@quasar/extras/fontawesome-v6/fa-solid-900.woff2": {
+    "file": "assets/fa-solid-900-CTAAxXor.woff2",
+    "src": "node_modules/@quasar/extras/fontawesome-v6/fa-solid-900.woff2"
+  },
+  "node_modules/@quasar/extras/fontawesome-v6/fa-v4compatibility.ttf": {
+    "file": "assets/fa-v4compatibility-CCth-dXg.ttf",
+    "src": "node_modules/@quasar/extras/fontawesome-v6/fa-v4compatibility.ttf"
+  },
+  "node_modules/@quasar/extras/fontawesome-v6/fa-v4compatibility.woff2": {
+    "file": "assets/fa-v4compatibility-C9RhG_FT.woff2",
+    "src": "node_modules/@quasar/extras/fontawesome-v6/fa-v4compatibility.woff2"
+  },
+  "node_modules/@quasar/extras/material-icons/web-font/flUhRq6tzZclQEJ-Vdg-IuiaDsNa.woff": {
+    "file": "assets/flUhRq6tzZclQEJ-Vdg-IuiaDsNa-Dr0goTwe.woff",
+    "src": "node_modules/@quasar/extras/material-icons/web-font/flUhRq6tzZclQEJ-Vdg-IuiaDsNa.woff"
+  },
+  "node_modules/@quasar/extras/material-icons/web-font/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2": {
+    "file": "assets/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ-D-x-0Q06.woff2",
+    "src": "node_modules/@quasar/extras/material-icons/web-font/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2"
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-DWhcAZQc.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/img/fondo.png": {
+    "file": "assets/fondo-ChIwidq2.png",
+    "src": "resources/img/fondo.png"
+  },
+  "resources/img/hero.webp": {
+    "file": "assets/hero-ju--Dmr1.webp",
+    "src": "resources/img/hero.webp"
+  },
+  "resources/img/logo.png": {
+    "file": "assets/logo-CSMIghgx.png",
+    "src": "resources/img/logo.png"
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-DpNPGOTZ.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "dynamicImports": [
+      "resources/js/components/Admin/AdminDashboard.vue",
+      "resources/js/components/Admin/AdminHome.vue",
+      "resources/js/components/Admin/AdminProductos.vue",
+      "resources/js/components/Admin/AdminCategorias.vue",
+      "resources/js/components/Admin/AdminUsuarios.vue",
+      "resources/js/components/Admin/AdminPedidos.vue"
+    ],
+    "css": [
+      "assets/app-ByNkBIv8.css"
+    ],
+    "assets": [
+      "assets/logo-CSMIghgx.png",
+      "assets/hero-ju--Dmr1.webp",
+      "assets/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ-D-x-0Q06.woff2",
+      "assets/flUhRq6tzZclQEJ-Vdg-IuiaDsNa-Dr0goTwe.woff",
+      "assets/fa-brands-400-D_cYUPeE.woff2",
+      "assets/fa-brands-400-D1LuMI3I.ttf",
+      "assets/fa-regular-400-BjRzuEpd.woff2",
+      "assets/fa-regular-400-DZaxPHgR.ttf",
+      "assets/fa-solid-900-CTAAxXor.woff2",
+      "assets/fa-solid-900-D0aA9rwL.ttf",
+      "assets/fa-v4compatibility-C9RhG_FT.woff2",
+      "assets/fa-v4compatibility-CCth-dXg.ttf",
+      "assets/fondo-ChIwidq2.png"
+    ]
+  },
+  "resources/js/components/Admin/AdminCategorias.vue": {
+    "file": "assets/AdminCategorias-DdvplejX.js",
+    "name": "AdminCategorias",
+    "src": "resources/js/components/Admin/AdminCategorias.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_QForm-CWS-nfM2.js",
+      "_use-quasar-DvpJf046.js",
+      "_QList-tIK3QmkE.js"
+    ],
+    "css": [
+      "assets/AdminCategorias-YP6YEbK5.css"
+    ]
+  },
+  "resources/js/components/Admin/AdminDashboard.vue": {
+    "file": "assets/AdminDashboard-BhP6W2--.js",
+    "name": "AdminDashboard",
+    "src": "resources/js/components/Admin/AdminDashboard.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_QList-tIK3QmkE.js",
+      "_use-quasar-DvpJf046.js"
+    ]
+  },
+  "resources/js/components/Admin/AdminHome.vue": {
+    "file": "assets/AdminHome-CkMLS-iI.js",
+    "name": "AdminHome",
+    "src": "resources/js/components/Admin/AdminHome.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_QList-tIK3QmkE.js"
+    ]
+  },
+  "resources/js/components/Admin/AdminPedidos.vue": {
+    "file": "assets/AdminPedidos-DX3pD9p5.js",
+    "name": "AdminPedidos",
+    "src": "resources/js/components/Admin/AdminPedidos.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js"
+    ]
+  },
+  "resources/js/components/Admin/AdminProductos.vue": {
+    "file": "assets/AdminProductos-RNzTs67N.js",
+    "name": "AdminProductos",
+    "src": "resources/js/components/Admin/AdminProductos.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_QForm-CWS-nfM2.js",
+      "_use-quasar-DvpJf046.js",
+      "_QList-tIK3QmkE.js"
+    ],
+    "css": [
+      "assets/AdminProductos-NL4giB3Q.css"
+    ]
+  },
+  "resources/js/components/Admin/AdminUsuarios.vue": {
+    "file": "assets/AdminUsuarios-DPo9obsw.js",
+    "name": "AdminUsuarios",
+    "src": "resources/js/components/Admin/AdminUsuarios.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_QForm-CWS-nfM2.js",
+      "_use-quasar-DvpJf046.js",
+      "_QList-tIK3QmkE.js"
+    ],
+    "css": [
+      "assets/AdminUsuarios-CleWvlvq.css"
+    ]
+  }
+}
