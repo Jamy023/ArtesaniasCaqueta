@@ -8,7 +8,7 @@ cmds = ["composer install --no-dev --optimize-autoloader"]
 cmds = ["echo 'Skipping npm build - using pre-built assets'"]
 
 [phases.deploy]
-cmds = ["rm -rf public/storage || true", "mkdir -p storage/app/public", "ln -sfn ../storage/app/public public/storage || true"]
+cmds = ["echo 'Skipping storage link - using direct access'"]
 
 [start]
 cmd = "php artisan serve --host=0.0.0.0 --port=$PORT"
