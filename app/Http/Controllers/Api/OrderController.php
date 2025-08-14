@@ -64,6 +64,11 @@ class OrderController extends Controller
                 'order_id' => $order->id,
                 'order_number' => $order->order_number,
                 'epayco_data' => $epaycoData
+            ])->withHeaders([
+                'Access-Control-Allow-Origin' => '*',
+                'Access-Control-Allow-Methods' => 'GET, POST, OPTIONS',
+                'Access-Control-Allow-Headers' => 'Content-Type, Authorization, X-Requested-With',
+                'X-Frame-Options' => 'ALLOWALL'
             ]);
 
         } catch (\Exception $e) {
@@ -102,8 +107,8 @@ class OrderController extends Controller
         'p_key' => $config['p_key'], // Tu P_KEY real
         'p_id_invoice' => $order->order_number,
         'p_description' => 'Pedido #' . $order->order_number . ' - Artesanías',
-        'p_amount' => number_format($order->total_amount, 2, '.', ''),
-        'p_amount_base' => number_format($order->total_amount, 2, '.', ''),
+        'p_amount' => (string) round($order->total_amount, 0),
+        'p_amount_base' => (string) round($order->total_amount, 0),
         'p_currency_code' => 'COP',
         'p_signature' => $signature,
         
@@ -120,13 +125,13 @@ class OrderController extends Controller
         'p_customer_city' => $cliente->ciudad ?? 'Bogotá',
         'p_customer_country' => 'CO',
         
-        // URLs de respuesta
+        // URLs de respuesta 
         'p_url_response' => url('/api/orders/epayco-response'),
         'p_url_confirmation' => url('/api/orders/epayco-confirmation'),
         
         // Configuración
         'p_test_request' => env('EPAYCO_TEST_MODE', 'TRUE'),
-        'p_method_confirmation' => 'GET',
+        'p_method_confirmation' => 'POST',
     ];
 }
     /**
@@ -134,10 +139,12 @@ class OrderController extends Controller
      */
     private function generateSignature(Order $order, array $config)
     {
+        $amount = (string) round($order->total_amount, 0);
+        
         $signature_string = $config['p_cust_id_cliente'] . '^' . 
                            $config['p_key'] . '^' . 
                            $order->order_number . '^' . 
-                           number_format($order->total_amount, 2, '.', '') . '^' . 
+                           $amount . '^' . 
                            'COP';
 
         return md5($signature_string);

@@ -4,6 +4,15 @@ import laravel from 'laravel-vite-plugin'
 import { quasar, transformAssetUrls } from '@quasar/vite-plugin'
 
 export default defineConfig({
+  server: {
+    host: '0.0.0.0',
+    port: 5173,
+    hmr: {
+      host: process.env.VITE_HMR_HOST || 'localhost',
+      port: process.env.VITE_HMR_HOST ? 443 : 5173,
+      protocol: process.env.VITE_HMR_HOST ? 'wss' : 'ws'
+    }
+  },
   resolve: {
     alias: {
       '@': '/resources/js',
