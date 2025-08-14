@@ -1,17 +1,18 @@
 <template>
   <nav class="navbar">
+
+    <DebugAuth />
     <div class="navbar-container">
-      <!-- Logo -->
+
       <router-link to="/" class="navbar-brand">
         <img src="@img/logo.png" alt="Logo" class="logo">
       </router-link>
 
-      <!-- Navigation Links -->
+
       <div class="navbar-menu" :class="{ 'is-active': isMenuOpen }">
         <router-link to="/" class="navbar-item">Inicio</router-link>
         <router-link to="/products" class="navbar-item">Productos</router-link>
-        
-        <!-- Categories Dropdown -->
+
         <div class="navbar-dropdown" @mouseenter="showDropdown" @mouseleave="hideDropdown">
           <span class="navbar-item">Explorar ⏷</span>
           <div class="dropdown-content" v-show="isDropdownOpen">
@@ -27,9 +28,9 @@
         </div>
       </div>
 
-      <!-- Actions -->
+  
       <div class="navbar-actions">
-        <!-- Search Button -->
+  
         <button class="action-btn search-btn" @click="toggleSearch" title="Buscar">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"/>
@@ -37,7 +38,7 @@
           </svg>
         </button>
 
-        <!-- Cart Button -->
+ 
          <button class="action-btn cart-btn" @click="toggleCart" title="Carrito">
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" 
          viewBox="0 0 24 24" fill="none" stroke="currentColor" 
@@ -195,11 +196,14 @@ import { useAuthStore } from '../stores/authStore';
 import CartSidebar from './CartSidebar.vue';
 import LoginModal from './Auth/LoginModal.vue';
 
+
+
 export default {
   name: 'Navbar',
   components: {
     CartSidebar,
-    LoginModal
+    LoginModal,
+
   },
   setup() {
     const router = useRouter();

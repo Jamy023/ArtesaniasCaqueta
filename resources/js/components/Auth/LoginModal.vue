@@ -1,5 +1,3 @@
-<!-- components/auth/LoginModal.vue -->
-<!-- components/auth/LoginModal.vue -->
 <template>
   <div class="modal-overlay" v-if="isOpen" @click="closeModal">
     <div class="modal-container" @click.stop>
@@ -16,8 +14,8 @@
       <div class="modal-body">
         <form @submit.prevent="login">
           <!-- Mostrar errores generales -->
-          <div v-if="errors.general" class="general-error">
-            <div v-for="error in errors.general" :key="error" class="error-message">
+          <div v-if="displayErrors.general" class="general-error">
+            <div v-for="error in displayErrors.general" :key="error" class="error-message">
               {{ error }}
             </div>
           </div>
@@ -30,9 +28,12 @@
               type="email" 
               placeholder="tu@email.com"
               required
-              :class="{ 'error': errors.email }"
+              :class="{ 'error': displayErrors.email }"
+              :disabled="authStore.loading || isSubmitting"
             >
-            <span v-if="errors.email" class="error-message">{{ errors.email[0] }}</span>
+            <span v-if="displayErrors.email" class="error-message">
+              {{ Array.isArray(displayErrors.email) ? displayErrors.email[0] : displayErrors.email }}
+            </span>
           </div>
 
           <div class="form-group">
@@ -44,12 +45,14 @@
                 :type="showPassword ? 'text' : 'password'"
                 placeholder="Tu contraseña"
                 required
-                :class="{ 'error': errors.password }"
+                :class="{ 'error': displayErrors.password }"
+                :disabled="authStore.loading || isSubmitting"
               >
               <button 
                 type="button" 
                 class="password-toggle"
                 @click="showPassword = !showPassword"
+                :disabled="authStore.loading || isSubmitting"
               >
                 <svg v-if="showPassword" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
@@ -61,13 +64,15 @@
                 </svg>
               </button>
             </div>
-            <span v-if="errors.password" class="error-message">{{ errors.password[0] }}</span>
+            <span v-if="displayErrors.password" class="error-message">
+              {{ Array.isArray(displayErrors.password) ? displayErrors.password[0] : displayErrors.password }}
+            </span>
           </div>
 
           <div class="form-actions">
-            <button type="submit" class="login-btn" :disabled="authStore.loading">
-              <span v-if="authStore.loading" class="loading-spinner"></span>
-              {{ authStore.loading ? 'Ingresando...' : 'Iniciar Sesión' }}
+            <button type="submit" class="login-btn" :disabled="authStore.loading || isSubmitting">
+              <span v-if="authStore.loading || isSubmitting" class="loading-spinner"></span>
+              {{ authStore.loading || isSubmitting ? 'Ingresando...' : 'Iniciar Sesión' }}
             </button>
           </div>
 
@@ -86,12 +91,10 @@
 </template>
 
 <script>
-import { ref, watch } from 'vue'
+import { ref, watch, computed, nextTick } from 'vue'
 import { useAuthStore } from '../../stores/authStore'
 import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
-
-const toast = useToast()
 
 export default {
   name: 'LoginModal',
@@ -105,75 +108,192 @@ export default {
   setup(props, { emit }) {
     const authStore = useAuthStore()
     const router = useRouter()
+    const toast = useToast()
     
+    // Estados del componente
     const form = ref({
       email: '',
       password: ''
     })
     
     const showPassword = ref(false)
-    const errors = ref({})
+    const localErrors = ref({})
+    const isSubmitting = ref(false)
 
-    const closeModal = () => {
-      emit('close')
-      // Limpiar formulario y errores
-      form.value = { email: '', password: '' }
-      errors.value = {}
-      authStore.clearErrors()
+    // 🔥 COMPUTED PARA MANEJAR ERRORES DE MÚLTIPLES FUENTES
+    const displayErrors = computed(() => {
+      // Priorizar errores locales, luego del store
+      const storeErrors = (authStore.hasErrors && authStore.errors) ? authStore.errors : {}
+      return {
+        ...storeErrors,
+        ...localErrors.value
+      }
+    })
+
+    // 🔥 FUNCIÓN PARA LIMPIAR ERRORES - VERSIÓN SEGURA
+    const clearAllErrors = () => {
+      try {
+        localErrors.value = {}
+        
+        // Verificar que el método existe antes de llamarlo
+        if (authStore && typeof authStore.clearErrors === 'function') {
+          authStore.clearErrors()
+        } else {
+          console.warn('⚠️ authStore.clearErrors no está disponible')
+          // Fallback: limpiar errores manualmente
+          if (authStore.errors) {
+            authStore.errors = {}
+          }
+        }
+      } catch (error) {
+        console.error('❌ Error limpiando errores:', error)
+        localErrors.value = {}
+      }
     }
 
+    // 🔥 FUNCIÓN PARA CERRAR MODAL MEJORADA
+    const closeModal = () => {
+      console.log('🔴 Cerrando modal de login')
+      
+      emit('close')
+      
+      // Limpiar formulario y errores después de un pequeño delay
+      setTimeout(() => {
+        form.value = { email: '', password: '' }
+        clearAllErrors()
+        showPassword.value = false
+        isSubmitting.value = false
+      }, 150)
+    }
+
+    // 🔥 FUNCIÓN DE LOGIN MEJORADA Y SEGURA
     const login = async () => {
+      console.log('🔵 Iniciando proceso de login...')
+      
+      // Validaciones básicas
+      if (!form.value.email || !form.value.password) {
+        localErrors.value = {
+          general: ['Por favor completa todos los campos']
+        }
+        return
+      }
+
       // Limpiar errores previos
-      errors.value = {}
-      authStore.clearErrors()
+      clearAllErrors()
+      isSubmitting.value = true
       
       try {
-        await authStore.login(form.value)
+        console.log('📤 Enviando credenciales al servidor...')
+        
+        // Verificar que authStore tiene el método login
+        if (!authStore || typeof authStore.login !== 'function') {
+          throw new Error('AuthStore no está disponible o no tiene método login')
+        }
+        
+        // Intentar login
+        const response = await authStore.login({
+          email: form.value.email.trim(),
+          password: form.value.password
+        })
 
-        toast.success('Login exitoso!', {
+        console.log('✅ Login exitoso:', {
+          user: response.cliente?.nombre,
+          email: response.cliente?.email
+        })
+
+        // Mostrar notificación de éxito
+        const userName = response.cliente?.nombre || 'Usuario'
+        toast.success(`¡Bienvenido, ${userName}!`, {
           position: 'top-right',
           timeout: 3000,
           closeOnClick: true,
           pauseOnHover: true,
-          draggable: true,
-          progress: undefined
+          draggable: true
         })
 
-
-        
         // Emitir evento de éxito
-        emit('login-success')
-        
-        // Mostrar mensaje de éxito
-        console.log('Login exitoso!')
+        emit('login-success', response)
         
         // Cerrar modal
         closeModal()
         
-        // Opcional: redirigir o mostrar notificación
-        // router.push('/dashboard')
+        console.log('🎉 Proceso de login completado exitosamente')
         
       } catch (error) {
-        console.error('Error en login:', error)
+        console.error('❌ Error en login:', error)
         
-        // Usar errores del authStore si están disponibles
-        if (authStore.hasErrors) {
-          errors.value = authStore.errors
-        } else if (error.response?.data?.errors) {
-          errors.value = error.response.data.errors
+        // Manejar diferentes tipos de errores
+        if (error.response?.status === 422) {
+          // Errores de validación
+          const serverErrors = error.response.data?.errors || {}
+          localErrors.value = serverErrors
+          console.log('🔴 Errores de validación:', serverErrors)
+          
+        } else if (error.response?.status === 401) {
+          // Credenciales incorrectas
+          localErrors.value = {
+            general: ['Credenciales incorrectas. Verifica tu email y contraseña.']
+          }
+          
+        } else if (error.response?.status >= 500) {
+          // Error del servidor
+          localErrors.value = {
+            general: ['Error del servidor. Inténtalo de nuevo más tarde.']
+          }
+          
         } else {
-          errors.value = { 
-            general: [error.response?.data?.message || 'Error al iniciar sesión'] 
+          // Otros errores
+          const errorMessage = error.response?.data?.message || 
+                              error.message || 
+                              'Error inesperado al iniciar sesión'
+          
+          localErrors.value = {
+            general: [errorMessage]
           }
         }
+
+        // Mostrar notificación de error
+        const errorMsg = localErrors.value.general?.[0] || 'Error al iniciar sesión'
+        toast.error(errorMsg, {
+          position: 'top-right',
+          timeout: 4000
+        })
+
+      } finally {
+        isSubmitting.value = false
       }
     }
 
-    // Limpiar errores cuando se cierra el modal
+    // 🔥 WATCHER PARA EL MODAL
     watch(() => props.isOpen, (newValue) => {
-      if (!newValue) {
-        errors.value = {}
-        authStore.clearErrors()
+      if (newValue) {
+        console.log('🔵 Modal de login abierto')
+        clearAllErrors()
+        
+        // Focus en el campo email después de que se abra
+        nextTick(() => {
+          const emailInput = document.getElementById('email')
+          if (emailInput) {
+            emailInput.focus()
+          }
+        })
+      } else {
+        console.log('🔴 Modal de login cerrado')
+      }
+    })
+
+    // 🔥 LIMPIAR ERRORES CUANDO EL USUARIO EMPIECE A ESCRIBIR
+    watch(() => form.value.email, () => {
+      if (displayErrors.value.email) {
+        const { email, ...rest } = localErrors.value
+        localErrors.value = rest
+      }
+    })
+
+    watch(() => form.value.password, () => {
+      if (displayErrors.value.password) {
+        const { password, ...rest } = localErrors.value
+        localErrors.value = rest
       }
     })
 
@@ -181,7 +301,8 @@ export default {
       authStore,
       form,
       showPassword,
-      errors,
+      displayErrors,
+      isSubmitting,
       closeModal,
       login
     }
@@ -260,6 +381,14 @@ export default {
   padding: 24px;
 }
 
+.general-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 20px;
+}
+
 .form-group {
   margin-bottom: 20px;
 }
@@ -293,6 +422,12 @@ export default {
   border-color: #ef4444;
 }
 
+.form-group input:disabled {
+  background-color: #f9fafb;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 .password-input-wrapper {
   position: relative;
 }
@@ -311,8 +446,13 @@ export default {
   transition: color 0.2s;
 }
 
-.password-toggle:hover {
+.password-toggle:hover:not(:disabled) {
   color: #374151;
+}
+
+.password-toggle:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .error-message {
@@ -351,6 +491,7 @@ export default {
 .login-btn:disabled {
   opacity: 0.7;
   cursor: not-allowed;
+  transform: none;
 }
 
 .loading-spinner {

@@ -5,7 +5,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import { createPinia } from 'pinia';
 import axios from 'axios';
 
-// ✅ IMPORTACIÓN CORRECTA DE QUASAR
+
 import { Quasar, Notify, Dialog, Loading } from 'quasar'
 import 'quasar/dist/quasar.css'
 import '@quasar/extras/material-icons/material-icons.css'
@@ -14,29 +14,41 @@ import '@quasar/extras/fontawesome-v6/fontawesome-v6.css'
 import Toast, { POSITION } from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
 
-// Configuración de axios
-axios.defaults.baseURL = 'http://127.0.0.1:8000/api';
+// Configuración dinámica de URL base
+const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const baseURL = isDevelopment 
+  ? 'http://127.0.0.1:8000/api'  // Local
+  : `${window.location.origin}/api`; // Ngrok o producción
+
+axios.defaults.baseURL = baseURL;
 axios.defaults.headers.common['Accept'] = 'application/json';
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 axios.defaults.withCredentials = true;
+axios.defaults.timeout = 30000; // 30 segundos timeout
+
+
+console.log('🔧 Configuración de Axios:', {
+  baseURL: axios.defaults.baseURL,
+  timeout: axios.defaults.timeout,
+  withCredentials: axios.defaults.withCredentials
+});
+
 window.axios = axios;
 
-// Importar componentes principales
+
 import App from './components/App.vue';
 import Home from './views/Home.vue';
 import Products from './views/Products.vue';
 import ProductDetail from './views/ProductDetail.vue';
 import NotFound from './views/NotFound.vue';
 import Registro from './components/Auth/RegisterView.vue';
-import CheckoutPage from './views/CheckoutPage.vue'; // 🆕 NUEVO
+import CheckoutPage from './views/CheckoutPage.vue';
 import AccountPage from './views/AccountPage.vue';
 
-// Importar layout y vistas del admin
 import AdminLogin from './components/Admin/AdminLogin.vue'
 
-// Configurar rutas
+
 const routes = [
-  // Rutas públicas
   {
     path: '/',
     name: 'Home',
@@ -58,13 +70,11 @@ const routes = [
     name: 'Registro',
     component: Registro,
     props: route => ({ redirect: route.query.redirect }),
-
-      meta: { 
-    hideNav: true,
-    hideFooter: true 
-  }
+    meta: { 
+      hideNav: true,
+      hideFooter: true 
+    }
   },
-  // 🆕 NUEVA RUTA DE CHECKOUT
   {
     path: '/checkout',
     name: 'Checkout',
@@ -178,79 +188,194 @@ app.use(Quasar, {
 app.use(pinia);
 app.use(router);
 
-// Importar stores
+// Importar stores DESPUÉS de configurar Pinia
 import { useAdminAuthStore } from './stores/adminAuthStore';
-import { useAuthStore } from './stores/authStore'; // 🆕 NUEVO
+import { useAuthStore } from './stores/authStore';
 import { useCartStore } from './stores/cartStore';
 
-// Guards de navegación
-router.beforeEach(async (to, from, next) => {
-  const adminAuthStore = useAdminAuthStore();
-  const authStore = useAuthStore(); // 🆕 NUEVO
-  const cartStore = useCartStore();
-  
-  // Inicializar autenticación de admin si no se ha hecho
-  if (!adminAuthStore.initialized) {
-    await adminAuthStore.initAuth();
-  }
-  
-  // Inicializar autenticación de cliente
-  await authStore.initAuth();
-  
-  // Cargar carrito desde localStorage
-  cartStore.loadFromLocalStorage();
+// 🔥 INTERCEPTOR DE AXIOS CON DEBUG MEJORADO
+let interceptorActive = false;
 
-  // 🆕 VERIFICAR RUTAS QUE REQUIEREN AUTENTICACIÓN DE CLIENTE
-  if (to.meta.requiresAuth && !to.path.startsWith('/admin')) {
-    if (!authStore.isAuthenticated) {
-      console.log('Ruta protegida de cliente, redirigiendo a registro');
-      return next({ 
-        name: 'Registro', 
-        query: { redirect: to.path } 
-      });
-    }
-  }
-
-  // Verificar rutas que requieren autenticación de admin
-  if (to.meta.requiresAuth && to.path.startsWith('/admin')) {
-    if (!adminAuthStore.isLoggedIn) {
-      console.log('Ruta protegida de admin, redirigiendo a login');
-      return next({ name: 'admin-login' });
-    }
-  }
-
-  // Verificar rutas que requieren NO estar autenticado (como login)
-  if (to.meta.requiresGuest) {
-    if (adminAuthStore.isLoggedIn) {
-      console.log('Ya está autenticado como admin, redirigiendo a dashboard');
-      return next({ name: 'admin-dashboard' });
-    }
-  }
-
-  next();
-});
-
-// Interceptor para manejar errores de autenticación
-axios.interceptors.response.use(
-  (response) => response,
+axios.interceptors.request.use(
+  (config) => {
+    console.log('📤 Request:', {
+      url: config.url,
+      method: config.method?.toUpperCase(),
+      hasAuth: !!config.headers.Authorization
+    });
+    return config;
+  },
   (error) => {
-    if (error.response?.status === 401) {
-      // Si hay error 401 en rutas de admin, cerrar sesión admin
-      if (router.currentRoute.value.path.startsWith('/admin')) {
-        const adminAuthStore = useAdminAuthStore();
-        adminAuthStore.logout();
-        router.push('/admin/login');
-      } 
-      // Si hay error 401 en rutas de cliente, cerrar sesión cliente
-      else {
-        const authStore = useAuthStore();
-        authStore.logout();
-        router.push('/register');
-      }
-    }
+    console.error('❌ Request Error:', error);
     return Promise.reject(error);
   }
 );
+
+axios.interceptors.response.use(
+  (response) => {
+    console.log('📥 Response:', {
+      url: response.config.url,
+      status: response.status,
+      statusText: response.statusText
+    });
+    return response;
+  },
+  async (error) => {
+    console.log('🔴 === ERROR DE RESPUESTA ===');
+    console.log('🔍 Detalles del error:', {
+      url: error.config?.url,
+      method: error.config?.method?.toUpperCase(),
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      message: error.response?.data?.message
+    });
+
+    // Evitar bucle infinito
+    if (interceptorActive) {
+      console.log('⚠️ Interceptor ya activo, evitando bucle');
+      return Promise.reject(error);
+    }
+
+    if (error.response?.status === 401) {
+      console.log('🔴 Error 401 detectado');
+      interceptorActive = true;
+      
+      try {
+        const currentRoute = router.currentRoute.value.path;
+        console.log('📍 Ruta actual:', currentRoute);
+        
+        // Si hay error 401 en rutas de admin, cerrar sesión admin
+        if (currentRoute.startsWith('/admin')) {
+          console.log('🔴 Error 401 en admin - cerrando sesión admin');
+          const adminAuthStore = useAdminAuthStore();
+          adminAuthStore.clearAuthData();
+          router.push('/admin/login');
+        } 
+        // Si hay error 401 en rutas de cliente, cerrar sesión cliente
+        else {
+          console.log('🔴 Error 401 en cliente - verificando estado');
+          const authStore = useAuthStore();
+          
+          console.log('📊 Estado actual del cliente:', {
+            isLoggedIn: authStore.isLoggedIn,
+            hasToken: !!authStore.token,
+            isAuthenticated: authStore.isAuthenticated,
+            url: error.config?.url
+          });
+          
+          // Solo limpiar si realmente está logueado
+          if (authStore.isLoggedIn) {
+            console.log('🔴 Cliente logueado - cerrando sesión');
+            authStore.clearAuthData();
+            
+            // Solo redirigir si no estamos en páginas públicas
+            if (currentRoute !== '/' && currentRoute !== '/products' && !currentRoute.startsWith('/products/')) {
+              router.push('/register');
+            }
+          } else {
+            console.log('ℹ️ Cliente no estaba logueado, ignorando 401');
+          }
+        }
+      } finally {
+        setTimeout(() => {
+          interceptorActive = false;
+        }, 1000);
+      }
+    }
+    
+    return Promise.reject(error);
+  }
+);
+
+// 🔥 GUARDS DE NAVEGACIÓN CON DEBUG DETALLADO
+router.beforeEach(async (to, from, next) => {
+  console.log('🧭 === NAVEGACIÓN ===');
+  console.log('📍 De:', from.path, '→ A:', to.path);
+  
+  const adminAuthStore = useAdminAuthStore();
+  const authStore = useAuthStore();
+  const cartStore = useCartStore();
+  
+  try {
+    // Inicializar autenticaciones si no están iniciadas
+    const initPromises = [];
+    
+    if (!adminAuthStore.initialized) {
+      console.log('🔧 Inicializando auth de admin...');
+      initPromises.push(adminAuthStore.initAuth().catch(err => {
+        console.error('❌ Error init admin:', err);
+      }));
+    }
+    
+    if (!authStore.initialized) {
+      console.log('🔧 Inicializando auth de cliente...');
+      initPromises.push(authStore.initAuth().catch(err => {
+        console.error('❌ Error init cliente:', err);
+      }));
+    }
+    
+    // Esperar a que se completen las inicializaciones
+    if (initPromises.length > 0) {
+      await Promise.all(initPromises);
+    }
+    
+    // Cargar carrito
+    cartStore.loadFromLocalStorage();
+
+    // Debug del estado final
+    console.log('📊 Estado después de inicialización:', {
+      ruta: to.path,
+      requiresAuth: to.meta.requiresAuth,
+      cliente: {
+        isLoggedIn: authStore.isLoggedIn,
+        isAuthenticated: authStore.isAuthenticated,
+        hasToken: !!authStore.token,
+        initialized: authStore.initialized
+      },
+      admin: {
+        isLoggedIn: adminAuthStore.isLoggedIn,
+        initialized: adminAuthStore.initialized
+      }
+    });
+
+    // Verificar rutas que requieren autenticación de cliente
+    if (to.meta.requiresAuth && !to.path.startsWith('/admin')) {
+      if (!authStore.isLoggedIn) {
+        console.log('❌ Ruta protegida de cliente sin autenticación');
+        console.log('📍 Redirigiendo a registro con redirect:', to.path);
+        return next({ 
+          name: 'Registro', 
+          query: { redirect: to.path } 
+        });
+      }
+      console.log('✅ Cliente autenticado para ruta protegida');
+    }
+
+    // Verificar rutas que requieren autenticación de admin
+    if (to.meta.requiresAuth && to.path.startsWith('/admin')) {
+      if (!adminAuthStore.isLoggedIn) {
+        console.log('❌ Ruta protegida de admin sin autenticación');
+        return next({ name: 'admin-login' });
+      }
+      console.log('✅ Admin autenticado para ruta protegida');
+    }
+
+    // Verificar rutas que requieren NO estar autenticado
+    if (to.meta.requiresGuest) {
+      if (adminAuthStore.isLoggedIn) {
+        console.log('⚠️ Admin ya autenticado en ruta de invitado');
+        return next({ name: 'admin-dashboard' });
+      }
+    }
+
+    console.log('✅ Navegación permitida');
+    next();
+    
+  } catch (error) {
+    console.error('❌ Error en guard de navegación:', error);
+    next();
+  }
+});
 
 // Configurar Toast
 app.use(Toast, {
@@ -269,13 +394,74 @@ app.use(Toast, {
 
 // Manejo de errores
 router.onError((error) => {
-  console.error('Router error:', error);
+  console.error('🔴 Router error:', error);
 });
 
 app.config.errorHandler = (error, instance, info) => {
-  console.error('Global error:', error, info);
+  console.error('🔴 Global error:', error, info);
 };
-const cartStore = useCartStore()
-cartStore.loadFromLocalStorage()
-// Montar aplicación
-app.mount('#app');
+
+
+const initializeApp = async () => {
+  console.log(' === INICIANDO APLICACIÓN ===');
+  
+  try {
+    // Obtener stores
+    const adminAuthStore = useAdminAuthStore();
+    const authStore = useAuthStore();
+    const cartStore = useCartStore();
+    
+    // Debug inicial
+    console.log('🔍 Estado inicial:', {
+      localStorage: {
+        authToken: localStorage.getItem('auth_token') ? 'EXISTS' : 'NULL',
+        adminToken: localStorage.getItem('admin_token') ? 'EXISTS' : 'NULL'
+      },
+      stores: {
+        authStoreToken: authStore.token ? 'EXISTS' : 'NULL',
+        adminStoreToken: adminAuthStore.token ? 'EXISTS' : 'NULL'
+      }
+    });
+    
+    // Inicializar todo en paralelo
+    await Promise.all([
+      adminAuthStore.initAuth().catch(err => {
+        console.error('❌ Error init admin auth:', err);
+        return null;
+      }),
+      authStore.initAuth().catch(err => {
+        console.error('❌ Error init client auth:', err);
+        return null;
+      }),
+    ]);
+    
+    // Cargar carrito
+    cartStore.loadFromLocalStorage();
+    
+    console.log('✅ === APLICACIÓN INICIALIZADA ===');
+    console.log('📊 Estados finales:', {
+      cliente: {
+        isLoggedIn: authStore.isLoggedIn,
+        isAuthenticated: authStore.isAuthenticated,
+        hasToken: !!authStore.token,
+        user: authStore.currentUser?.nombre || 'N/A'
+      },
+      admin: {
+        isLoggedIn: adminAuthStore.isLoggedIn,
+        user: adminAuthStore.currentUser?.name || 'N/A'
+      },
+      cart: {
+        itemCount: cartStore.itemCount
+      }
+    });
+    
+  } catch (error) {
+    console.error('❌ Error durante inicialización:', error);
+  } finally {
+    console.log('🏁 Montando aplicación...');
+    app.mount('#app');
+  }
+};
+
+// Inicializar la aplicación
+initializeApp();
