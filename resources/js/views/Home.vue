@@ -254,6 +254,7 @@
 import { ref, reactive, onMounted, onUnmounted, watch, computed } from 'vue'
 import api from '../axios'
 import '../css/Home.css'
+import { getProductImageUrl, handleImageError } from '../utils/imageUtils'
 
 // Estado reactivo para productos
 const productsState = reactive({
@@ -300,20 +301,7 @@ const addToCart = (product) => {
   alert(`${product.name} agregado al carrito`)
 }
 
-// Manejar error de imagen
-const handleImageError = (event) => {
-  event.target.src = '/img/logo.png'
-}
-
-// Obtener URL de imagen del producto
-  const getProductImageUrl = (main_image) => {
-    if (!main_image) return '/img/logo.png';
-    if (main_image.startsWith('http')) return main_image;
-
-    // Limpiar cualquier prefijo y construir ruta correcta
-    const cleanImage = main_image.replace(/^(public\/|storage\/|storage\/app\/public\/|products\/)/, '');
-    return `/storage/products/${cleanImage}`;
-  };
+// Las funciones getProductImageUrl y handleImageError se importan desde utils
 
 // Lifecycle hooks
 onMounted(() => {
