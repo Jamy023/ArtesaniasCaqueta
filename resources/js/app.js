@@ -18,7 +18,7 @@ import 'vue-toastification/dist/index.css'
 const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 const baseURL = isDevelopment 
   ? 'http://127.0.0.1:8000/api'  // Local
-  : `${window.location.origin}/api`; // Ngrok o producción
+  : `${window.location.origin}/api`; //o producción
 
 axios.defaults.baseURL = baseURL;
 axios.defaults.headers.common['Accept'] = 'application/json';
