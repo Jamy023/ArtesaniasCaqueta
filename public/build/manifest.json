@@ -1,22 +1,22 @@
 {
-  "_QForm-BEkzOPTV.js": {
-    "file": "assets/QForm-BEkzOPTV.js",
+  "_QForm-8B3GLiox.js": {
+    "file": "assets/QForm-8B3GLiox.js",
     "name": "QForm",
     "imports": [
       "resources/js/app.js",
-      "_use-quasar-6Nc55FC6.js",
-      "_QList-aTwoovDj.js"
+      "_use-quasar-CVuwJWhP.js",
+      "_QList-5SMGbq7O.js"
     ]
   },
-  "_QList-aTwoovDj.js": {
-    "file": "assets/QList-aTwoovDj.js",
+  "_QList-5SMGbq7O.js": {
+    "file": "assets/QList-5SMGbq7O.js",
     "name": "QList",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_use-quasar-6Nc55FC6.js": {
-    "file": "assets/use-quasar-6Nc55FC6.js",
+  "_use-quasar-CVuwJWhP.js": {
+    "file": "assets/use-quasar-CVuwJWhP.js",
     "name": "use-quasar",
     "imports": [
       "resources/js/app.js"
@@ -54,6 +54,22 @@
     "file": "assets/fa-v4compatibility-C9RhG_FT.woff2",
     "src": "node_modules/@quasar/extras/fontawesome-v6/fa-v4compatibility.woff2"
   },
+  "node_modules/@quasar/extras/material-icons-outlined/web-font/gok-H7zzDkdnRel8-DQ6KAXJ69wP1tGnf4ZGhUcY.woff": {
+    "file": "assets/gok-H7zzDkdnRel8-DQ6KAXJ69wP1tGnf4ZGhUcY-BpWbwl2n.woff",
+    "src": "node_modules/@quasar/extras/material-icons-outlined/web-font/gok-H7zzDkdnRel8-DQ6KAXJ69wP1tGnf4ZGhUcY.woff"
+  },
+  "node_modules/@quasar/extras/material-icons-outlined/web-font/gok-H7zzDkdnRel8-DQ6KAXJ69wP1tGnf4ZGhUcel5euIg.woff2": {
+    "file": "assets/gok-H7zzDkdnRel8-DQ6KAXJ69wP1tGnf4ZGhUcel5euIg-DZhiGvEA.woff2",
+    "src": "node_modules/@quasar/extras/material-icons-outlined/web-font/gok-H7zzDkdnRel8-DQ6KAXJ69wP1tGnf4ZGhUcel5euIg.woff2"
+  },
+  "node_modules/@quasar/extras/material-icons-round/web-font/LDItaoyNOAY6Uewc665JcIzCKsKc_M9flwmJ.woff": {
+    "file": "assets/LDItaoyNOAY6Uewc665JcIzCKsKc_M9flwmJ-BDlwx-sv.woff",
+    "src": "node_modules/@quasar/extras/material-icons-round/web-font/LDItaoyNOAY6Uewc665JcIzCKsKc_M9flwmJ.woff"
+  },
+  "node_modules/@quasar/extras/material-icons-round/web-font/LDItaoyNOAY6Uewc665JcIzCKsKc_M9flwmPq_HTTw.woff2": {
+    "file": "assets/LDItaoyNOAY6Uewc665JcIzCKsKc_M9flwmPq_HTTw-DrirKXBx.woff2",
+    "src": "node_modules/@quasar/extras/material-icons-round/web-font/LDItaoyNOAY6Uewc665JcIzCKsKc_M9flwmPq_HTTw.woff2"
+  },
   "node_modules/@quasar/extras/material-icons/web-font/flUhRq6tzZclQEJ-Vdg-IuiaDsNa.woff": {
     "file": "assets/flUhRq6tzZclQEJ-Vdg-IuiaDsNa-Dr0goTwe.woff",
     "src": "node_modules/@quasar/extras/material-icons/web-font/flUhRq6tzZclQEJ-Vdg-IuiaDsNa.woff"
@@ -76,7 +92,7 @@
     "src": "resources/img/logo.png"
   },
   "resources/js/app.js": {
-    "file": "assets/app-6YsqTXnk.js",
+    "file": "assets/app-DfAn3x9I.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -89,7 +105,7 @@
       "resources/js/components/Admin/AdminPedidos.vue"
     ],
     "css": [
-      "assets/app-B2pFSlNw.css"
+      "assets/app-BSo6rT1I.css"
     ],
     "assets": [
       "assets/logo-CSMIghgx.png",
@@ -103,47 +119,51 @@
       "assets/fa-solid-900-D0aA9rwL.ttf",
       "assets/fa-v4compatibility-C9RhG_FT.woff2",
       "assets/fa-v4compatibility-CCth-dXg.ttf",
+      "assets/gok-H7zzDkdnRel8-DQ6KAXJ69wP1tGnf4ZGhUcel5euIg-DZhiGvEA.woff2",
+      "assets/gok-H7zzDkdnRel8-DQ6KAXJ69wP1tGnf4ZGhUcY-BpWbwl2n.woff",
+      "assets/LDItaoyNOAY6Uewc665JcIzCKsKc_M9flwmPq_HTTw-DrirKXBx.woff2",
+      "assets/LDItaoyNOAY6Uewc665JcIzCKsKc_M9flwmJ-BDlwx-sv.woff",
       "assets/fondo-ChIwidq2.png"
     ]
   },
   "resources/js/components/Admin/AdminCategorias.vue": {
-    "file": "assets/AdminCategorias-D7pb4ec0.js",
+    "file": "assets/AdminCategorias-DycJVsAY.js",
     "name": "AdminCategorias",
     "src": "resources/js/components/Admin/AdminCategorias.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_QForm-BEkzOPTV.js",
-      "_use-quasar-6Nc55FC6.js",
-      "_QList-aTwoovDj.js"
+      "_QForm-8B3GLiox.js",
+      "_use-quasar-CVuwJWhP.js",
+      "_QList-5SMGbq7O.js"
     ],
     "css": [
       "assets/AdminCategorias-YP6YEbK5.css"
     ]
   },
   "resources/js/components/Admin/AdminDashboard.vue": {
-    "file": "assets/AdminDashboard-h0Xjyeh4.js",
+    "file": "assets/AdminDashboard-JiJHWS6a.js",
     "name": "AdminDashboard",
     "src": "resources/js/components/Admin/AdminDashboard.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_QList-aTwoovDj.js",
-      "_use-quasar-6Nc55FC6.js"
+      "_QList-5SMGbq7O.js",
+      "_use-quasar-CVuwJWhP.js"
     ]
   },
   "resources/js/components/Admin/AdminHome.vue": {
-    "file": "assets/AdminHome-CcOftJDN.js",
+    "file": "assets/AdminHome-DHZlxp9y.js",
     "name": "AdminHome",
     "src": "resources/js/components/Admin/AdminHome.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_QList-aTwoovDj.js"
+      "_QList-5SMGbq7O.js"
     ]
   },
   "resources/js/components/Admin/AdminPedidos.vue": {
-    "file": "assets/AdminPedidos-CPVrUt3o.js",
+    "file": "assets/AdminPedidos-CTbnvQDo.js",
     "name": "AdminPedidos",
     "src": "resources/js/components/Admin/AdminPedidos.vue",
     "isDynamicEntry": true,
@@ -152,30 +172,30 @@
     ]
   },
   "resources/js/components/Admin/AdminProductos.vue": {
-    "file": "assets/AdminProductos-BW8I06mu.js",
+    "file": "assets/AdminProductos-BGZERcuF.js",
     "name": "AdminProductos",
     "src": "resources/js/components/Admin/AdminProductos.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_QForm-BEkzOPTV.js",
-      "_use-quasar-6Nc55FC6.js",
-      "_QList-aTwoovDj.js"
+      "_QForm-8B3GLiox.js",
+      "_use-quasar-CVuwJWhP.js",
+      "_QList-5SMGbq7O.js"
     ],
     "css": [
       "assets/AdminProductos-NL4giB3Q.css"
     ]
   },
   "resources/js/components/Admin/AdminUsuarios.vue": {
-    "file": "assets/AdminUsuarios-ChNZuxnT.js",
+    "file": "assets/AdminUsuarios-H3L8XJoA.js",
     "name": "AdminUsuarios",
     "src": "resources/js/components/Admin/AdminUsuarios.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_QForm-BEkzOPTV.js",
-      "_use-quasar-6Nc55FC6.js",
-      "_QList-aTwoovDj.js"
+      "_QForm-8B3GLiox.js",
+      "_use-quasar-CVuwJWhP.js",
+      "_QList-5SMGbq7O.js"
     ],
     "css": [
       "assets/AdminUsuarios-CleWvlvq.css"
