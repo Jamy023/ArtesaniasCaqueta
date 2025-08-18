@@ -21,7 +21,7 @@
         <div class="product-gallery">
           <div class="main-image-container">
             <img 
-              :src="getProductImageUrl(selectedImage)" 
+              :src="getProductImageUrl(main_image)" 
               :alt="product.name"
               class="main-image"
               @error="handleImageError"
@@ -409,14 +409,14 @@ const formatSpecLabel = (key) => {
   return labels[key] || key.charAt(0).toUpperCase() + key.slice(1)
 }
 
-const getProductImageUrl = (image) => {
-  if (!image) return '/img/logo.png'
-  if (image.startsWith('http')) return image
-  if (image.startsWith('public/')) return '/storage/' + image.replace('public/', '')
-  if (image.startsWith('storage/app/public/')) return '/storage/' + image.replace('storage/app/public/', '')
-  if (image.startsWith('products/')) return '/storage/' + image
-  return image
-}
+ const getProductImageUrl = (main_image) => {
+    if (!main_image) return '/img/logo.png';
+    if (main_image.startsWith('http')) return main_image;
+
+    // Limpiar cualquier prefijo y construir ruta correcta
+    const cleanImage = main_image.replace(/^(public\/|storage\/|storage\/app\/public\/|products\/)/, '');
+    return `/storage/products/${cleanImage}`;
+  };
 
 const handleImageError = (event) => {
   event.target.src = '/img/logo.png'

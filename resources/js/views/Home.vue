@@ -306,15 +306,14 @@ const handleImageError = (event) => {
 }
 
 // Obtener URL de imagen del producto
-const getProductImageUrl = (main_image) => {
-  if (!main_image) return '/img/logo.png';
+  const getProductImageUrl = (main_image) => {
+    if (!main_image) return '/img/logo.png';
+    if (main_image.startsWith('http')) return main_image;
 
-  // si ya es URL completa
-  if (main_image.startsWith('http')) return main_image;
-
-  // asegura siempre que la ruta sea pública desde /storage
-  return '/storage/' + main_image.replace(/^public\//, '').replace(/^storage\/app\/public\//, '');
-};
+    // Limpiar cualquier prefijo y construir ruta correcta
+    const cleanImage = main_image.replace(/^(public\/|storage\/|storage\/app\/public\/|products\/)/, '');
+    return `/storage/products/${cleanImage}`;
+  };
 
 // Lifecycle hooks
 onMounted(() => {
