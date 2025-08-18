@@ -3,17 +3,20 @@ export const getProductImageUrl = (main_image) => {
   if (!main_image) return '/img/logo.png';
   if (main_image.startsWith('http')) return main_image;
   
-  // Si ya empieza con /storage/, usar tal como está
-  if (main_image.startsWith('/storage/')) return main_image;
-  if (main_image.startsWith('storage/')) return '/' + main_image;
+  // DEBUG: Mostrar qué está recibiendo
+  console.log('🖼️ Procesando imagen:', main_image);
   
-  // Si empieza con products/, agregar solo /storage/
-  if (main_image.startsWith('products/')) {
-    return '/storage/' + main_image;
-  }
+  // Limpiar completamente la ruta y construir desde cero
+  let cleanImage = main_image;
   
-  // Si no tiene prefijo, asumir que va en products/
-  return `/storage/products/${main_image}`;
+  // Remover cualquier prefijo conocido
+  cleanImage = cleanImage.replace(/^(public\/|storage\/app\/public\/|storage\/|\/storage\/|products\/)/, '');
+  
+  // Construir la URL final
+  const finalUrl = `/storage/products/${cleanImage}`;
+  
+  console.log('🖼️ URL final:', finalUrl);
+  return finalUrl;
 };
 
 // Manejar errores de imagen (fallback a logo)
