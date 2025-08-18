@@ -20,7 +20,7 @@
           </router-link>
         </div>
         <div class="hero-image fade-in-up delay-1">
-          <img src="@img/hero.webp" alt="Artesanías amazónicas" class="hero-img" />
+          <img src="/build/assets/hero-ju--Dmr1.webp" alt="Artesanías amazónicas" class="hero-img" />
         </div>
       </div>
     </section>
