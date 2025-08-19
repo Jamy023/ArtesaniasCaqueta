@@ -49,69 +49,60 @@ RUN chown -R www-data:www-data /var/www && \
     chmod -R 755 /var/www/storage && \
     chmod -R 755 /var/www/bootstrap/cache
 
-# Configurar Nginx
-COPY <<EOF /etc/nginx/nginx.conf
-worker_processes auto;
-error_log /var/log/nginx/error.log warn;
-pid /var/run/nginx.pid;
+# Crear configuración de Nginx
+RUN echo 'worker_processes auto;\n\
+error_log /var/log/nginx/error.log warn;\n\
+pid /var/run/nginx.pid;\n\
+\n\
+events {\n\
+    worker_connections 1024;\n\
+}\n\
+\n\
+http {\n\
+    include /etc/nginx/mime.types;\n\
+    default_type application/octet-stream;\n\
+    \n\
+    sendfile on;\n\
+    tcp_nopush on;\n\
+    tcp_nodelay on;\n\
+    keepalive_timeout 65;\n\
+    types_hash_max_size 2048;\n\
+    \n\
+    server {\n\
+        listen 8080;\n\
+        server_name _;\n\
+        root /var/www/public;\n\
+        index index.php index.html;\n\
+        \n\
+        gzip on;\n\
+        gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;\n\
+        \n\
+        location / {\n\
+            try_files $uri $uri/ /index.php?$query_string;\n\
+        }\n\
+        \n\
+        location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|webp|woff|woff2|ttf|eot)$ {\n\
+            expires 1y;\n\
+            add_header Cache-Control "public, immutable";\n\
+            access_log off;\n\
+        }\n\
+        \n\
+        location ~ \.php$ {\n\
+            fastcgi_pass 127.0.0.1:9000;\n\
+            fastcgi_index index.php;\n\
+            fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;\n\
+            include fastcgi_params;\n\
+        }\n\
+        \n\
+        location ~ /\.ht {\n\
+            deny all;\n\
+        }\n\
+    }\n\
+}' > /etc/nginx/nginx.conf
 
-events {
-    worker_connections 1024;
-}
-
-http {
-    include /etc/nginx/mime.types;
-    default_type application/octet-stream;
-    
-    sendfile on;
-    tcp_nopush on;
-    tcp_nodelay on;
-    keepalive_timeout 65;
-    types_hash_max_size 2048;
-    
-    server {
-        listen 8080;
-        server_name _;
-        root /var/www/public;
-        index index.php index.html;
-        
-        # Habilitar compresión
-        gzip on;
-        gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
-        
-        location / {
-            try_files \$uri \$uri/ /index.php?\$query_string;
-        }
-        
-        # Servir archivos estáticos directamente
-        location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|webp|woff|woff2|ttf|eot)$ {
-            expires 1y;
-            add_header Cache-Control "public, immutable";
-            access_log off;
-        }
-        
-        location ~ \.php$ {
-            fastcgi_pass 127.0.0.1:9000;
-            fastcgi_index index.php;
-            fastcgi_param SCRIPT_FILENAME \$realpath_root\$fastcgi_script_name;
-            include fastcgi_params;
-        }
-        
-        location ~ /\.ht {
-            deny all;
-        }
-    }
-}
-EOF
-
-# Script de inicio
-COPY <<EOF /start.sh
-#!/bin/sh
-php-fpm -D
-nginx -g "daemon off;"
-EOF
-
-RUN chmod +x /start.sh
+# Crear script de inicio
+RUN echo '#!/bin/sh\nphp-fpm -D\nnginx -g "daemon off;"' > /start.sh && \
+    chmod +x /start.sh
 
 EXPOSE 8080
 
