@@ -258,6 +258,8 @@ import { ref, reactive, onMounted, onUnmounted, watch, computed } from 'vue'
 import api from '../axios'
 
 import { getProductImageUrl, handleImageError } from '../utils/imageUtils'
+// Importar imagen de fondo correctamente para Vite
+import fondoImage from '/public/img/fondo.png'
 
 // Estado reactivo para productos
 const productsState = reactive({
@@ -309,6 +311,9 @@ const addToCart = (product) => {
 // Lifecycle hooks
 onMounted(() => {
   fetchProducts()
+  
+  // Aplicar imagen de fondo usando variable CSS
+  document.documentElement.style.setProperty('--fondo-image', `url(${fondoImage})`)
 })
 </script>
 
@@ -340,7 +345,7 @@ onMounted(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('img/fondo.png') center/cover;
+  background: var(--fondo-image, url('/img/fondo.png')) center/cover;
 }
 
 .hero::after {

@@ -64,7 +64,11 @@ class OrderController extends Controller
                 'order_id' => $order->id,
                 'order_number' => $order->order_number,
                 'total_amount' => $order->total_amount,
-                'epayco_data_keys' => array_keys($epaycoData)
+                'customer_email' => $cliente->email,
+                'epayco_data_keys' => array_keys($epaycoData),
+                'p_key_preview' => substr($epaycoData['p_key'], 0, 10) . '...',
+                'test_mode' => $epaycoData['p_test_request'],
+                'signature_preview' => substr($epaycoData['p_signature'], 0, 8) . '...'
             ]);
 
             return response()->json([
@@ -101,8 +105,29 @@ class OrderController extends Controller
         Log::error('ePayco P_KEY not configured in .env file');
         throw new \Exception('Error de configuración: P_KEY de ePayco no encontrada');
     }
+    
+    if (strpos($config['p_key'], '*') !== false) {
+        Log::error('ePayco P_KEY contains asterisks - invalid key format', ['key_preview' => substr($config['p_key'], 0, 10) . '...']);
+        throw new \Exception('Error de configuración: P_KEY de ePayco contiene asteriscos (clave inválida)');
+    }
+    
+    if (strlen($config['p_key']) < 10) {
+        Log::error('ePayco P_KEY too short', ['key_length' => strlen($config['p_key'])]);
+        throw new \Exception('Error de configuración: P_KEY de ePayco es muy corta');
+    }
 
     $signature = $this->generateSignature($order, $config);
+    
+    // 🔥 VALIDACIONES ADICIONALES
+    if ($order->total_amount < 1000) {
+        Log::warning('Order amount below minimum', ['amount' => $order->total_amount]);
+        // ePayco requires minimum 1000 COP but we'll allow it for testing
+    }
+    
+    if (empty($cliente->email) || !filter_var($cliente->email, FILTER_VALIDATE_EMAIL)) {
+        Log::error('Invalid customer email', ['email' => $cliente->email]);
+        throw new \Exception('Email del cliente es inválido');
+    }
 
     return [
         // Datos obligatorios de ePayco

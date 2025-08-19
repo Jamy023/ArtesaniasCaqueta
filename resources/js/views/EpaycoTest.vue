@@ -220,6 +220,30 @@ const testAPI = async () => {
     if (response.data.success) {
       addLog('✅ Orden creada exitosamente', 'success')
       addLog(`📋 Datos ePayco recibidos: ${Object.keys(response.data.epayco_data).join(', ')}`, 'success')
+      
+      // 🔥 DIAGNÓSTICO AVANZADO
+      const epaycoData = response.data.epayco_data
+      addLog('🔍 DIAGNÓSTICO DETALLADO:', 'info')
+      addLog(`├─ P_KEY: ${epaycoData.p_key?.substring(0, 10)}...`, 'info')
+      addLog(`├─ Customer ID: ${epaycoData.p_cust_id_cliente}`, 'info')
+      addLog(`├─ Test Mode: ${epaycoData.p_test_request}`, 'info')
+      addLog(`├─ Amount: ${epaycoData.p_amount} COP`, 'info')
+      addLog(`├─ Invoice: ${epaycoData.p_id_invoice}`, 'info')
+      addLog(`├─ Signature: ${epaycoData.p_signature?.substring(0, 8)}...`, 'info')
+      addLog(`├─ Response URL: ${epaycoData.p_url_response}`, 'info')
+      addLog(`└─ Confirmation URL: ${epaycoData.p_url_confirmation}`, 'info')
+      
+      // Verificar campos críticos
+      if (!epaycoData.p_key || epaycoData.p_key.includes('*')) {
+        addLog('🚨 PROBLEMA: P_KEY contiene asteriscos o está vacía', 'error')
+      }
+      if (!epaycoData.p_signature) {
+        addLog('🚨 PROBLEMA: Signature no generada', 'error')  
+      }
+      if (parseFloat(epaycoData.p_amount) < 1000) {
+        addLog('⚠️ ADVERTENCIA: Monto menor a $1,000 COP', 'error')
+      }
+      
     } else {
       addLog(`❌ Error en respuesta: ${response.data.message}`, 'error')
     }
