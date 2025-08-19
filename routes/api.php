@@ -114,6 +114,19 @@ Route::put('/users/{id}/change-password', [AdminController::class, 'changeUserPa
 
 
 
+// Ruta simple para servir imágenes via API
+Route::get('/image/{filename}', function ($filename) {
+    $decodedFilename = urldecode($filename);
+    
+    // Intentar desde public/storage/products
+    $publicPath = public_path('storage/products/' . $decodedFilename);
+    if (file_exists($publicPath)) {
+        return response()->file($publicPath);
+    }
+    
+    abort(404, 'Image not found');
+});
+
 Route::get('/health-check', function () {
     return response()->json([
         'status' => 'ok',

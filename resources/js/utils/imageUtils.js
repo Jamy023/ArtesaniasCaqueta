@@ -3,12 +3,15 @@ export const getProductImageUrl = (main_image) => {
   if (!main_image) return '/img/logo.png';
   if (main_image.startsWith('http')) return main_image;
   
+  // TEMPORAL: usar URLs directas mientras arreglamos las rutas
+  const baseUrl = 'https://artesaniascaqueta-production.up.railway.app';
+  
   // Limpiar la ruta de la imagen
   let cleanImage = main_image;
   cleanImage = cleanImage.replace(/^(public\/|storage\/app\/public\/|storage\/|\/storage\/|products\/)/, '');
   
-  // Ahora Laravel manejará esta ruta y servirá el archivo
-  return `/storage/products/${cleanImage}`;
+  // Intentar primero con API endpoint directo
+  return `${baseUrl}/api/image/${encodeURIComponent(cleanImage)}`;
 };
 
 // Manejar errores de imagen (fallback a logo)
