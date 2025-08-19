@@ -8,7 +8,7 @@
           round
           @click="toggleLeftDrawer"
           aria-label="Menu"
-          icon="menu"
+          icon="bi-list"
         />
         
         <q-toolbar-title>
@@ -18,7 +18,7 @@
         
         <q-btn 
           flat
-          icon="logout"
+          icon="bi-box-arrow-right"
           @click="logout"
           label="Salir"
         />
@@ -42,7 +42,7 @@
           @click="closeDrawerOnMobile"
         >
           <q-item-section avatar>
-            <q-icon name="home" />
+            <q-icon name="bi-house" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Dashboard</q-item-label>
@@ -58,7 +58,7 @@
           @click="closeDrawerOnMobile"
         >
           <q-item-section avatar>
-            <q-icon name="shop" />
+            <q-icon name="bi-shop" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Productos</q-item-label>
@@ -74,7 +74,7 @@
           @click="closeDrawerOnMobile"
         >
           <q-item-section avatar>
-            <q-icon name="folder" />
+            <q-icon name="bi-folder" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Categorías</q-item-label>
@@ -90,7 +90,7 @@
           @click="closeDrawerOnMobile"
         >
           <q-item-section avatar>
-            <q-icon name="person" />
+            <q-icon name="bi-people" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Usuarios</q-item-label>
@@ -106,7 +106,7 @@
           @click="closeDrawerOnMobile"
         >
           <q-item-section avatar>
-            <q-icon name="list" />
+            <q-icon name="bi-cart" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Pedidos</q-item-label>

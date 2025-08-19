@@ -10,7 +10,7 @@
       <div class="col-auto">
         <q-btn
           color="primary"
-          icon="add"
+          icon="bi-plus-circle"
           label="Nuevo Producto"
           unelevated
           size="md"
@@ -35,7 +35,7 @@
               @input="applyFilters"
             >
               <template v-slot:prepend>
-                <q-icon name="search" />
+                <q-icon name="bi-search" />
               </template>
             </q-input>
           </div>
@@ -176,7 +176,7 @@
                 <q-btn
                   flat
                   round
-                  icon="visibility"
+                  icon="bi-eye"
                   size="sm"
                   color="info"
                   @click="openProductDialog('view', props.row)"
@@ -186,7 +186,7 @@
                 <q-btn
                   flat
                   round
-                  icon="edit"
+                  icon="bi-pencil"
                   size="sm"
                   color="primary"
                   @click="openProductDialog('edit', props.row)"
@@ -196,7 +196,7 @@
                 <q-btn
                   flat
                   round
-                  icon="delete"
+                  icon="bi-trash"
                   size="sm"
                   color="negative"
                   @click="deleteProduct(props.row)"
@@ -230,13 +230,13 @@
         <q-card-section class="row items-center q-pb-none bg-primary text-white">
           <div class="text-h5">
             <q-icon 
-              :name="dialogMode === 'create' ? 'add_circle' : dialogMode === 'edit' ? 'edit' : 'visibility'" 
+              :name="dialogMode === 'create' ? 'bi-plus-circle' : dialogMode === 'edit' ? 'bi-pencil' : 'bi-eye'" 
               class="q-mr-sm" 
             />
             {{ dialogTitle }}
           </div>
           <q-space />
-          <q-btn icon="close" flat round dense @click="closeProductDialog" />
+          <q-btn icon="bi-x" flat round dense @click="closeProductDialog" />
         </q-card-section>
 
         <q-card-section class="q-pa-lg">
@@ -468,20 +468,20 @@
                       <q-btn
                         round
                         color="negative"
-                        icon="delete"
+                        icon="bi-trash"
                         size="sm"
                         @click="removeMainImage"
                       />
                     </div>
                   </div>
                   <div v-else class="image-placeholder">
-                    <q-icon name="image" size="3em" color="grey-5" />
+                    <q-icon name="bi-image" size="3em" color="grey-5" />
                     <div class="text-grey-5">Sin imagen</div>
                   </div>
                   
                   <q-btn v-if="dialogMode !== 'view'"
                     color="primary"
-                    icon="upload"
+                    icon="bi-upload"
                     label="Seleccionar Imagen"
                     class="q-mt-sm full-width"
                     @click="selectMainImage"
@@ -510,7 +510,7 @@
                       <q-btn
                         round
                         color="negative"
-                        icon="delete"
+                        icon="bi-trash"
                         size="xs"
                         @click="removeGalleryImage(index)"
                       />
@@ -520,7 +520,7 @@
                   <div v-if="dialogMode !== 'view'" class="gallery-add">
                     <q-btn
                       color="primary"
-                      icon="add"
+                      icon="bi-plus-circle"
                       flat
                       class="full-width full-height"
                       @click="selectGalleryImage"

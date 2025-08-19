@@ -10,7 +10,7 @@
       <div class="col-auto">
         <q-btn
           color="primary"
-          icon="add"
+          icon="bi-plus-circle"
           label="Nuevo Usuario"
           unelevated
           size="md"
@@ -24,7 +24,7 @@
     <q-card flat bordered class="q-mb-lg shadow-2">
       <q-card-section>
         <div class="text-subtitle2 text-grey-8 q-mb-md">
-          <q-icon name="search" class="q-mr-xs" />
+          <q-icon name="bi-search" class="q-mr-xs" />
           Filtros de búsqueda
         </div>
         <div class="row q-gutter-md">
@@ -39,7 +39,7 @@
               @input="applyFilters"
             >
               <template v-slot:prepend>
-                <q-icon name="search" color="primary" />
+                <q-icon name="bi-search" color="primary" />
               </template>
             </q-input>
           </div>
@@ -61,7 +61,7 @@
           <div class="col-auto">
             <q-btn
               flat
-              icon="clear"
+              icon="bi-x-circle"
               label="Limpiar"
               color="grey-7"
               @click="clearFilters"
@@ -120,7 +120,7 @@
                   size="40px"
                   color="primary"
                   text-color="white"
-                  :icon="'person'"
+                  :icon="'bi-person'"
                 >
                   {{ getInitials(props.row.name) }}
                 </q-avatar>
@@ -165,7 +165,7 @@
                 <q-btn
                   flat
                   round
-                  icon="visibility"
+                  icon="bi-eye"
                   size="sm"
                   color="info"
                   @click="openUserDialog('view', props.row)"
@@ -175,7 +175,7 @@
                 <q-btn
                   flat
                   round
-                  icon="edit"
+                  icon="bi-pencil"
                   size="sm"
                   color="primary"
                   @click="openUserDialog('edit', props.row)"
@@ -185,7 +185,7 @@
                 <q-btn
                   flat
                   round
-                  icon="lock"
+                  icon="bi-key"
                   size="sm"
                   color="warning"
                   @click="openPasswordDialog(props.row)"
@@ -195,7 +195,7 @@
                 <q-btn
                   flat
                   round
-                  icon="delete"
+                  icon="bi-trash"
                   size="sm"
                   color="negative"
                   @click="deleteUser(props.row)"
@@ -231,13 +231,13 @@
         <q-card-section class="row items-center q-pb-none bg-primary text-white">
           <div class="text-h5">
             <q-icon 
-              :name="dialogMode === 'create' ? 'add_circle' : dialogMode === 'edit' ? 'edit' : 'visibility'" 
+              :name="dialogMode === 'create' ? 'bi-plus-circle' : dialogMode === 'edit' ? 'bi-pencil' : 'bi-eye'" 
               class="q-mr-sm" 
             />
             {{ dialogTitle }}
           </div>
           <q-space />
-          <q-btn icon="close" flat round dense @click="closeUserDialog" />
+          <q-btn icon="bi-x" flat round dense @click="closeUserDialog" />
         </q-card-section>
 
         <q-card-section class="q-pa-lg">
@@ -374,11 +374,11 @@
       <q-card style="min-width: 400px">
         <q-card-section class="row items-center q-pb-none bg-warning text-white">
           <div class="text-h6">
-            <q-icon name="key" class="q-mr-sm" />
+            <q-icon name="bi-key" class="q-mr-sm" />
             Cambiar Contraseña
           </div>
           <q-space />
-          <q-btn icon="close" flat round dense @click="passwordDialog = false" />
+          <q-btn icon="bi-x" flat round dense @click="passwordDialog = false" />
         </q-card-section>
 
         <q-card-section>
