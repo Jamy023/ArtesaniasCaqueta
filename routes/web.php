@@ -5,9 +5,16 @@ use App\Http\Controllers\AdminController;
 
 // Ruta para servir imágenes de storage
 Route::get('/storage/products/{filename}', function ($filename) {
-    $path = storage_path('app/public/products/' . $filename);
+    // Decodificar la URL para manejar espacios y caracteres especiales
+    $decodedFilename = urldecode($filename);
+    $path = storage_path('app/public/products/' . $decodedFilename);
     
     if (!file_exists($path)) {
+        // Intentar también desde public/storage/products como fallback
+        $fallbackPath = public_path('storage/products/' . $decodedFilename);
+        if (file_exists($fallbackPath)) {
+            return response()->file($fallbackPath);
+        }
         abort(404);
     }
     
