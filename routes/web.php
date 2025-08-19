@@ -3,6 +3,17 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 
+// Ruta para servir imágenes de storage
+Route::get('/storage/products/{filename}', function ($filename) {
+    $path = storage_path('app/public/products/' . $filename);
+    
+    if (!file_exists($path)) {
+        abort(404);
+    }
+    
+    return response()->file($path);
+})->where('filename', '.*');
+
 // Redirección de la raíz (opcional)
 Route::get('/', function () {
     return view('app'); // o redirigir a tu frontend Vue

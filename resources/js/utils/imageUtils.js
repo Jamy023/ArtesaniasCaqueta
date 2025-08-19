@@ -3,16 +3,12 @@ export const getProductImageUrl = (main_image) => {
   if (!main_image) return '/img/logo.png';
   if (main_image.startsWith('http')) return main_image;
   
-  // Limpiar completamente la ruta y construir desde cero
+  // Limpiar la ruta de la imagen
   let cleanImage = main_image;
-  
-  // Remover cualquier prefijo conocido
   cleanImage = cleanImage.replace(/^(public\/|storage\/app\/public\/|storage\/|\/storage\/|products\/)/, '');
   
-  // Construir la URL final
-  const finalUrl = `/storage/products/${cleanImage}`;
-  
-  return finalUrl;
+  // Ahora Laravel manejará esta ruta y servirá el archivo
+  return `/storage/products/${cleanImage}`;
 };
 
 // Manejar errores de imagen (fallback a logo)
