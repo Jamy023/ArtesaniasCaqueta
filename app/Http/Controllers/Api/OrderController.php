@@ -194,16 +194,29 @@ class OrderController extends Controller
                 'epayco_transaction_id' => $request->input('x_transaction_id'),
             ]);
 
-            // Redirigir según el estado
+            // Redirigir según el estado a nuestra página de confirmación
+            $baseParams = [
+                'order' => $order->order_number,
+                'transaction_id' => $request->input('x_transaction_id'),
+                'amount' => $order->total_amount
+            ];
+
             switch ($estado) {
                 case '1': // Transacción aprobada
-                    return redirect('/account/orders?success=true&order=' . $order->order_number);
+                    $params = array_merge($baseParams, ['success' => 'true']);
+                    return redirect('/order-confirmation?' . http_build_query($params));
+                    
                 case '2': // Transacción rechazada
-                    return redirect('/account/orders?error=rejected&order=' . $order->order_number);
+                    $params = array_merge($baseParams, ['error' => 'rejected']);
+                    return redirect('/order-confirmation?' . http_build_query($params));
+                    
                 case '3': // Transacción pendiente
-                    return redirect('/account/orders?pending=true&order=' . $order->order_number);
+                    $params = array_merge($baseParams, ['pending' => 'true']);
+                    return redirect('/order-confirmation?' . http_build_query($params));
+                    
                 default:
-                    return redirect('/account/orders?error=unknown&order=' . $order->order_number);
+                    $params = array_merge($baseParams, ['error' => 'unknown']);
+                    return redirect('/order-confirmation?' . http_build_query($params));
             }
 
         } catch (\Exception $e) {

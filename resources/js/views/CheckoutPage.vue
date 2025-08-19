@@ -232,22 +232,67 @@ const processCheckout = async () => {
 }
 
 const submitToEpayco = () => {
-  // Envío directo del formulario POST a ePayco
+  // Método SDK mejorado - evita problemas de CloudFront
   if (Object.keys(epaycoData.value).length > 0) {
-    console.log('Enviando datos a ePayco:', epaycoData.value)
+    console.log('🚀 Iniciando pago con ePayco SDK:', epaycoData.value)
     
-    setTimeout(() => {
-      const form = document.querySelector('form[ref="epaycoForm"]') || document.querySelector('form')
-      if (form) {
-        form.submit()
-      } else {
-        console.error('Formulario no encontrado')
-        error.value = 'Error al enviar el formulario'
+    // Verificar que ePayco esté disponible
+    if (typeof ePayco === 'undefined') {
+      console.error('❌ ePayco SDK no está disponible')
+      error.value = 'Error: SDK de ePayco no disponible. Recarga la página.'
+      processing.value = false
+      return
+    }
+
+    try {
+      // Configurar ePayco
+      const handler = ePayco.checkout.configure({
+        key: epaycoData.value.p_key,
+        test: epaycoData.value.p_test_request === 'TRUE'
+      })
+
+      // Datos para el checkout
+      const data = {
+        // Información del producto
+        name: epaycoData.value.p_description,
+        description: epaycoData.value.p_description,
+        invoice: epaycoData.value.p_id_invoice,
+        currency: epaycoData.value.p_currency_code,
+        amount: epaycoData.value.p_amount,
+        amount_base: epaycoData.value.p_amount_base,
+        
+        // Información del cliente
+        name_billing: epaycoData.value.p_billing_customer,
+        email_billing: epaycoData.value.p_email,
+        phone_billing: epaycoData.value.p_customer_phone || '',
+        address_billing: epaycoData.value.p_customer_address || '',
+        city_billing: epaycoData.value.p_customer_city || 'Bogotá',
+        country_billing: epaycoData.value.p_customer_country || 'CO',
+        
+        // URLs de respuesta
+        response: epaycoData.value.p_url_response,
+        confirmation: epaycoData.value.p_url_confirmation,
+        
+        // Configuración adicional
+        method_confirmation: 'POST',
+        external: false, // Mostrar checkout en modal
+        autoclick: false
       }
-    }, 500)
+
+      console.log('💳 Abriendo checkout de ePayco:', data)
+
+      // Abrir checkout
+      handler.open(data)
+
+    } catch (err) {
+      console.error('❌ Error al abrir checkout de ePayco:', err)
+      error.value = 'Error al inicializar el pago. Intenta nuevamente.'
+      processing.value = false
+    }
   } else {
-    console.error('Datos de ePayco incompletos')
+    console.error('❌ Datos de ePayco incompletos')
     error.value = 'Error: datos de pago incompletos'
+    processing.value = false
   }
 }
 

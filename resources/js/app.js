@@ -47,6 +47,8 @@ import NotFound from './views/NotFound.vue';
 import Registro from './components/Auth/RegisterView.vue';
 import CheckoutPage from './views/CheckoutPage.vue';
 import AccountPage from './views/AccountPage.vue';
+import OrderConfirmation from './views/OrderConfirmation.vue';
+import EpaycoTest from './views/EpaycoTest.vue';
 
 import AdminLogin from './components/Admin/AdminLogin.vue'
 
@@ -94,6 +96,22 @@ const routes = [
     meta: { 
       requiresAuth: true,
       title: 'Mi Cuenta'
+    }
+  },
+  {
+    path: '/order-confirmation',
+    name: 'OrderConfirmation',
+    component: OrderConfirmation,
+    meta: { 
+      title: 'Confirmación de Pedido'
+    }
+  },
+  {
+    path: '/epayco-test',
+    name: 'EpaycoTest',
+    component: EpaycoTest,
+    meta: { 
+      title: 'Prueba ePayco'
     }
   },
   

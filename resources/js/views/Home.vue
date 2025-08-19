@@ -30,52 +30,7 @@
       <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" />
     </a>
 
-    <!-- SECCIÓN DE CONFIANZA Y BENEFICIOS -->
-    <section class="trust-section">
-      <div class="trust-container">
-        <div class="trust-items">
-          <div class="trust-item">
-            <div class="trust-icon">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 1L21 5V11C21 16.55 17.16 21.74 12 23C6.84 21.74 3 16.55 3 11V5L12 1Z"/>
-              </svg>
-            </div>
-            <h3>100% Auténtico</h3>
-            <p>Productos artesanales únicos hechos por comunidades indígenas</p>
-          </div>
-
-          <div class="trust-item">
-            <div class="trust-icon">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M3 13H11V3H3V13ZM3 21H11V15H3V21ZM13 21H21V11H13V21ZM13 3V9H21V3H13Z"/>
-              </svg>
-            </div>
-            <h3>Envíos Seguros</h3>
-            <p>Empaque especial para proteger cada pieza durante el transporte</p>
-          </div>
-
-          <div class="trust-item">
-            <div class="trust-icon">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M7 18C5.9 18 5 18.9 5 20S5.9 22 7 22 9 21.1 9 20 8.1 18 7 18ZM1 2V4H3L6.6 11.59L5.25 14.04C5.09 14.32 5 14.65 5 15C5 16.1 5.9 17 7 17H19V15H7.42C7.28 15 7.17 14.89 7.17 14.75L7.2 14.63L8.1 13H15.55C16.3 13 16.96 12.59 17.3 11.97L20.88 5H18.21L15.27 11H8.53L4.27 2H1ZM17 18C15.9 18 15 18.9 15 20S15.9 22 17 22 19 21.1 19 20 18.1 18 17 18Z"/>
-              </svg>
-            </div>
-            <h3>Comercio Justo</h3>
-            <p>Tu compra apoya directamente a las comunidades artesanas</p>
-          </div>
-
-          <div class="trust-item">
-            <div class="trust-icon">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2C6.48 2 2 6.48 2 12S6.48 22 12 22 22 17.52 22 12 17.48 2 12 2ZM13 19H11V17H13V19ZM15.07 11.25L14.17 12.17C13.45 12.9 13 13.5 13 15H11V14.5C11 13.4 11.45 12.4 12.17 11.67L13.41 10.41C13.78 10.05 14 9.55 14 9C14 7.9 13.1 7 12 7S10 7.9 10 9H8C8 6.79 9.79 5 12 5S16 6.79 16 9C16 9.88 15.64 10.68 15.07 11.25Z"/>
-              </svg>
-            </div>
-            <h3>Atención Personal</h3>
-            <p>Asesoría especializada para ayudarte a elegir la pieza perfecta</p>
-          </div>
-        </div>
-      </div>
-    </section>
+   
 
     <!-- SECCIÓN DE PRODUCTOS DESTACADOS MEJORADA -->
     <section class="featured-products-section">
@@ -155,6 +110,54 @@
           <div class="no-products-illustration">🎨</div>
           <h3>Próximamente nuevos productos</h3>
           <p>Estamos preparando una hermosa colección de artesanías amazónicas para ti</p>
+        </div>
+      </div>
+    </section>
+
+
+     <!-- SECCIÓN DE CONFIANZA Y BENEFICIOS -->
+    <section class="trust-section">
+      <div class="trust-container">
+        <div class="trust-items">
+          <div class="trust-item">
+            <div class="trust-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 1L21 5V11C21 16.55 17.16 21.74 12 23C6.84 21.74 3 16.55 3 11V5L12 1Z"/>
+              </svg>
+            </div>
+            <h3>100% Auténtico</h3>
+            <p>Productos artesanales únicos hechos por comunidades indígenas</p>
+          </div>
+
+          <div class="trust-item">
+            <div class="trust-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3 13H11V3H3V13ZM3 21H11V15H3V21ZM13 21H21V11H13V21ZM13 3V9H21V3H13Z"/>
+              </svg>
+            </div>
+            <h3>Envíos Seguros</h3>
+            <p>Empaque especial para proteger cada pieza durante el transporte</p>
+          </div>
+
+          <div class="trust-item">
+            <div class="trust-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7 18C5.9 18 5 18.9 5 20S5.9 22 7 22 9 21.1 9 20 8.1 18 7 18ZM1 2V4H3L6.6 11.59L5.25 14.04C5.09 14.32 5 14.65 5 15C5 16.1 5.9 17 7 17H19V15H7.42C7.28 15 7.17 14.89 7.17 14.75L7.2 14.63L8.1 13H15.55C16.3 13 16.96 12.59 17.3 11.97L20.88 5H18.21L15.27 11H8.53L4.27 2H1ZM17 18C15.9 18 15 18.9 15 20S15.9 22 17 22 19 21.1 19 20 18.1 18 17 18Z"/>
+              </svg>
+            </div>
+            <h3>Comercio Justo</h3>
+            <p>Tu compra apoya directamente a las comunidades artesanas</p>
+          </div>
+
+          <div class="trust-item">
+            <div class="trust-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12S6.48 22 12 22 22 17.52 22 12 17.48 2 12 2ZM13 19H11V17H13V19ZM15.07 11.25L14.17 12.17C13.45 12.9 13 13.5 13 15H11V14.5C11 13.4 11.45 12.4 12.17 11.67L13.41 10.41C13.78 10.05 14 9.55 14 9C14 7.9 13.1 7 12 7S10 7.9 10 9H8C8 6.79 9.79 5 12 5S16 6.79 16 9C16 9.88 15.64 10.68 15.07 11.25Z"/>
+              </svg>
+            </div>
+            <h3>Atención Personal</h3>
+            <p>Asesoría especializada para ayudarte a elegir la pieza perfecta</p>
+          </div>
         </div>
       </div>
     </section>
@@ -337,7 +340,7 @@ onMounted(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('/public/img/fondo.png') center/cover;
+  background: url('img/fondo.png') center/cover;
 }
 
 .hero::after {
@@ -1280,6 +1283,10 @@ onMounted(() => {
 
 /* =================== RESPONSIVE DESIGN =================== */
 
+/* =================== AJUSTES RESPONSIVOS MEJORADOS =================== */
+
+/* Mantener todos los estilos existentes y agregar estos ajustes */
+
 @media (max-width: 1024px) {
   .hero-content {
     grid-template-columns: 1fr;
@@ -1335,7 +1342,7 @@ onMounted(() => {
   }
   
   .hero-content {
-    gap: 1rem; /* Más espacio entre texto e imagen */
+    gap: 3rem; /* Más espacio entre texto e imagen */
   }
   
   .hero-title {
@@ -1372,43 +1379,13 @@ onMounted(() => {
     font-size: 2rem;
   }
   
-  /* MEJORA PRINCIPAL: Mostrar 2 productos por fila en móviles */
+  /* Mantener productos de 1 en 1 en móviles para mejor visualización */
   .products-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 columnas fijas */
-    gap: 1.5rem;
-  }
-  
-  /* Ajustar el contenido de las tarjetas para que se vea bien en 2 columnas */
-  .product-card-premium {
-    border-radius: 1rem;
-  }
-  
-  .product-image-wrapper {
-    height: 200px; /* Reducir altura para que quepa mejor */
-  }
-  
-  .product-content-premium {
-    padding: 1.5rem 1rem; /* Reducir padding lateral */
-  }
-  
-  .product-name-premium {
-    font-size: 1.1rem; /* Reducir tamaño del título */
-    margin-bottom: 1rem;
-  }
-  
-  .product-price-premium {
-    font-size: 1.3rem; /* Reducir tamaño del precio */
+    grid-template-columns: 1fr;
   }
   
   .product-actions-premium {
     flex-direction: column;
-    gap: 0.75rem;
-  }
-  
-  .view-details-btn,
-  .add-cart-btn-premium {
-    font-size: 0.85rem;
-    padding: 0.6rem 1rem;
   }
   
   .story-metrics {
@@ -1472,37 +1449,13 @@ onMounted(() => {
     padding: 1.5rem 1rem;
   }
   
-  /* Mantener 2 productos por fila incluso en móviles muy pequeños */
+  /* Mantener 1 producto por fila en móviles pequeños */
   .products-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-  }
-  
-  .product-image-wrapper {
-    height: 180px;
+    grid-template-columns: 1fr;
   }
   
   .product-content-premium {
-    padding: 1.25rem 0.75rem;
-  }
-  
-  .product-name-premium {
-    font-size: 1rem;
-    line-height: 1.2;
-  }
-  
-  .product-price-premium {
-    font-size: 1.2rem;
-  }
-  
-  .product-stock-info {
-    font-size: 0.75rem;
-  }
-  
-  .view-details-btn,
-  .add-cart-btn-premium {
-    font-size: 0.8rem;
-    padding: 0.5rem 0.75rem;
+    padding: 1.5rem;
   }
   
   .story-container-new {
@@ -1522,31 +1475,10 @@ onMounted(() => {
     height: 25em;
   }
   
+  /* Mantener productos individuales con buen tamaño */
   .products-grid {
-    gap: 0.75rem;
-  }
-  
-  .product-image-wrapper {
-    height: 160px;
-  }
-  
-  .product-content-premium {
-    padding: 1rem 0.5rem;
-  }
-  
-  .product-name-premium {
-    font-size: 0.9rem;
-  }
-  
-  .product-price-premium {
-    font-size: 1.1rem;
-  }
-  
-  .view-details-btn,
-  .add-cart-btn-premium {
-    font-size: 0.75rem;
-    padding: 0.45rem 0.5rem;
+    grid-template-columns: 1fr;
+    gap: 2rem;
   }
 }
-
 </style>
