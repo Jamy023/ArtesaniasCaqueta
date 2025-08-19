@@ -3,9 +3,6 @@ export const getProductImageUrl = (main_image) => {
   if (!main_image) return '/img/logo.png';
   if (main_image.startsWith('http')) return main_image;
   
-  // DEBUG: Mostrar qué está recibiendo
-  console.log('🖼️ Procesando imagen:', main_image);
-  
   // Limpiar completamente la ruta y construir desde cero
   let cleanImage = main_image;
   
@@ -15,7 +12,6 @@ export const getProductImageUrl = (main_image) => {
   // Construir la URL final
   const finalUrl = `/storage/products/${cleanImage}`;
   
-  console.log('🖼️ URL final:', finalUrl);
   return finalUrl;
 };
 
