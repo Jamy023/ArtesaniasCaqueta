@@ -59,16 +59,19 @@ class OrderController extends Controller
             // Generar datos para ePayco
             $epaycoData = $this->generateEpaycoData($order, $cliente);
 
+            // Log para debugging
+            Log::info('Order created successfully', [
+                'order_id' => $order->id,
+                'order_number' => $order->order_number,
+                'total_amount' => $order->total_amount,
+                'epayco_data_keys' => array_keys($epaycoData)
+            ]);
+
             return response()->json([
                 'success' => true,
                 'order_id' => $order->id,
                 'order_number' => $order->order_number,
                 'epayco_data' => $epaycoData
-            ])->withHeaders([
-                'Access-Control-Allow-Origin' => '*',
-                'Access-Control-Allow-Methods' => 'GET, POST, OPTIONS',
-                'Access-Control-Allow-Headers' => 'Content-Type, Authorization, X-Requested-With',
-                'X-Frame-Options' => 'ALLOWALL'
             ]);
 
         } catch (\Exception $e) {
@@ -125,9 +128,9 @@ class OrderController extends Controller
         'p_customer_city' => $cliente->ciudad ?? 'Bogotá',
         'p_customer_country' => 'CO',
         
-        // URLs de respuesta 
-        'p_url_response' => url('/api/orders/epayco-response'),
-        'p_url_confirmation' => url('/api/orders/epayco-confirmation'),
+        // URLs de respuesta - usar URL base específica de Railway
+        'p_url_response' => 'https://artesaniascaqueta-production.up.railway.app/api/orders/epayco-response',
+        'p_url_confirmation' => 'https://artesaniascaqueta-production.up.railway.app/api/orders/epayco-confirmation',
         
         // Configuración
         'p_test_request' => env('EPAYCO_TEST_MODE', 'TRUE'),

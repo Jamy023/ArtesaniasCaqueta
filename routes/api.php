@@ -73,9 +73,6 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 //  RUTAS PÚBLICAS DE EPAYCO (sin autenticación)
-Route::get('/orders/epayco-response', [OrderController::class, 'epaycoResponse']);
-Route::any('/orders/epayco-confirmation', [OrderController::class, 'epaycoConfirmation']);
-
 Route::match(['get', 'post'], '/orders/epayco-response', [OrderController::class, 'epaycoResponse']);
 Route::match(['get', 'post'], '/orders/epayco-confirmation', [OrderController::class, 'epaycoConfirmation']);
 // ===== RUTAS DE ADMINISTRACIÓN =====

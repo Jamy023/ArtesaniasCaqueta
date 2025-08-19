@@ -1291,6 +1291,12 @@ onMounted(() => {
     font-size: 2.5rem;
   }
   
+  /* Mejorar la imagen del hero en tablet */
+  .hero-img {
+    height: 35em;
+    max-width: 90%;
+  }
+  
   .trust-items {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -1325,7 +1331,11 @@ onMounted(() => {
 @media (max-width: 768px) {
   .hero {
     padding: 1rem;
-    min-height: 500px;
+    min-height: 600px; /* Aumentar altura mínima */
+  }
+  
+  .hero-content {
+    gap: 1rem; /* Más espacio entre texto e imagen */
   }
   
   .hero-title {
@@ -1336,8 +1346,17 @@ onMounted(() => {
     font-size: 1.1rem;
   }
   
+  /* MEJORA PRINCIPAL: Imagen del hero más prominente en móviles */
   .hero-img {
-    height: 25em;
+    height: 30em; /* Aumentar considerablemente */
+    max-width: 95%;
+    margin: 0 auto;
+    display: block;
+  }
+  
+  .hero-image {
+    order: -1; /* Poner la imagen arriba del texto */
+    margin-bottom: 2rem;
   }
   
   .trust-items {
@@ -1353,12 +1372,43 @@ onMounted(() => {
     font-size: 2rem;
   }
   
+  /* MEJORA PRINCIPAL: Mostrar 2 productos por fila en móviles */
   .products-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas fijas */
+    gap: 1.5rem;
+  }
+  
+  /* Ajustar el contenido de las tarjetas para que se vea bien en 2 columnas */
+  .product-card-premium {
+    border-radius: 1rem;
+  }
+  
+  .product-image-wrapper {
+    height: 200px; /* Reducir altura para que quepa mejor */
+  }
+  
+  .product-content-premium {
+    padding: 1.5rem 1rem; /* Reducir padding lateral */
+  }
+  
+  .product-name-premium {
+    font-size: 1.1rem; /* Reducir tamaño del título */
+    margin-bottom: 1rem;
+  }
+  
+  .product-price-premium {
+    font-size: 1.3rem; /* Reducir tamaño del precio */
   }
   
   .product-actions-premium {
     flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .view-details-btn,
+  .add-cart-btn-premium {
+    font-size: 0.85rem;
+    padding: 0.6rem 1rem;
   }
   
   .story-metrics {
@@ -1388,12 +1438,22 @@ onMounted(() => {
 }
 
 @media (max-width: 480px) {
+  .hero {
+    min-height: 650px; /* Aún más altura para móviles pequeños */
+  }
+  
   .hero-title {
     font-size: 1.75rem;
   }
   
+  /* Imagen aún más prominente en móviles pequeños */
   .hero-img {
-    height: 20em;
+    height: 28em;
+    max-width: 100%;
+  }
+  
+  .hero-content {
+    gap: 2.5rem;
   }
   
   .trust-section,
@@ -1412,8 +1472,37 @@ onMounted(() => {
     padding: 1.5rem 1rem;
   }
   
+  /* Mantener 2 productos por fila incluso en móviles muy pequeños */
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  .product-image-wrapper {
+    height: 180px;
+  }
+  
   .product-content-premium {
-    padding: 1.5rem;
+    padding: 1.25rem 0.75rem;
+  }
+  
+  .product-name-premium {
+    font-size: 1rem;
+    line-height: 1.2;
+  }
+  
+  .product-price-premium {
+    font-size: 1.2rem;
+  }
+  
+  .product-stock-info {
+    font-size: 0.75rem;
+  }
+  
+  .view-details-btn,
+  .add-cart-btn-premium {
+    font-size: 0.8rem;
+    padding: 0.5rem 0.75rem;
   }
   
   .story-container-new {
@@ -1423,6 +1512,40 @@ onMounted(() => {
   .story-highlight-box {
     flex-direction: column;
     text-align: center;
+    padding: 1.5rem;
+  }
+}
+
+/* Ajuste adicional para móviles muy pequeños (menos de 400px) */
+@media (max-width: 400px) {
+  .hero-img {
+    height: 25em;
+  }
+  
+  .products-grid {
+    gap: 0.75rem;
+  }
+  
+  .product-image-wrapper {
+    height: 160px;
+  }
+  
+  .product-content-premium {
+    padding: 1rem 0.5rem;
+  }
+  
+  .product-name-premium {
+    font-size: 0.9rem;
+  }
+  
+  .product-price-premium {
+    font-size: 1.1rem;
+  }
+  
+  .view-details-btn,
+  .add-cart-btn-premium {
+    font-size: 0.75rem;
+    padding: 0.45rem 0.5rem;
   }
 }
 
