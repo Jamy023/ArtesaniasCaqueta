@@ -11,7 +11,7 @@
       <div class="col-auto">
         <q-btn
           color="primary"
-          icon="add_circle"
+          icon="add"
           label="Nueva Categoría"
           unelevated
           size="md"
@@ -28,7 +28,7 @@
     <q-card flat bordered class="q-mb-lg shadow-2">
       <q-card-section>
         <div class="text-subtitle2 text-grey-8 q-mb-md">
-          <q-icon name="filter_list" class="q-mr-xs" />
+          <q-icon name="search" class="q-mr-xs" />
           Filtros de búsqueda
         </div>
         <div class="row q-gutter-md">
@@ -65,7 +65,7 @@
           <div class="col-auto">
             <q-btn
               flat
-              icon="clear_all"
+              icon="clear"
               label="Limpiar"
               color="grey-7"
               @click="clearFilters"
@@ -97,7 +97,7 @@
                   size="30px"
                   color="primary"
                   text-color="white"
-                  :icon="props.row.image ? 'image' : 'category'"
+                  :icon="props.row.image ? 'photo' : 'folder'"
                 >
                   <img v-if="props.row.image" :src="props.row.image" alt="Categoría" />
                 </q-avatar>
@@ -120,7 +120,7 @@
                 :color="props.row.products_count > 0 ? 'positive' : 'grey-5'"
                 text-color="white"
                 size="sm"
-                icon="inventory_2"
+                icon="shop"
               />
             </q-td>
           </template>

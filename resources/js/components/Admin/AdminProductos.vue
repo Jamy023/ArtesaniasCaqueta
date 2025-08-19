@@ -10,7 +10,7 @@
       <div class="col-auto">
         <q-btn
           color="primary"
-          icon="add_circle"
+          icon="add"
           label="Nuevo Producto"
           unelevated
           size="md"

@@ -42,7 +42,7 @@
           @click="closeDrawerOnMobile"
         >
           <q-item-section avatar>
-            <q-icon name="dashboard" />
+            <q-icon name="home" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Dashboard</q-item-label>
@@ -58,7 +58,7 @@
           @click="closeDrawerOnMobile"
         >
           <q-item-section avatar>
-            <q-icon name="inventory" />
+            <q-icon name="shop" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Productos</q-item-label>
@@ -74,7 +74,7 @@
           @click="closeDrawerOnMobile"
         >
           <q-item-section avatar>
-            <q-icon name="category" />
+            <q-icon name="folder" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Categorías</q-item-label>
@@ -90,7 +90,7 @@
           @click="closeDrawerOnMobile"
         >
           <q-item-section avatar>
-            <q-icon name="people" />
+            <q-icon name="person" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Usuarios</q-item-label>
@@ -106,7 +106,7 @@
           @click="closeDrawerOnMobile"
         >
           <q-item-section avatar>
-            <q-icon name="shopping_cart" />
+            <q-icon name="list" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Pedidos</q-item-label>

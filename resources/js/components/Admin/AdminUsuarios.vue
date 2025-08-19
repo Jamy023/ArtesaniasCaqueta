@@ -10,7 +10,7 @@
       <div class="col-auto">
         <q-btn
           color="primary"
-          icon="add_circle"
+          icon="add"
           label="Nuevo Usuario"
           unelevated
           size="md"
@@ -24,7 +24,7 @@
     <q-card flat bordered class="q-mb-lg shadow-2">
       <q-card-section>
         <div class="text-subtitle2 text-grey-8 q-mb-md">
-          <q-icon name="filter_list" class="q-mr-xs" />
+          <q-icon name="search" class="q-mr-xs" />
           Filtros de búsqueda
         </div>
         <div class="row q-gutter-md">
@@ -61,7 +61,7 @@
           <div class="col-auto">
             <q-btn
               flat
-              icon="clear_all"
+              icon="clear"
               label="Limpiar"
               color="grey-7"
               @click="clearFilters"
@@ -185,7 +185,7 @@
                 <q-btn
                   flat
                   round
-                  icon="key"
+                  icon="lock"
                   size="sm"
                   color="warning"
                   @click="openPasswordDialog(props.row)"
