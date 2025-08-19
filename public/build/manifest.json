@@ -1,22 +1,22 @@
 {
-  "_QForm-Dlsmn_lk.js": {
-    "file": "assets/QForm-Dlsmn_lk.js",
+  "_QForm-DKSKaHGd.js": {
+    "file": "assets/QForm-DKSKaHGd.js",
     "name": "QForm",
     "imports": [
       "resources/js/app.js",
-      "_use-quasar-BLC_O7Kc.js",
-      "_QList-D5cvF6ub.js"
+      "_use-quasar-D35cipOj.js",
+      "_QList-CN0FeMRx.js"
     ]
   },
-  "_QList-D5cvF6ub.js": {
-    "file": "assets/QList-D5cvF6ub.js",
+  "_QList-CN0FeMRx.js": {
+    "file": "assets/QList-CN0FeMRx.js",
     "name": "QList",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_use-quasar-BLC_O7Kc.js": {
-    "file": "assets/use-quasar-BLC_O7Kc.js",
+  "_use-quasar-D35cipOj.js": {
+    "file": "assets/use-quasar-D35cipOj.js",
     "name": "use-quasar",
     "imports": [
       "resources/js/app.js"
@@ -104,7 +104,7 @@
     "src": "resources/img/logo.png"
   },
   "resources/js/app.js": {
-    "file": "assets/app-CEvoeePK.js",
+    "file": "assets/app-U2blQjwM.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -117,7 +117,7 @@
       "resources/js/components/Admin/AdminPedidos.vue"
     ],
     "css": [
-      "assets/app-qnUSLuQs.css"
+      "assets/app-GUfPvaBe.css"
     ],
     "assets": [
       "assets/logo-CSMIghgx.png",
@@ -142,43 +142,43 @@
     ]
   },
   "resources/js/components/Admin/AdminCategorias.vue": {
-    "file": "assets/AdminCategorias-C8uWD-89.js",
+    "file": "assets/AdminCategorias-DEjkIfka.js",
     "name": "AdminCategorias",
     "src": "resources/js/components/Admin/AdminCategorias.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_QForm-Dlsmn_lk.js",
-      "_use-quasar-BLC_O7Kc.js",
-      "_QList-D5cvF6ub.js"
+      "_QForm-DKSKaHGd.js",
+      "_use-quasar-D35cipOj.js",
+      "_QList-CN0FeMRx.js"
     ],
     "css": [
       "assets/AdminCategorias-BdG0uSUp.css"
     ]
   },
   "resources/js/components/Admin/AdminDashboard.vue": {
-    "file": "assets/AdminDashboard-CAgrtK64.js",
+    "file": "assets/AdminDashboard-ACTJeLhY.js",
     "name": "AdminDashboard",
     "src": "resources/js/components/Admin/AdminDashboard.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_QList-D5cvF6ub.js",
-      "_use-quasar-BLC_O7Kc.js"
+      "_QList-CN0FeMRx.js",
+      "_use-quasar-D35cipOj.js"
     ]
   },
   "resources/js/components/Admin/AdminHome.vue": {
-    "file": "assets/AdminHome-CGV-eurk.js",
+    "file": "assets/AdminHome-CW8breEK.js",
     "name": "AdminHome",
     "src": "resources/js/components/Admin/AdminHome.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_QList-D5cvF6ub.js"
+      "_QList-CN0FeMRx.js"
     ]
   },
   "resources/js/components/Admin/AdminPedidos.vue": {
-    "file": "assets/AdminPedidos-RnXUMnHw.js",
+    "file": "assets/AdminPedidos-BD8vmRXH.js",
     "name": "AdminPedidos",
     "src": "resources/js/components/Admin/AdminPedidos.vue",
     "isDynamicEntry": true,
@@ -187,30 +187,30 @@
     ]
   },
   "resources/js/components/Admin/AdminProductos.vue": {
-    "file": "assets/AdminProductos-DvsmAt6q.js",
+    "file": "assets/AdminProductos-EQxaMIEe.js",
     "name": "AdminProductos",
     "src": "resources/js/components/Admin/AdminProductos.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_QForm-Dlsmn_lk.js",
-      "_use-quasar-BLC_O7Kc.js",
-      "_QList-D5cvF6ub.js"
+      "_QForm-DKSKaHGd.js",
+      "_use-quasar-D35cipOj.js",
+      "_QList-CN0FeMRx.js"
     ],
     "css": [
       "assets/AdminProductos-D3mULzaE.css"
     ]
   },
   "resources/js/components/Admin/AdminUsuarios.vue": {
-    "file": "assets/AdminUsuarios-DNIW6LfW.js",
+    "file": "assets/AdminUsuarios-DdkQNxJc.js",
     "name": "AdminUsuarios",
     "src": "resources/js/components/Admin/AdminUsuarios.vue",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.js",
-      "_QForm-Dlsmn_lk.js",
-      "_use-quasar-BLC_O7Kc.js",
-      "_QList-D5cvF6ub.js"
+      "_QForm-DKSKaHGd.js",
+      "_use-quasar-D35cipOj.js",
+      "_QList-CN0FeMRx.js"
     ],
     "css": [
       "assets/AdminUsuarios-BGfWo7Zq.css"

@@ -59,16 +59,23 @@ class OrderController extends Controller
             // Generar datos para ePayco
             $epaycoData = $this->generateEpaycoData($order, $cliente);
 
-            // Log para debugging
+            // Log detallado para debugging
             Log::info('Order created successfully', [
                 'order_id' => $order->id,
                 'order_number' => $order->order_number,
                 'total_amount' => $order->total_amount,
                 'customer_email' => $cliente->email,
+                'customer_document' => $cliente->numero_documento,
+                'customer_phone' => $cliente->telefono,
                 'epayco_data_keys' => array_keys($epaycoData),
                 'p_key_preview' => substr($epaycoData['p_key'], 0, 10) . '...',
+                'p_key_length' => strlen($epaycoData['p_key']),
                 'test_mode' => $epaycoData['p_test_request'],
-                'signature_preview' => substr($epaycoData['p_signature'], 0, 8) . '...'
+                'signature_preview' => substr($epaycoData['p_signature'], 0, 8) . '...',
+                'amount_formatted' => $epaycoData['p_amount'],
+                'currency' => $epaycoData['p_currency_code'],
+                'response_url' => $epaycoData['p_url_response'],
+                'confirmation_url' => $epaycoData['p_url_confirmation']
             ]);
 
             return response()->json([
@@ -153,9 +160,9 @@ class OrderController extends Controller
         'p_customer_city' => $cliente->ciudad ?? 'Bogotá',
         'p_customer_country' => 'CO',
         
-        // URLs de respuesta - usar URL base específica de Railway
-        'p_url_response' => 'https://artesaniascaqueta-production.up.railway.app/api/orders/epayco-response',
-        'p_url_confirmation' => 'https://artesaniascaqueta-production.up.railway.app/api/orders/epayco-confirmation',
+        // URLs de respuesta - usar URL base de la aplicación
+        'p_url_response' => env('APP_URL', 'https://artesaniascaqueta-production.up.railway.app') . '/api/orders/epayco-response',
+        'p_url_confirmation' => env('APP_URL', 'https://artesaniascaqueta-production.up.railway.app') . '/api/orders/epayco-confirmation',
         
         // Configuración
         'p_test_request' => env('EPAYCO_TEST_MODE', 'TRUE'),

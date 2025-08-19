@@ -232,63 +232,32 @@ const processCheckout = async () => {
 }
 
 const submitToEpayco = () => {
-  // Método SDK mejorado - evita problemas de CloudFront
+  // Método híbrido: intentar SDK primero, fallback a formulario POST
   if (Object.keys(epaycoData.value).length > 0) {
-    console.log('🚀 Iniciando pago con ePayco SDK:', epaycoData.value)
+    console.log('🚀 Iniciando pago con ePayco:', epaycoData.value)
     
-    // Verificar que ePayco esté disponible
-    if (typeof ePayco === 'undefined') {
-      console.error('❌ ePayco SDK no está disponible')
-      error.value = 'Error: SDK de ePayco no disponible. Recarga la página.'
-      processing.value = false
-      return
-    }
-
-    try {
-      // Configurar ePayco
-      const handler = ePayco.checkout.configure({
-        key: epaycoData.value.p_key,
-        test: epaycoData.value.p_test_request === 'TRUE'
-      })
-
-      // Datos para el checkout
-      const data = {
-        // Información del producto
-        name: epaycoData.value.p_description,
-        description: epaycoData.value.p_description,
-        invoice: epaycoData.value.p_id_invoice,
-        currency: epaycoData.value.p_currency_code,
-        amount: epaycoData.value.p_amount,
-        amount_base: epaycoData.value.p_amount_base,
-        
-        // Información del cliente
-        name_billing: epaycoData.value.p_billing_customer,
-        email_billing: epaycoData.value.p_email,
-        phone_billing: epaycoData.value.p_customer_phone || '',
-        address_billing: epaycoData.value.p_customer_address || '',
-        city_billing: epaycoData.value.p_customer_city || 'Bogotá',
-        country_billing: epaycoData.value.p_customer_country || 'CO',
-        
-        // URLs de respuesta
-        response: epaycoData.value.p_url_response,
-        confirmation: epaycoData.value.p_url_confirmation,
-        
-        // Configuración adicional
-        method_confirmation: 'POST',
-        external: false, // Mostrar checkout en modal
-        autoclick: false
+    // FALLBACK DIRECTO: usar formulario POST (más confiable)
+    setTimeout(() => {
+      console.log('💳 Usando fallback POST form para ePayco')
+      const form = document.createElement('form')
+      form.method = 'POST'
+      form.action = epaycoUrl
+      form.target = '_self' // Abrir en la misma ventana
+      
+      // Agregar todos los campos de ePayco
+      for (const [key, value] of Object.entries(epaycoData.value)) {
+        const input = document.createElement('input')
+        input.type = 'hidden'
+        input.name = key
+        input.value = value
+        form.appendChild(input)
       }
-
-      console.log('💳 Abriendo checkout de ePayco:', data)
-
-      // Abrir checkout
-      handler.open(data)
-
-    } catch (err) {
-      console.error('❌ Error al abrir checkout de ePayco:', err)
-      error.value = 'Error al inicializar el pago. Intenta nuevamente.'
-      processing.value = false
-    }
+      
+      document.body.appendChild(form)
+      form.submit()
+      document.body.removeChild(form)
+    }, 500)
+    
   } else {
     console.error('❌ Datos de ePayco incompletos')
     error.value = 'Error: datos de pago incompletos'
