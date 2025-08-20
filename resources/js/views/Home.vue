@@ -79,9 +79,7 @@
                 </div>
                 
                 <div class="product-actions-premium">
-                  <router-link :to="{ name: 'ProductDetail', params: { slug: product.slug } }" class="view-details-btn">
-                    Ver detalles
-                  </router-link>
+             
                   <button @click="addToCart(product)" class="add-cart-btn-premium" :disabled="product.stock === 0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <circle cx="9" cy="21" r="1"/>
