@@ -147,21 +147,21 @@ class OrderController extends Controller
         'p_currency_code' => 'COP',
         'p_signature' => $signature,
         
-        // Datos del cliente
+        // Datos del cliente para Checkout Onpage
         'p_email' => $cliente->email,
         'p_billing_customer' => trim($cliente->nombre . ' ' . $cliente->apellido),
         'p_customer_name' => $cliente->nombre,
         'p_customer_lastname' => $cliente->apellido,
         'p_customer_email' => $cliente->email,
-        'p_customer_phone' => $cliente->telefono ?? '',
+        'p_customer_phone' => $cliente->telefono ?? '3001234567',
         'p_customer_doc_type' => $this->mapDocumentType($cliente->tipo_documento),
         'p_customer_document' => $cliente->numero_documento,
-        'p_customer_address' => $cliente->direccion ?? 'No especificada',
-        'p_customer_city' => $cliente->ciudad ?? 'Bogotá',
+        'p_customer_address' => $cliente->direccion ?? 'Calle principal 123',
+        'p_customer_city' => $cliente->ciudad ?? 'Florencia',
         'p_customer_country' => 'CO',
         
-        // URLs de respuesta - usar URL base de la aplicación
-        'p_url_response' => env('APP_URL', 'https://artesaniascaqueta-production.up.railway.app') . '/api/orders/epayco-response',
+        // URLs de respuesta optimizadas para Railway
+        'p_url_response' => env('APP_URL', 'https://artesaniascaqueta-production.up.railway.app') . '/order-confirmation',
         'p_url_confirmation' => env('APP_URL', 'https://artesaniascaqueta-production.up.railway.app') . '/api/orders/epayco-confirmation',
         
         // Configuración

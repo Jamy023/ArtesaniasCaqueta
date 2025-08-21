@@ -30,11 +30,7 @@ axios.defaults.withCredentials = true;
 axios.defaults.timeout = 30000; // 30 segundos timeout
 
 
-console.log('🔧 Configuración de Axios:', {
-  baseURL: axios.defaults.baseURL,
-  timeout: axios.defaults.timeout,
-  withCredentials: axios.defaults.withCredentials
-});
+
 
 window.axios = axios;
 

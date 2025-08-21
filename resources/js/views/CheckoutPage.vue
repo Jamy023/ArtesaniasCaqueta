@@ -232,19 +232,72 @@ const processCheckout = async () => {
 }
 
 const submitToEpayco = () => {
-  // Método híbrido: intentar SDK primero, fallback a formulario POST
-  if (Object.keys(epaycoData.value).length > 0) {
-    console.log('🚀 Iniciando pago con ePayco:', epaycoData.value)
+  if (Object.keys(epaycoData.value).length === 0) {
+    console.error('❌ Datos de ePayco incompletos')
+    error.value = 'Error: datos de pago incompletos'
+    processing.value = false
+    return
+  }
+
+  console.log('🚀 Iniciando Checkout Onpage con ePayco:', epaycoData.value)
+  
+  try {
+    // Verificar que el SDK esté disponible
+    if (typeof window.ePayco === 'undefined') {
+      throw new Error('SDK de ePayco no está disponible')
+    }
+
+    // Configurar ePayco
+    const handler = window.ePayco.checkout.configure({
+      key: window.epaycoConfig.public_key,
+      test: window.epaycoConfig.test
+    })
+
+    // Preparar datos para Checkout Onpage
+    const checkoutData = {
+      // Datos básicos del pago
+      name: epaycoData.value.p_description,
+      description: epaycoData.value.p_description,
+      invoice: epaycoData.value.p_id_invoice,
+      currency: epaycoData.value.p_currency_code,
+      amount: epaycoData.value.p_amount,
+      amount_base: epaycoData.value.p_amount_base,
+      
+      // Datos del cliente (requeridos)
+      name_billing: epaycoData.value.p_billing_customer,
+      email_billing: epaycoData.value.p_customer_email,
+      phone_billing: epaycoData.value.p_customer_phone || '3001234567',
+      address_billing: epaycoData.value.p_customer_address,
+      city_billing: epaycoData.value.p_customer_city,
+      country_billing: epaycoData.value.p_customer_country,
+      
+      // URLs de respuesta
+      response: epaycoData.value.p_url_response,
+      confirmation: epaycoData.value.p_url_confirmation,
+      
+      // Configuración adicional
+      method_confirmation: 'POST',
+      external: false, // Para usar modal onpage
+      autoclick: false
+    }
+
+    console.log('📋 Datos para Checkout Onpage:', checkoutData)
     
-    // FALLBACK DIRECTO: usar formulario POST (más confiable)
+    // Abrir Checkout Onpage
+    handler.open(checkoutData)
+    console.log('✅ Checkout Onpage abierto exitosamente')
+    
+  } catch (error) {
+    console.error('❌ Error en Checkout Onpage:', error)
+    
+    // FALLBACK: usar formulario POST si el SDK falla
+    console.log('🔄 Usando fallback POST form')
     setTimeout(() => {
-      console.log('💳 Usando fallback POST form para ePayco')
       const form = document.createElement('form')
       form.method = 'POST'
-      form.action = epaycoUrl
-      form.target = '_self' // Abrir en la misma ventana
+      form.action = 'https://checkout.epayco.co/checkout.php'
+      form.target = '_self'
       
-      // Agregar todos los campos de ePayco
       for (const [key, value] of Object.entries(epaycoData.value)) {
         const input = document.createElement('input')
         input.type = 'hidden'
@@ -257,11 +310,6 @@ const submitToEpayco = () => {
       form.submit()
       document.body.removeChild(form)
     }, 500)
-    
-  } else {
-    console.error('❌ Datos de ePayco incompletos')
-    error.value = 'Error: datos de pago incompletos'
-    processing.value = false
   }
 }
 
