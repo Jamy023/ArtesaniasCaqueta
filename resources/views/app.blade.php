@@ -12,10 +12,15 @@
     <script>
         // Configuración global de ePayco
         window.epaycoConfig = {
-            test: {{ env('EPAYCO_TEST_MODE', 'TRUE') === 'TRUE' ? 'true' : 'false' }},
+            test: {{ strtoupper(env('EPAYCO_TEST_MODE', 'TRUE')) === 'TRUE' ? 'true' : 'false' }},
             public_key: "{{ env('EPAYCO_PUBLIC_KEY', '') }}",
             customer_id: "{{ env('EPAYCO_CUSTOMER_ID', '1556492') }}"
         };
+        
+        // Validar configuración
+        if (!window.epaycoConfig.public_key || window.epaycoConfig.public_key.includes('*')) {
+            console.error('❌ ePayco P_KEY inválida o no configurada');
+        }
         
         // Debug info mejorado
         console.log('🚀 ePayco SDK Cargado - Checkout Onpage Ready:', {

@@ -30,9 +30,7 @@
       <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" />
     </a>
 
-   
-
-    <!-- SECCIÓN DE PRODUCTOS DESTACADOS MEJORADA -->
+    <!-- SECCIÓN DE PRODUCTOS DESTACADOS CON CARRUSEL -->
     <section class="featured-products-section">
       <div class="section-container">
         <div class="section-header-new">
@@ -54,43 +52,81 @@
           <button @click="fetchProducts" class="retry-button">Intentar nuevamente</button>
         </div>
 
-        <!-- Grid de productos mejorado -->
+        <!-- Carrusel de productos -->
         <div v-else-if="productsState.data.length > 0" class="products-showcase">
-          <div class="products-grid">
-            <article v-for="product in productsState.data.slice(0, 6)" :key="product.id" class="product-card-premium">
-              <div class="product-image-wrapper">
-                <img :src="getProductImageUrl(product.main_image)" :alt="product.name" class="product-image-premium" @error="handleImageError" />
-                <div class="product-overlay">
-                  <router-link :to="{ name: 'ProductDetail', params: { slug: product.slug } }" class="quick-view-btn">
-                    Vista rápida
-                  </router-link>
-                </div>
-                <div class="product-status" v-if="product.stock === 0">Agotado</div>
-                <div class="product-category-tag" v-if="product.category">{{ product.category.name }}</div>
-              </div>
+          <div class="carousel-container" ref="carouselContainer">
+            <div 
+              class="products-carousel" 
+              :style="{ transform: `translateX(-${currentSlide * slideWidth}%)` }"
+            >
+              <div 
+                v-for="product in productsState.data" 
+                :key="product.id" 
+                class="carousel-slide"
+                @click="goToProduct(product)"
+              >
+                <article class="product-card-carousel">
+                  <div class="product-image-wrapper-carousel">
+                    <img 
+                      :src="getProductImageUrl(product.main_image)" 
+                      :alt="product.name" 
+                      class="product-image-carousel" 
+                      @error="handleImageError" 
+                    />
+                    <div class="product-overlay-carousel">
+                      <div class="quick-view-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                          <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                      </div>
+                    </div>
+                    <div class="product-status" v-if="product.stock === 0">Agotado</div>
+                    <div class="product-category-tag" v-if="product.category">{{ product.category.name }}</div>
+                  </div>
 
-              <div class="product-content-premium">
-                <h3 class="product-name-premium">{{ product.name }}</h3>
-                <div class="product-price-wrapper">
-                  <span class="product-price-premium">{{ formatPrice(product.price) }}</span>
-                  <span class="product-stock-info" :class="{ 'out-of-stock': product.stock === 0 }">
-                    {{ product.stock > 0 ? `${product.stock} disponibles` : 'Sin stock' }}
-                  </span>
-                </div>
-                
-                <div class="product-actions-premium">
-             
-                  <button @click="addToCart(product)" class="add-cart-btn-premium" :disabled="product.stock === 0">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <circle cx="9" cy="21" r="1"/>
-                      <circle cx="20" cy="21" r="1"/>
-                      <path d="m1 1 4 2.68L3 15.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-                    </svg>
-                    {{ product.stock === 0 ? 'Agotado' : 'Agregar' }}
-                  </button>
-                </div>
+                  <div class="product-content-carousel">
+                    <h3 class="product-name-carousel">{{ product.name }}</h3>
+                    <div class="product-price-wrapper-carousel">
+                      <span class="product-price-carousel">{{ formatPrice(product.price) }}</span>
+                      <span class="product-stock-info-carousel" :class="{ 'out-of-stock': product.stock === 0 }">
+                        {{ product.stock > 0 ? `${product.stock} disponibles` : 'Sin stock' }}
+                      </span>
+                    </div>
+                  </div>
+                </article>
               </div>
-            </article>
+            </div>
+
+            <!-- Indicadores de navegación -->
+            <div class="carousel-indicators">
+              <button 
+                v-for="(slide, index) in totalSlides" 
+                :key="index"
+                @click="goToSlide(index)"
+                :class="['indicator-dot', { active: index === currentSlide }]"
+              ></button>
+            </div>
+
+            <!-- Botones de navegación -->
+            <button 
+              class="carousel-nav prev" 
+              @click="prevSlide"
+              :disabled="currentSlide === 0"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15,18 9,12 15,6"></polyline>
+              </svg>
+            </button>
+            <button 
+              class="carousel-nav next" 
+              @click="nextSlide"
+              :disabled="currentSlide >= totalSlides - 1"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9,18 15,12 9,6"></polyline>
+              </svg>
+            </button>
           </div>
 
           <div class="view-all-products">
@@ -112,8 +148,7 @@
       </div>
     </section>
 
-
-     <!-- SECCIÓN DE CONFIANZA Y BENEFICIOS -->
+    <!-- SECCIÓN DE CONFIANZA Y BENEFICIOS -->
     <section class="trust-section">
       <div class="trust-container">
         <div class="trust-items">
@@ -159,8 +194,6 @@
         </div>
       </div>
     </section>
-
- 
 
     <!-- SECCIÓN NUESTRA HISTORIA REDISEÑADA -->
     <section class="story-section-new">
@@ -252,12 +285,13 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, onUnmounted, watch, computed } from 'vue'
+import { ref, reactive, onMounted, onUnmounted, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import api from '../axios'
-
 import { getProductImageUrl, handleImageError } from '../utils/imageUtils'
-// Importar imagen de fondo correctamente para Vite
 import fondoImage from '/public/img/fondo.png'
+
+const router = useRouter()
 
 // Estado reactivo para productos
 const productsState = reactive({
@@ -266,13 +300,37 @@ const productsState = reactive({
   error: null
 })
 
+// Variables del carrusel
+const currentSlide = ref(0)
+const carouselContainer = ref(null)
+const autoSlideInterval = ref(null)
+
+// Configuración del carrusel
+const slidesPerView = computed(() => {
+  if (typeof window !== 'undefined') {
+    if (window.innerWidth >= 1024) return 3
+    if (window.innerWidth >= 768) return 2
+    return 1
+  }
+  return 3
+})
+
+const slideWidth = computed(() => {
+  return 100 / slidesPerView.value
+})
+
+const totalSlides = computed(() => {
+  const total = productsState.data.length - slidesPerView.value + 1
+  return total > 0 ? total : 1
+})
+
 // Obtener productos destacados
 const fetchProducts = async () => {
   productsState.loading = true
   productsState.error = null
 
   try {
-    const res = await api.get('/products?limit=6')
+    const res = await api.get('/products?limit=12')
     
     if (res.data?.data) {
       productsState.data = res.data.data
@@ -288,7 +346,50 @@ const fetchProducts = async () => {
     productsState.data = []
   } finally {
     productsState.loading = false
+    startAutoSlide()
   }
+}
+
+// Navegación del carrusel
+const nextSlide = () => {
+  if (currentSlide.value < totalSlides.value - 1) {
+    currentSlide.value++
+  } else {
+    currentSlide.value = 0
+  }
+}
+
+const prevSlide = () => {
+  if (currentSlide.value > 0) {
+    currentSlide.value--
+  } else {
+    currentSlide.value = totalSlides.value - 1
+  }
+}
+
+const goToSlide = (index) => {
+  currentSlide.value = index
+}
+
+// Auto-slide
+const startAutoSlide = () => {
+  if (productsState.data.length > slidesPerView.value) {
+    autoSlideInterval.value = setInterval(() => {
+      nextSlide()
+    }, 1000)
+  }
+}
+
+const stopAutoSlide = () => {
+  if (autoSlideInterval.value) {
+    clearInterval(autoSlideInterval.value)
+    autoSlideInterval.value = null
+  }
+}
+
+// Ir al detalle del producto
+const goToProduct = (product) => {
+  router.push({ name: 'ProductDetail', params: { slug: product.slug } })
 }
 
 // Formatear precios
@@ -296,22 +397,23 @@ const formatPrice = (price) => {
   return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(price)
 }
 
-// Agregar al carrito
-const addToCart = (product) => {
-  if (product.stock === 0) return
-  
-  console.log('Agregando al carrito:', product)
-  alert(`${product.name} agregado al carrito`)
+// Manejar resize
+const handleResize = () => {
+  if (currentSlide.value >= totalSlides.value) {
+    currentSlide.value = Math.max(0, totalSlides.value - 1)
+  }
 }
-
-// Las funciones getProductImageUrl y handleImageError se importan desde utils
 
 // Lifecycle hooks
 onMounted(() => {
   fetchProducts()
-  
-  // Aplicar imagen de fondo usando variable CSS
   document.documentElement.style.setProperty('--fondo-image', `url(${fondoImage})`)
+  window.addEventListener('resize', handleResize)
+})
+
+onUnmounted(() => {
+  stopAutoSlide()
+  window.removeEventListener('resize', handleResize)
 })
 </script>
 
@@ -343,7 +445,7 @@ onMounted(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--fondo-image, url('/img/fondo.png')) center/cover;
+  background: var(--fondo-image, url('/img/fondo.webp')) center/cover;
 }
 
 .hero::after {
@@ -473,7 +575,385 @@ onMounted(() => {
   transform: scale(1.1);
 }
 
-/* =================== NUEVOS ESTILOS REDISEÑADOS =================== */
+/* =================== ESTILOS DEL CARRUSEL =================== */
+
+.section-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.section-header-new {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.section-badge {
+  background: linear-gradient(45deg, #E8F5E8, #C8E6C9);
+  color: #2E7D32;
+  padding: 0.5rem 1.5rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: inline-block;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(46, 125, 50, 0.2);
+}
+
+.section-title-new {
+  color: #5D4037;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.section-subtitle-new {
+  color: #8D6E63;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.featured-products-section {
+  background: #fff;
+  padding: 6rem 0;
+  position: relative;
+}
+
+.loading-state, .error-state {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #F1F8E9;
+  border-top: 4px solid #4CAF50;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 2rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-state {
+  color: #5D4037;
+}
+
+.error-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.retry-button {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+}
+
+.retry-button:hover {
+  background: #45a049;
+  transform: translateY(-2px);
+}
+
+/* Contenedor principal del carrusel */
+.carousel-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  margin-bottom: 4rem;
+}
+
+.carousel-container:hover .carousel-nav {
+  opacity: 1;
+}
+
+/* Carrusel principal */
+.products-carousel {
+  display: flex;
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+/* Slide individual */
+.carousel-slide {
+  flex: 0 0 33.333%;
+  padding: 0 1rem;
+  cursor: pointer;
+}
+
+/* Tarjeta de producto en carrusel */
+.product-card-carousel {
+  background: #fff;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  box-shadow: 0 6px 25px rgba(93, 64, 55, 0.08);
+  border: 1px solid #F1F8E9;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-card-carousel:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 40px rgba(46, 125, 50, 0.15);
+  border-color: #E8F5E8;
+}
+
+.product-image-wrapper-carousel {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #F1F8E9, #E8F5E8);
+}
+
+.product-image-carousel {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.product-card-carousel:hover .product-image-carousel {
+  transform: scale(1.06);
+}
+
+.product-overlay-carousel {
+  position: absolute;
+  inset: 0;
+  background: rgba(46, 125, 50, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  backdrop-filter: blur(2px);
+}
+
+.product-card-carousel:hover .product-overlay-carousel {
+  opacity: 1;
+}
+
+.quick-view-icon {
+  background: white;
+  color: #2E7D32;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.quick-view-icon:hover {
+  background: #E8F5E8;
+  transform: scale(1.1);
+}
+
+.product-status {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: #f44336;
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  z-index: 5;
+}
+
+.product-category-tag {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  color: #2E7D32;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  z-index: 5;
+  backdrop-filter: blur(10px);
+}
+
+.product-content-carousel {
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.product-name-carousel {
+  color: #5D4037;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.product-price-wrapper-carousel {
+  margin-top: auto;
+}
+
+.product-price-carousel {
+  color: #2E7D32;
+  font-size: 1.3rem;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.product-stock-info-carousel {
+  color: #4CAF50;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.product-stock-info-carousel.out-of-stock {
+  color: #f44336;
+}
+
+/* Navegación del carrusel */
+.carousel-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.95);
+  color: #2E7D32;
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  opacity: 0;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.carousel-nav:hover {
+  background: #E8F5E8;
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 6px 20px rgba(46, 125, 50, 0.2);
+}
+
+.carousel-nav:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.carousel-nav.prev {
+  left: -25px;
+}
+
+.carousel-nav.next {
+  right: -25px;
+}
+
+/* Indicadores */
+.carousel-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  position: absolute;
+  bottom: -3rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.indicator-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(46, 125, 50, 0.3);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.indicator-dot:hover {
+  background: rgba(46, 125, 50, 0.6);
+  transform: scale(1.2);
+}
+
+.indicator-dot.active {
+  background: #2E7D32;
+  transform: scale(1.3);
+}
+
+/* Botón ver todo */
+.view-all-products {
+  text-align: center;
+  margin-top: 4rem;
+}
+
+.view-all-button {
+  background: linear-gradient(135deg, #2E7D32, #4CAF50);
+  color: white;
+  padding: 1.25rem 2.5rem;
+  border-radius: 60px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(46, 125, 50, 0.3);
+}
+
+.view-all-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(46, 125, 50, 0.4);
+}
+
+.no-products-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #8D6E63;
+}
+
+.no-products-illustration {
+  font-size: 4rem;
+  margin-bottom: 2rem;
+}
+
+.no-products-state h3 {
+  color: #5D4037;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* =================== SECCIONES RESTANTES (SIN CAMBIOS) =================== */
 
 /* SECCIÓN DE CONFIANZA */
 .trust-section {
@@ -558,465 +1038,6 @@ onMounted(() => {
   color: #8D6E63;
   line-height: 1.6;
   font-size: 0.95rem;
-}
-
-/* CONTENEDORES DE SECCIÓN GENERALES */
-.section-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 2rem;
-}
-
-.section-header-new {
-  text-align: center;
-  margin-bottom: 4rem;
-}
-
-.section-badge {
-  background: linear-gradient(45deg, #E8F5E8, #C8E6C9);
-  color: #2E7D32;
-  padding: 0.5rem 1.5rem;
-  border-radius: 50px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  display: inline-block;
-  margin-bottom: 1rem;
-  border: 1px solid rgba(46, 125, 50, 0.2);
-}
-
-.section-title-new {
-  color: #5D4037;
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  line-height: 1.2;
-}
-
-.section-subtitle-new {
-  color: #8D6E63;
-  font-size: 1.1rem;
-  line-height: 1.6;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-/* SECCIÓN DE PRODUCTOS DESTACADOS */
-.featured-products-section {
-  background: #fff;
-  padding: 6rem 0;
-  position: relative;
-}
-
-.loading-state, .error-state {
-  text-align: center;
-  padding: 4rem 2rem;
-}
-
-.loading-spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid #F1F8E9;
-  border-top: 4px solid #4CAF50;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto 2rem;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.error-state {
-  color: #5D4037;
-}
-
-.error-icon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-}
-
-.retry-button {
-  background: #4CAF50;
-  color: white;
-  border: none;
-  padding: 1rem 2rem;
-  border-radius: 0.75rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 1rem;
-}
-
-.retry-button:hover {
-  background: #45a049;
-  transform: translateY(-2px);
-}
-
-.products-showcase {
-  position: relative;
-}
-
-.products-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2.5rem;
-  margin-bottom: 4rem;
-}
-
-.product-card-premium {
-  background: #fff;
-  border-radius: 1.5rem;
-  overflow: hidden;
-  box-shadow: 0 8px 32px rgba(93, 64, 55, 0.08);
-  border: 1px solid #F1F8E9;
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  position: relative;
-}
-
-.product-card-premium:hover {
-  transform: translateY(-12px);
-  box-shadow: 0 20px 60px rgba(46, 125, 50, 0.15);
-  border-color: #E8F5E8;
-}
-
-.product-image-wrapper {
-  position: relative;
-  height: 280px;
-  overflow: hidden;
-  background: linear-gradient(135deg, #F1F8E9, #E8F5E8);
-}
-
-.product-image-premium {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.4s ease;
-}
-
-.product-card-premium:hover .product-image-premium {
-  transform: scale(1.08);
-}
-
-.product-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(46, 125, 50, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.product-card-premium:hover .product-overlay {
-  opacity: 1;
-}
-
-.quick-view-btn {
-  background: white;
-  color: #2E7D32;
-  padding: 0.75rem 1.5rem;
-  border-radius: 50px;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-}
-
-.quick-view-btn:hover {
-  background: #E8F5E8;
-  transform: scale(1.05);
-}
-
-.product-status {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: #f44336;
-  color: white;
-  padding: 0.4rem 1rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  z-index: 5;
-}
-
-.product-category-tag {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  background: rgba(255, 255, 255, 0.9);
-  color: #2E7D32;
-  padding: 0.4rem 1rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  z-index: 5;
-  backdrop-filter: blur(10px);
-}
-
-.product-content-premium {
-  padding: 2rem;
-}
-
-.product-name-premium {
-  color: #5D4037;
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
-  line-height: 1.3;
-}
-
-.product-price-wrapper {
-  margin-bottom: 1.5rem;
-}
-
-.product-price-premium {
-  color: #2E7D32;
-  font-size: 1.6rem;
-  font-weight: 700;
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
-.product-stock-info {
-  color: #4CAF50;
-  font-size: 0.85rem;
-  font-weight: 500;
-}
-
-.product-stock-info.out-of-stock {
-  color: #f44336;
-}
-
-.product-actions-premium {
-  display: flex;
-  gap: 1rem;
-}
-
-.view-details-btn {
-  background: transparent;
-  color: #2E7D32;
-  border: 2px solid #2E7D32;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.75rem;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-  text-align: center;
-  flex: 1;
-}
-
-.view-details-btn:hover {
-  background: #2E7D32;
-  color: white;
-  transform: translateY(-2px);
-}
-
-.add-cart-btn-premium {
-  background: linear-gradient(135deg, #2E7D32, #4CAF50);
-  color: white;
-  border: none;
-  padding: 0.75rem 1rem;
-  border-radius: 0.75rem;
-  font-weight: 600;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  flex: 1;
-}
-
-.add-cart-btn-premium:hover:not(:disabled) {
-  background: linear-gradient(135deg, #1B5E20, #2E7D32);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(46, 125, 50, 0.3);
-}
-
-.add-cart-btn-premium:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-}
-
-.view-all-products {
-  text-align: center;
-  margin-top: 3rem;
-}
-
-.view-all-button {
-  background: linear-gradient(135deg, #2E7D32, #4CAF50);
-  color: white;
-  padding: 1.25rem 2.5rem;
-  border-radius: 60px;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 1.1rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 8px 25px rgba(46, 125, 50, 0.3);
-}
-
-.view-all-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 35px rgba(46, 125, 50, 0.4);
-}
-
-.no-products-state {
-  text-align: center;
-  padding: 4rem 2rem;
-  color: #8D6E63;
-}
-
-.no-products-illustration {
-  font-size: 4rem;
-  margin-bottom: 2rem;
-}
-
-.no-products-state h3 {
-  color: #5D4037;
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-}
-
-/* SECCIÓN DE CATEGORÍAS */
-.categories-showcase-section {
-  background: linear-gradient(135deg, #F1F8E9 0%, #ffffff 100%);
-  padding: 6rem 0;
-}
-
-.categories-grid-new {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-}
-
-.category-large {
-  grid-row: span 2;
-}
-
-.category-card-new {
-  position: relative;
-  border-radius: 1.5rem;
-  overflow: hidden;
-  box-shadow: 0 12px 40px rgba(93, 64, 55, 0.1);
-  transition: all 0.4s ease;
-  background: white;
-  min-height: 300px;
-  display: flex;
-  flex-direction: column;
-}
-
-.category-card-new:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 60px rgba(46, 125, 50, 0.15);
-}
-
-.category-image-container {
-  position: relative;
-  flex: 1;
-  overflow: hidden;
-}
-
-.category-image-new {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.4s ease;
-}
-
-.category-card-new:hover .category-image-new {
-  transform: scale(1.05);
-}
-
-.category-gradient {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, transparent 0%, rgba(46, 125, 50, 0.8) 100%);
-}
-
-.category-content-new {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 2rem;
-  color: white;
-}
-
-.category-label {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  padding: 0.25rem 0.75rem;
-  border-radius: 15px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  display: inline-block;
-  margin-bottom: 0.75rem;
-  backdrop-filter: blur(10px);
-}
-
-.category-title-new {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  line-height: 1.2;
-}
-
-.category-large .category-title-new {
-  font-size: 2rem;
-}
-
-.category-description-new {
-  font-size: 0.95rem;
-  opacity: 0.9;
-  margin-bottom: 1rem;
-}
-
-.category-stats {
-  font-size: 0.85rem;
-  opacity: 0.8;
-  font-weight: 500;
-}
-
-.category-link-new {
-  position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
-  background: rgba(255, 255, 255, 0.15);
-  color: white;
-  padding: 0.75rem 1.25rem;
-  border-radius: 50px;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 0.9rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-}
-
-.category-card-new:hover .category-link-new {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.category-link-new:hover {
-  background: rgba(255, 255, 255, 0.25);
-  transform: scale(1.05);
 }
 
 /* SECCIÓN DE HISTORIA */
@@ -1286,10 +1307,6 @@ onMounted(() => {
 
 /* =================== RESPONSIVE DESIGN =================== */
 
-/* =================== AJUSTES RESPONSIVOS MEJORADOS =================== */
-
-/* Mantener todos los estilos existentes y agregar estos ajustes */
-
 @media (max-width: 1024px) {
   .hero-content {
     grid-template-columns: 1fr;
@@ -1301,7 +1318,6 @@ onMounted(() => {
     font-size: 2.5rem;
   }
   
-  /* Mejorar la imagen del hero en tablet */
   .hero-img {
     height: 35em;
     max-width: 90%;
@@ -1311,17 +1327,10 @@ onMounted(() => {
     grid-template-columns: repeat(2, 1fr);
   }
   
-  .products-grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-  }
-  
-  .categories-grid-new {
-    grid-template-columns: 1fr;
-  }
-  
-  .category-large {
-    grid-row: span 1;
+  /* Carrusel en tablet: 2 slides */
+  .carousel-slide {
+    flex: 0 0 50%;
+    padding: 0 0.75rem;
   }
   
   .story-content-grid {
@@ -1341,11 +1350,11 @@ onMounted(() => {
 @media (max-width: 768px) {
   .hero {
     padding: 1rem;
-    min-height: 600px; /* Aumentar altura mínima */
+    min-height: 600px;
   }
   
   .hero-content {
-    gap: 3rem; /* Más espacio entre texto e imagen */
+    gap: 3rem;
   }
   
   .hero-title {
@@ -1356,16 +1365,15 @@ onMounted(() => {
     font-size: 1.1rem;
   }
   
-  /* MEJORA PRINCIPAL: Imagen del hero más prominente en móviles */
   .hero-img {
-    height: 30em; /* Aumentar considerablemente */
+    height: 30em;
     max-width: 95%;
     margin: 0 auto;
     display: block;
   }
   
   .hero-image {
-    order: -1; /* Poner la imagen arriba del texto */
+    order: -1;
     margin-bottom: 2rem;
   }
   
@@ -1382,13 +1390,27 @@ onMounted(() => {
     font-size: 2rem;
   }
   
-  /* Mantener productos de 1 en 1 en móviles para mejor visualización */
-  .products-grid {
-    grid-template-columns: 1fr;
+  /* Carrusel en móvil: 1 slide */
+  .carousel-slide {
+    flex: 0 0 100%;
+    padding: 0 0.5rem;
   }
   
-  .product-actions-premium {
-    flex-direction: column;
+  .carousel-nav {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .carousel-nav.prev {
+    left: -15px;
+  }
+  
+  .carousel-nav.next {
+    right: -15px;
+  }
+  
+  .product-image-wrapper-carousel {
+    height: 200px;
   }
   
   .story-metrics {
@@ -1419,14 +1441,13 @@ onMounted(() => {
 
 @media (max-width: 480px) {
   .hero {
-    min-height: 650px; /* Aún más altura para móviles pequeños */
+    min-height: 650px;
   }
   
   .hero-title {
     font-size: 1.75rem;
   }
   
-  /* Imagen aún más prominente en móviles pequeños */
   .hero-img {
     height: 28em;
     max-width: 100%;
@@ -1438,7 +1459,6 @@ onMounted(() => {
   
   .trust-section,
   .featured-products-section,
-  .categories-showcase-section,
   .story-section-new,
   .final-cta-section {
     padding: 3rem 0;
@@ -1452,13 +1472,17 @@ onMounted(() => {
     padding: 1.5rem 1rem;
   }
   
-  /* Mantener 1 producto por fila en móviles pequeños */
-  .products-grid {
-    grid-template-columns: 1fr;
+  .carousel-slide {
+    padding: 0 0.25rem;
   }
   
-  .product-content-premium {
-    padding: 1.5rem;
+  .product-content-carousel {
+    padding: 1.25rem;
+  }
+  
+  .carousel-nav {
+    width: 40px;
+    height: 40px;
   }
   
   .story-container-new {
@@ -1472,16 +1496,13 @@ onMounted(() => {
   }
 }
 
-/* Ajuste adicional para móviles muy pequeños (menos de 400px) */
 @media (max-width: 400px) {
   .hero-img {
     height: 25em;
   }
   
-  /* Mantener productos individuales con buen tamaño */
-  .products-grid {
-    grid-template-columns: 1fr;
-    gap: 2rem;
+  .product-image-wrapper-carousel {
+    height: 180px;
   }
 }
 </style>

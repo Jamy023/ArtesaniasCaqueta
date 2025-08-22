@@ -42,6 +42,11 @@ Route::patch('/products/{id}/toggle-active', [ProductController::class, 'toggleA
 // Ruta para subir imágenes de productos
 Route::post('/upload-product-image', [ProductController::class, 'uploadImage']);
 
+// ===== RUTAS DE GESTIÓN DE PEDIDOS (para admin, sin autenticación adicional) =====
+Route::get('/admin/orders', [AdminController::class, 'getAllOrders']);
+Route::get('/admin/orders/{id}', [AdminController::class, 'getOrderDetails']);
+Route::patch('/admin/orders/{id}/status', [AdminController::class, 'updateOrderStatus']);
+
 // ===== RUTAS DE AUTENTICACIÓN =====
 
 // Autenticación de clientes (mantiene Sanctum)
@@ -89,11 +94,6 @@ Route::middleware(['admin.auth'])->prefix('admin')->group(function () {
     
     // Dashboard data
     Route::get('/dashboard-stats', [AdminController::class, 'dashboardStats']);
-    
-    //  RUTAS ADMIN PARA GESTIÓN DE PEDIDOS
-    Route::get('/orders', [AdminController::class, 'getAllOrders']);
-    Route::get('/orders/{id}', [AdminController::class, 'getOrderDetails']);
-    Route::patch('/orders/{id}/status', [AdminController::class, 'updateOrderStatus']);
 
 });
 

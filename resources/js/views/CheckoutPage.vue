@@ -112,12 +112,12 @@
               </div>
               
               <div class="payment-badges">
-                <img src="/resources/img/PagoMedios/visa-10.svg" alt="Visa" class="payment-icon" />
-                <img src="/img/PagoMedios/mastercard-6.svg" alt="Mastercard" class="payment-icon" />
+                <div class="payment-icon visa-icon">VISA</div>
+                <div class="payment-icon mc-icon">MC</div>
                 <div class="payment-icon pse-icon">PSE</div>
-                <img src="/img/PagoMedios/efecty.svg" alt="Efecty" class="payment-icon" />
-                <img src="/img/PagoMedios/nequi-2.svg" alt="Nequi" class="payment-icon" />
-                <img src="/img/PagoMedios/daviplata.svg" alt="Daviplata" class="payment-icon" />
+                <div class="payment-icon efecty-icon">EFECTY</div>
+                <div class="payment-icon nequi-icon">NEQUI</div>
+                <div class="payment-icon davi-icon">DAVI</div>
               </div>
             </div>
           </div>
@@ -241,6 +241,14 @@ const submitToEpayco = () => {
 
   console.log('🚀 Iniciando Checkout Onpage con ePayco:', epaycoData.value)
   
+  // Verificar configuración
+  if (!window.epaycoConfig?.public_key || window.epaycoConfig.public_key.includes('*')) {
+    console.error('❌ P_KEY de ePayco no configurada correctamente')
+    error.value = 'Error de configuración: P_KEY inválida'
+    processing.value = false
+    return
+  }
+  
   try {
     // Verificar que el SDK esté disponible
     if (typeof window.ePayco === 'undefined') {
@@ -267,9 +275,9 @@ const submitToEpayco = () => {
       name_billing: epaycoData.value.p_billing_customer,
       email_billing: epaycoData.value.p_customer_email,
       phone_billing: epaycoData.value.p_customer_phone || '3001234567',
-      address_billing: epaycoData.value.p_customer_address,
-      city_billing: epaycoData.value.p_customer_city,
-      country_billing: epaycoData.value.p_customer_country,
+      address_billing: epaycoData.value.p_customer_address || 'Calle 123',
+      city_billing: epaycoData.value.p_customer_city || 'Florencia',
+      country_billing: epaycoData.value.p_customer_country || 'CO',
       
       // URLs de respuesta
       response: epaycoData.value.p_url_response,
@@ -645,17 +653,46 @@ onMounted(() => {
   background: #fff;
 }
 
+.visa-icon {
+  background: #1a1f71;
+  color: white;
+}
+
+.mc-icon {
+  background: #eb001b;
+  color: white;
+}
+
 .pse-icon {
   background: #00a651;
   color: white;
-  font-size: 0.7rem;
+}
+
+.efecty-icon {
+  background: #ff6b35;
+  color: white;
+}
+
+.nequi-icon {
+  background: #642f8c;
+  color: white;
+}
+
+.davi-icon {
+  background: #ff5722;
+  color: white;
+}
+
+.visa-icon, .mc-icon, .pse-icon, .efecty-icon, .nequi-icon, .davi-icon {
+  font-size: 0.65rem;
   font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 32px;
+  min-width: 36px;
   height: 24px;
   border: none;
+  border-radius: 0.25rem;
 }
 
 .security-info {
