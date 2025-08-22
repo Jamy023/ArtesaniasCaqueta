@@ -2,16 +2,10 @@
 export const getProductImageUrl = (main_image) => {
   if (!main_image) return '/img/logo.png';
   if (main_image.startsWith('http')) return main_image;
-  
-  // TEMPORAL: usar URLs directas mientras arreglamos las rutas
-  const baseUrl = 'https://artesaniascaqueta-production.up.railway.app';
-  
-  // Limpiar la ruta de la imagen
-  let cleanImage = main_image;
-  cleanImage = cleanImage.replace(/^(public\/|storage\/app\/public\/|storage\/|\/storage\/|products\/)/, '');
-  
-  // Intentar primero con API endpoint directo
-  return `${baseUrl}/api/image/${encodeURIComponent(cleanImage)}`;
+
+  // Limpiar cualquier prefijo y construir ruta correcta
+  const cleanImage = main_image.replace(/^(public\/|storage\/|storage\/app\/public\/|products\/)/, '');
+  return `/storage/products/${cleanImage}`;
 };
 
 // Manejar errores de imagen (fallback a logo)
