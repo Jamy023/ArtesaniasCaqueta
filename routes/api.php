@@ -39,8 +39,9 @@ Route::patch('/products/{id}', [ProductController::class, 'update']);
 Route::delete('/products/{id}', [ProductController::class, 'destroy']);
 Route::patch('/products/{id}/toggle-active', [ProductController::class, 'toggleActive']);
 
-// Ruta para subir imágenes de productos
+// Rutas para manejo de imágenes de productos
 Route::post('/upload-product-image', [ProductController::class, 'uploadImage']);
+Route::delete('/delete-product-image', [ProductController::class, 'deleteImage']);
 
 // ===== RUTAS DE GESTIÓN DE PEDIDOS (para admin, sin autenticación adicional) =====
 Route::get('/admin/orders', [AdminController::class, 'getAllOrders']);

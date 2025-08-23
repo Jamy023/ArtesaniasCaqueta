@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Category;
+use App\Services\CloudinaryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -12,6 +13,12 @@ use Illuminate\Validation\ValidationException;
 
 class ProductController extends Controller
 {
+    protected $cloudinaryService;
+
+    public function __construct(CloudinaryService $cloudinaryService)
+    {
+        $this->cloudinaryService = $cloudinaryService;
+    }
     /**
      * Lista productos - Funciona para clientes Y para admin
      */
@@ -202,14 +209,15 @@ class ProductController extends Controller
         try {
             $product = Product::findOrFail($id);
             
-            // Eliminar imágenes asociadas del storage
+            // Eliminar imagen principal de Cloudinary
             if ($product->main_image) {
-                $this->deleteImageIfExists($product->main_image);
+                $this->deleteCloudinaryImage($product->main_image);
             }
             
+            // Eliminar imágenes de galería de Cloudinary
             if ($product->gallery && is_array($product->gallery)) {
-                foreach ($product->gallery as $image) {
-                    $this->deleteImageIfExists($image);
+                foreach ($product->gallery as $imageUrl) {
+                    $this->deleteCloudinaryImage($imageUrl);
                 }
             }
             
@@ -253,7 +261,7 @@ class ProductController extends Controller
     }
     
     /**
-     * Sube una imagen de producto
+     * Sube una imagen de producto a Cloudinary
      */
     public function uploadImage(Request $request)
     {
@@ -264,16 +272,35 @@ class ProductController extends Controller
             
             $image = $request->file('image');
             
-            // Generar nombre único para la imagen
-            $fileName = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
+            // Subir a Cloudinary
+            $result = $this->cloudinaryService->uploadImage(
+                $image->getRealPath(),
+                'products',
+                [
+                    'public_id' => 'product_' . time() . '_' . Str::random(10),
+                    'transformation' => [
+                        'quality' => 'auto',
+                        'fetch_format' => 'auto'
+                    ]
+                ]
+            );
             
-            // Guardar en storage/app/public/products
-            $path = $image->storeAs('products', $fileName, 'public');
+            if (!$result['success']) {
+                return response()->json([
+                    'message' => 'Error al subir la imagen: ' . $result['error']
+                ], 500);
+            }
             
             return response()->json([
                 'message' => 'Imagen subida exitosamente',
-                'path' => $path,
-                'url' => Storage::url($path)
+                'url' => $result['url'],
+                'public_id' => $result['public_id'],
+                'format' => $result['format'],
+                'dimensions' => [
+                    'width' => $result['width'],
+                    'height' => $result['height']
+                ],
+                'size' => $result['bytes']
             ]);
             
         } catch (ValidationException $e) {
@@ -284,6 +311,54 @@ class ProductController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error al subir la imagen: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+    
+    /**
+     * Elimina una imagen específica de Cloudinary
+     */
+    public function deleteImage(Request $request)
+    {
+        try {
+            $request->validate([
+                'image_url' => 'required|string'
+            ]);
+            
+            $imageUrl = $request->image_url;
+            
+            // Verificar si es una URL de Cloudinary
+            if (strpos($imageUrl, 'cloudinary.com') === false) {
+                return response()->json([
+                    'message' => 'La URL proporcionada no es de Cloudinary'
+                ], 400);
+            }
+            
+            // Extraer public_id y eliminar
+            $publicId = $this->cloudinaryService->extractPublicIdFromUrl($imageUrl);
+            
+            if (!$publicId) {
+                return response()->json([
+                    'message' => 'No se pudo extraer el ID público de la imagen'
+                ], 400);
+            }
+            
+            $result = $this->cloudinaryService->deleteImage($publicId);
+            
+            if ($result['success']) {
+                return response()->json([
+                    'message' => 'Imagen eliminada exitosamente',
+                    'public_id' => $publicId
+                ]);
+            } else {
+                return response()->json([
+                    'message' => 'Error al eliminar la imagen: ' . $result['error']
+                ], 500);
+            }
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al procesar la solicitud: ' . $e->getMessage()
             ], 500);
         }
     }
@@ -346,12 +421,23 @@ class ProductController extends Controller
     }
     
     /**
-     * Elimina una imagen del storage si existe
+     * Elimina una imagen de Cloudinary si existe
      */
-    private function deleteImageIfExists($imagePath)
+    private function deleteCloudinaryImage($imageUrl)
     {
-        if ($imagePath && Storage::disk('public')->exists($imagePath)) {
-            Storage::disk('public')->delete($imagePath);
+        if (!$imageUrl) return;
+        
+        // Si es una URL de Cloudinary, extraer public_id y eliminar
+        if (strpos($imageUrl, 'cloudinary.com') !== false) {
+            $publicId = $this->cloudinaryService->extractPublicIdFromUrl($imageUrl);
+            if ($publicId) {
+                $this->cloudinaryService->deleteImage($publicId);
+            }
+        } else {
+            // Compatibilidad hacia atrás: eliminar del storage local si no es de Cloudinary
+            if (Storage::disk('public')->exists($imageUrl)) {
+                Storage::disk('public')->delete($imageUrl);
+            }
         }
     }
 }
