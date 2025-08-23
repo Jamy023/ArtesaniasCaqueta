@@ -142,6 +142,7 @@ import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import api from '../axios'
 import { useCartStore } from '../stores/cartStore'
+import { getProductImageUrl, handleImageError } from '../utils/imageUtils'
 
 const cartStore = useCartStore();
 const route = useRoute();
@@ -332,18 +333,6 @@ const formatPrice = (price) => {
   return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(price)
 }
 
-const getProductImageUrl = (main_image) => {
-  if (!main_image) return '/img/logo.png';
-  if (main_image.startsWith('http')) return main_image;
-
-  // Limpiar cualquier prefijo y construir ruta correcta
-  const cleanImage = main_image.replace(/^(public\/|storage\/|storage\/app\/public\/|products\/)/, '');
-  return `/storage/products/${cleanImage}`;
-};
-
-const handleImageError = (event) => {
-  event.target.src = '/img/logo.png';
-};
 
 const addToCart = (producto) => {
   cartStore.addToCart(producto);
@@ -400,7 +389,7 @@ onMounted(async () => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('/img/fondo_convertido') center/cover;
+  background: url('/img/fondo.webp') center/cover;
 }
 
 .page-header::after {

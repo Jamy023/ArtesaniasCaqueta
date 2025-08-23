@@ -445,7 +445,7 @@ onUnmounted(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('/img/fondo_convertido') center/cover;
+  background: url('/img/fondo.webp') center/cover;
 }
 
 .hero::after {
