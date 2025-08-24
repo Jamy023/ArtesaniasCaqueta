@@ -445,7 +445,7 @@ onUnmounted(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('/img/fondo.webp') center/cover;
+  background: url('https://res.cloudinary.com/dbjmhh4wr/image/upload/v1756005430/fondo_qlt75j.webp') center/cover;
 }
 
 .hero::after {
@@ -585,7 +585,7 @@ onUnmounted(() => {
 
 .section-header-new {
   text-align: center;
-  margin-bottom: 4rem;
+  margin-bottom: 2.5rem;
 }
 
 .section-badge {
@@ -620,7 +620,7 @@ onUnmounted(() => {
 
 .featured-products-section {
   background: #fff;
-  padding: 6rem 0;
+  padding: 3.5rem 0;
   position: relative;
 }
 
@@ -958,7 +958,7 @@ onUnmounted(() => {
 /* SECCIÓN DE CONFIANZA */
 .trust-section {
   background: linear-gradient(135deg, #F1F8E9 0%, #E8F5E8 100%);
-  padding: 5rem 2rem;
+  padding: 3rem 2rem;
   position: relative;
   border-bottom: 1px solid rgba(76, 175, 80, 0.1);
 }
@@ -1043,7 +1043,7 @@ onUnmounted(() => {
 /* SECCIÓN DE HISTORIA */
 .story-section-new {
   background: #fff;
-  padding: 6rem 0;
+  padding: 3.5rem 0;
   position: relative;
 }
 
@@ -1354,7 +1354,7 @@ onUnmounted(() => {
   }
   
   .hero-content {
-    gap: 3rem;
+    gap: 1.0rem;
   }
   
   .hero-title {
@@ -1363,6 +1363,7 @@ onUnmounted(() => {
   
   .hero-subtitle {
     font-size: 1.1rem;
+    margin-bottom: 1.5rem;
   }
   
   .hero-img {
@@ -1374,16 +1375,31 @@ onUnmounted(() => {
   
   .hero-image {
     order: -1;
-    margin-bottom: 2rem;
+    margin-bottom: 0rem;
   }
   
   .trust-items {
-    grid-template-columns: 1fr;
-    gap: 2rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
   }
   
   .trust-item {
-    padding: 2rem 1.5rem;
+    padding: 1.5rem 1rem;
+  }
+  
+  .trust-icon {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 1rem;
+  }
+  
+  .trust-item h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+  }
+  
+  .trust-item p {
+    font-size: 0.85rem;
   }
   
   .section-title-new {
@@ -1461,7 +1477,11 @@ onUnmounted(() => {
   .featured-products-section,
   .story-section-new,
   .final-cta-section {
-    padding: 3rem 0;
+    padding: 2rem 0;
+  }
+  
+  .section-header-new {
+    margin-bottom: 1.5rem;
   }
   
   .section-container {

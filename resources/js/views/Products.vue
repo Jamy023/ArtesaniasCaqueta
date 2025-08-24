@@ -389,7 +389,7 @@ onMounted(async () => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('/img/fondo.webp') center/cover;
+  background: url('https://res.cloudinary.com/dbjmhh4wr/image/upload/v1756005430/fondo_qlt75j.webp') center/cover;
 }
 
 .page-header::after {
