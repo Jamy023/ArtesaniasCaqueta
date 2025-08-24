@@ -1,7 +1,7 @@
 <template>
   <div class="account-page">
   
-    <div class="account-header">
+    <div class="account-header" :style="{ '--bg-image': `url(${fondoImage})` }">
       <div class="container">
         <div class="header-content">
           <div class="user-info">

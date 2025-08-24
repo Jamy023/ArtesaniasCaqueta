@@ -1,7 +1,7 @@
 <template>
   <div class="products-page">
     <!-- Header -->
-    <div class="page-header">
+    <div class="page-header" :style="{ '--bg-image': `url(${fondoImage})` }">
       <h1 class="page-title">Catálogo de Artesanías</h1>
       <p class="page-subtitle">Descubre la riqueza cultural de la Amazonía a través de nuestras artesanías únicas</p>
     </div>
@@ -390,7 +390,7 @@ onMounted(async () => {
   left: 0;
   right: 0;
   bottom: 0;
-   background: url('/public/img/fondo.webp') center/cover;
+   background: var(--bg-image) center/cover;
 }
 
 .page-header::after {

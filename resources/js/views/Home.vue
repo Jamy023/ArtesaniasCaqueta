@@ -1,7 +1,7 @@
 <template>
   <div class="bg-white min-h-screen w-full overflow-x-hidden">
     <!-- HERO - SE MANTIENE IGUAL -->
-    <section class="hero hero-enhanced ">
+    <section class="hero hero-enhanced" :style="{ '--bg-image': `url(${fondoImage})` }">
       <div class="hero-content">
         <div class="hero-text fade-in-up">
           <h1 class="hero-title">Artesanías auténticas del corazón de la Amazonía</h1>
@@ -445,7 +445,7 @@ onUnmounted(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('/public/img/fondo.webp') center/cover;
+  background: var(--bg-image) center/cover;
 }
 
 .hero::after {
