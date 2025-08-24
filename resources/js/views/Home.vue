@@ -289,7 +289,7 @@ import { ref, reactive, onMounted, onUnmounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '../axios'
 import { getProductImageUrl, handleImageError } from '../utils/imageUtils'
-import fondoImage from '/public/img/fondo.png'
+import fondoImage from '/public/img/fondo.webp'
 
 const router = useRouter()
 
@@ -445,7 +445,7 @@ onUnmounted(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('https://res.cloudinary.com/dbjmhh4wr/image/upload/v1756005430/fondo_qlt75j.webp') center/cover;
+  background: url('/public/img/fondo.webp') center/cover;
 }
 
 .hero::after {

@@ -430,6 +430,7 @@
 import { ref, reactive, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/authStore';
+import fondoImage from '/public/img/fondo.webp';
 import '../css/Acount.css';
 
 import axios from 'axios';

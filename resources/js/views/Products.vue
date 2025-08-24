@@ -143,6 +143,7 @@ import { useRoute, useRouter } from 'vue-router'
 import api from '../axios'
 import { useCartStore } from '../stores/cartStore'
 import { getProductImageUrl, handleImageError } from '../utils/imageUtils'
+import fondoImage from '/public/img/fondo.webp'
 
 const cartStore = useCartStore();
 const route = useRoute();
@@ -389,7 +390,7 @@ onMounted(async () => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('https://res.cloudinary.com/dbjmhh4wr/image/upload/v1756005430/fondo_qlt75j.webp') center/cover;
+   background: url('/public/img/fondo.webp') center/cover;
 }
 
 .page-header::after {
