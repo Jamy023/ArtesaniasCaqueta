@@ -1,7 +1,8 @@
 <template>
   <div class="products-page">
     <!-- Header -->
-    <div class="page-header" :style="{ '--bg-image': `url(${fondoImage})` }">
+    <div class="page-header">
+      <img :src="fondoImage" alt="Fondo Amazonía" class="page-header-bg-img" />
       <h1 class="page-title">Catálogo de Artesanías</h1>
       <p class="page-subtitle">Descubre la riqueza cultural de la Amazonía a través de nuestras artesanías únicas</p>
     </div>
@@ -383,14 +384,14 @@ onMounted(async () => {
   overflow: hidden;
 }
 
-.page-header::before {
- content: '';
+.page-header-bg-img {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-   background: var(--bg-image) center/cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
 }
 
 .page-header::after {

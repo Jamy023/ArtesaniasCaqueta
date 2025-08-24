@@ -1,7 +1,9 @@
 <template>
   <div class="bg-white min-h-screen w-full overflow-x-hidden">
     <!-- HERO - SE MANTIENE IGUAL -->
-    <section class="hero hero-enhanced" :style="{ '--bg-image': `url(${fondoImage})` }">
+    <section class="hero hero-enhanced">
+      <img :src="fondoImage" alt="Fondo Amazonía" class="hero-bg-img" />
+      <div class="hero-overlay"></div>
       <div class="hero-content">
         <div class="hero-text fade-in-up">
           <h1 class="hero-title">Artesanías auténticas del corazón de la Amazonía</h1>
@@ -438,18 +440,17 @@ onUnmounted(() => {
   margin: 0%;
 }
 
-.hero::before {
-  content: '';
+.hero-bg-img {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--bg-image) center/cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
 }
 
-.hero::after {
-  content: '';
+.hero-overlay {
   position: absolute;
   top: 0;
   left: 0;

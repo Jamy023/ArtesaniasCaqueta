@@ -1,7 +1,9 @@
 <template>
   <div class="account-page">
   
-    <div class="account-header" :style="{ '--bg-image': `url(${fondoImage})` }">
+    <div class="account-header">
+      <img :src="fondoImage" alt="Fondo Amazonía" class="account-header-bg-img" />
+      <div class="account-header-overlay"></div>
       <div class="container">
         <div class="header-content">
           <div class="user-info">
@@ -675,6 +677,7 @@ export default {
       accountData,
       addresses,
       tabs,
+      fondoImage,
       
       // Formularios
       profileForm,
