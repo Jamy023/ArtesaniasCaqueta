@@ -59,6 +59,25 @@ class OrderController extends Controller
             // Generar datos para ePayco
             $epaycoData = $this->generateEpaycoData($order, $cliente);
 
+            // Log detallado para debugging
+            Log::info('Order created successfully', [
+                'order_id' => $order->id,
+                'order_number' => $order->order_number,
+                'total_amount' => $order->total_amount,
+                'customer_email' => $cliente->email,
+                'customer_document' => $cliente->numero_documento,
+                'customer_phone' => $cliente->telefono,
+                'epayco_data_keys' => array_keys($epaycoData),
+                'p_key_preview' => substr($epaycoData['p_key'], 0, 10) . '...',
+                'p_key_length' => strlen($epaycoData['p_key']),
+                'test_mode' => $epaycoData['p_test_request'],
+                'signature_preview' => substr($epaycoData['p_signature'], 0, 8) . '...',
+                'amount_formatted' => $epaycoData['p_amount'],
+                'currency' => $epaycoData['p_currency_code'],
+                'response_url' => $epaycoData['p_url_response'],
+                'confirmation_url' => $epaycoData['p_url_confirmation']
+            ]);
+
             return response()->json([
                 'success' => true,
                 'order_id' => $order->id,
@@ -93,8 +112,29 @@ class OrderController extends Controller
         Log::error('ePayco P_KEY not configured in .env file');
         throw new \Exception('Error de configuración: P_KEY de ePayco no encontrada');
     }
+    
+    if (strpos($config['p_key'], '*') !== false) {
+        Log::error('ePayco P_KEY contains asterisks - invalid key format', ['key_preview' => substr($config['p_key'], 0, 10) . '...']);
+        throw new \Exception('Error de configuración: P_KEY de ePayco contiene asteriscos (clave inválida)');
+    }
+    
+    if (strlen($config['p_key']) < 10) {
+        Log::error('ePayco P_KEY too short', ['key_length' => strlen($config['p_key'])]);
+        throw new \Exception('Error de configuración: P_KEY de ePayco es muy corta');
+    }
 
     $signature = $this->generateSignature($order, $config);
+    
+    // 🔥 VALIDACIONES ADICIONALES
+    if ($order->total_amount < 1000) {
+        Log::warning('Order amount below minimum', ['amount' => $order->total_amount]);
+        // ePayco requires minimum 1000 COP but we'll allow it for testing
+    }
+    
+    if (empty($cliente->email) || !filter_var($cliente->email, FILTER_VALIDATE_EMAIL)) {
+        Log::error('Invalid customer email', ['email' => $cliente->email]);
+        throw new \Exception('Email del cliente es inválido');
+    }
 
     return [
         // Datos obligatorios de ePayco
@@ -102,31 +142,31 @@ class OrderController extends Controller
         'p_key' => $config['p_key'], // Tu P_KEY real
         'p_id_invoice' => $order->order_number,
         'p_description' => 'Pedido #' . $order->order_number . ' - Artesanías',
-        'p_amount' => number_format($order->total_amount, 2, '.', ''),
-        'p_amount_base' => number_format($order->total_amount, 2, '.', ''),
+        'p_amount' => (string) round($order->total_amount, 0),
+        'p_amount_base' => (string) round($order->total_amount, 0),
         'p_currency_code' => 'COP',
         'p_signature' => $signature,
         
-        // Datos del cliente
+        // Datos del cliente para Checkout Onpage
         'p_email' => $cliente->email,
         'p_billing_customer' => trim($cliente->nombre . ' ' . $cliente->apellido),
         'p_customer_name' => $cliente->nombre,
         'p_customer_lastname' => $cliente->apellido,
         'p_customer_email' => $cliente->email,
-        'p_customer_phone' => $cliente->telefono ?? '',
+        'p_customer_phone' => $cliente->telefono ?? '3001234567',
         'p_customer_doc_type' => $this->mapDocumentType($cliente->tipo_documento),
         'p_customer_document' => $cliente->numero_documento,
-        'p_customer_address' => $cliente->direccion ?? 'No especificada',
-        'p_customer_city' => $cliente->ciudad ?? 'Bogotá',
+        'p_customer_address' => $cliente->direccion ?? 'Calle principal 123',
+        'p_customer_city' => $cliente->ciudad ?? 'Florencia',
         'p_customer_country' => 'CO',
         
-        // URLs de respuesta
-        'p_url_response' => url('/api/orders/epayco-response'),
-        'p_url_confirmation' => url('/api/orders/epayco-confirmation'),
+        // URLs de respuesta optimizadas para Railway
+        'p_url_response' => env('APP_URL', 'https://artesaniascaqueta-production.up.railway.app') . '/order-confirmation',
+        'p_url_confirmation' => env('APP_URL', 'https://artesaniascaqueta-production.up.railway.app') . '/api/orders/epayco-confirmation',
         
         // Configuración
         'p_test_request' => env('EPAYCO_TEST_MODE', 'TRUE'),
-        'p_method_confirmation' => 'GET',
+        'p_method_confirmation' => 'POST',
     ];
 }
     /**
@@ -134,10 +174,12 @@ class OrderController extends Controller
      */
     private function generateSignature(Order $order, array $config)
     {
+        $amount = (string) round($order->total_amount, 0);
+        
         $signature_string = $config['p_cust_id_cliente'] . '^' . 
                            $config['p_key'] . '^' . 
                            $order->order_number . '^' . 
-                           number_format($order->total_amount, 2, '.', '') . '^' . 
+                           $amount . '^' . 
                            'COP';
 
         return md5($signature_string);
@@ -184,16 +226,29 @@ class OrderController extends Controller
                 'epayco_transaction_id' => $request->input('x_transaction_id'),
             ]);
 
-            // Redirigir según el estado
+            // Redirigir según el estado a nuestra página de confirmación
+            $baseParams = [
+                'order' => $order->order_number,
+                'transaction_id' => $request->input('x_transaction_id'),
+                'amount' => $order->total_amount
+            ];
+
             switch ($estado) {
                 case '1': // Transacción aprobada
-                    return redirect('/account/orders?success=true&order=' . $order->order_number);
+                    $params = array_merge($baseParams, ['success' => 'true']);
+                    return redirect('/order-confirmation?' . http_build_query($params));
+                    
                 case '2': // Transacción rechazada
-                    return redirect('/account/orders?error=rejected&order=' . $order->order_number);
+                    $params = array_merge($baseParams, ['error' => 'rejected']);
+                    return redirect('/order-confirmation?' . http_build_query($params));
+                    
                 case '3': // Transacción pendiente
-                    return redirect('/account/orders?pending=true&order=' . $order->order_number);
+                    $params = array_merge($baseParams, ['pending' => 'true']);
+                    return redirect('/order-confirmation?' . http_build_query($params));
+                    
                 default:
-                    return redirect('/account/orders?error=unknown&order=' . $order->order_number);
+                    $params = array_merge($baseParams, ['error' => 'unknown']);
+                    return redirect('/order-confirmation?' . http_build_query($params));
             }
 
         } catch (\Exception $e) {

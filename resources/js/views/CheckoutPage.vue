@@ -24,7 +24,7 @@
       <div class="checkout-content">
         <!-- Resumen del Pedido -->
         <div class="order-summary">
-          <h2>Resumen del Pedido</h2>
+          <h3>Resumen del Pedido</h3>
           
           <div class="cart-items">
             <div v-for="item in cartItems" :key="item.id" class="cart-item">
@@ -36,9 +36,11 @@
               />
               <div class="item-details">
                 <h4 class="item-name">{{ item.name }}</h4>
-                <p class="item-price">{{ formatPrice(item.price) }}</p>
-                <p class="item-quantity">Cantidad: {{ item.quantity }}</p>
-                <p class="item-subtotal">Subtotal: {{ formatPrice(item.price * item.quantity) }}</p>
+                <div class="item-info">
+                  <span class="item-price">{{ formatPrice(item.price) }}</span>
+                  <span class="item-quantity">× {{ item.quantity }}</span>
+                  <span class="item-subtotal">{{ formatPrice(item.price * item.quantity) }}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -61,7 +63,7 @@
 
         <!-- Datos del Cliente -->
         <div class="customer-info">
-          <h4>Datos de Envío</h4>
+          <h3>Datos de Envío</h3>
           
           <div class="customer-card">
             <div class="customer-header">
@@ -69,7 +71,7 @@
                 {{ customerData.nombre?.charAt(0) || '' }}{{ customerData.apellido?.charAt(0) || '' }}
               </div>
               <div class="customer-details">
-                <h3>{{ customerData.nombre || '' }} {{ customerData.apellido || '' }}</h3>
+                <h4>{{ customerData.nombre || '' }} {{ customerData.apellido || '' }}</h4>
                 <p>{{ customerData.email || '' }}</p>
               </div>
             </div>
@@ -97,49 +99,40 @@
 
         <!-- Información de Pago -->
         <div class="payment-info">
-          <h2>Método de Pago</h2>
+          <h3>Método de Pago</h3>
           
           <div class="payment-methods">
             <div class="payment-method active">
-              <div class="method-icon">
+              <div class="method-header">
                 <img src="https://multimedia.epayco.co/dashboard/images/logo.png" alt="ePayco" class="epayco-logo" />
-              </div>
-              <div class="method-details">
-                <h4>Pago Seguro con ePayco</h4>
-                <p>Tarjetas de crédito, débito, PSE, Efecty y más</p>
-                <div class="payment-badges">
-                  <span class="badge">Visa</span>
-                  <span class="badge">Mastercard</span>
-                  <span class="badge">PSE</span>
-                  <span class="badge">Efecty</span>
+                <div class="method-text">
+                  <h4>Pago Seguro con ePayco</h4>
+                  <p>Múltiples opciones disponibles</p>
                 </div>
+              </div>
+              
+              <div class="payment-badges">
+                <div class="payment-icon visa-icon">VISA</div>
+                <div class="payment-icon mc-icon">MC</div>
+                <div class="payment-icon pse-icon">PSE</div>
+                <div class="payment-icon efecty-icon">EFECTY</div>
+                <div class="payment-icon nequi-icon">NEQUI</div>
+                <div class="payment-icon davi-icon">DAVI</div>
               </div>
             </div>
           </div>
 
           <div class="security-info">
-            <div class="security-item">
-              <span class="security-icon">🔒</span>
-              <span>Conexión segura SSL</span>
-            </div>
-            <div class="security-item">
-              <span class="security-icon">🛡️</span>
-              <span>Datos protegidos</span>
-            </div>
-            <div class="security-item">
-              <span class="security-icon">✅</span>
-              <span>Transacciones verificadas</span>
-            </div>
+            <span class="security-text">🔒 Transacción segura SSL</span>
+            <span class="security-text">🛡️ Datos protegidos</span>
+            <span class="security-text">✓ Garantizado</span>
           </div>
         </div>
 
         <!-- Botones de Acción -->
         <div class="checkout-actions">
           <button @click="goBack" class="btn-secondary">
-            <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-            </svg>
-            Continuar Comprando
+            ← Continuar Comprando
           </button>
           
           <button 
@@ -147,10 +140,7 @@
             :disabled="processing || cartItems.length === 0"
             class="btn-primary"
           >
-            <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-            </svg>
-            {{ processing ? 'Procesando...' : 'Pagar con ePayco' }}
+            {{ processing ? 'Procesando...' : 'Pagar Ahora' }}
           </button>
         </div>
       </div>
@@ -242,12 +232,92 @@ const processCheckout = async () => {
 }
 
 const submitToEpayco = () => {
-  // Submit automático del formulario hacia ePayco
-  if (Object.keys(epaycoData.value).length > 0) {
-    const form = document.querySelector('form')
-    if (form) {
-      form.submit()
+  if (Object.keys(epaycoData.value).length === 0) {
+    console.error('❌ Datos de ePayco incompletos')
+    error.value = 'Error: datos de pago incompletos'
+    processing.value = false
+    return
+  }
+
+  console.log('🚀 Iniciando Checkout Onpage con ePayco:', epaycoData.value)
+  
+  // Verificar configuración
+  if (!window.epaycoConfig?.public_key || window.epaycoConfig.public_key.includes('*')) {
+    console.error('❌ P_KEY de ePayco no configurada correctamente')
+    error.value = 'Error de configuración: P_KEY inválida'
+    processing.value = false
+    return
+  }
+  
+  try {
+    // Verificar que el SDK esté disponible
+    if (typeof window.ePayco === 'undefined') {
+      throw new Error('SDK de ePayco no está disponible')
     }
+
+    // Configurar ePayco
+    const handler = window.ePayco.checkout.configure({
+      key: window.epaycoConfig.public_key,
+      test: window.epaycoConfig.test
+    })
+
+    // Preparar datos para Checkout Onpage
+    const checkoutData = {
+      // Datos básicos del pago
+      name: epaycoData.value.p_description,
+      description: epaycoData.value.p_description,
+      invoice: epaycoData.value.p_id_invoice,
+      currency: epaycoData.value.p_currency_code,
+      amount: epaycoData.value.p_amount,
+      amount_base: epaycoData.value.p_amount_base,
+      
+      // Datos del cliente (requeridos)
+      name_billing: epaycoData.value.p_billing_customer,
+      email_billing: epaycoData.value.p_customer_email,
+      phone_billing: epaycoData.value.p_customer_phone || '3001234567',
+      address_billing: epaycoData.value.p_customer_address || 'Calle 123',
+      city_billing: epaycoData.value.p_customer_city || 'Florencia',
+      country_billing: epaycoData.value.p_customer_country || 'CO',
+      
+      // URLs de respuesta
+      response: epaycoData.value.p_url_response,
+      confirmation: epaycoData.value.p_url_confirmation,
+      
+      // Configuración adicional
+      method_confirmation: 'POST',
+      external: false, // Para usar modal onpage
+      autoclick: false
+    }
+
+    console.log('📋 Datos para Checkout Onpage:', checkoutData)
+    
+    // Abrir Checkout Onpage
+    handler.open(checkoutData)
+    console.log('✅ Checkout Onpage abierto exitosamente')
+    
+  } catch (error) {
+    console.error('❌ Error en Checkout Onpage:', error)
+    
+    // FALLBACK: usar formulario POST si el SDK falla
+    console.log('🔄 Usando fallback POST form')
+    setTimeout(() => {
+      const form = document.createElement('form')
+      form.method = 'POST'
+      form.action = 'https://checkout.epayco.co/checkout.php'
+      form.target = '_self'
+      
+      for (const [key, value] of Object.entries(epaycoData.value)) {
+        const input = document.createElement('input')
+        input.type = 'hidden'
+        input.name = key
+        input.value = value
+        form.appendChild(input)
+      }
+      
+      document.body.appendChild(form)
+      form.submit()
+      document.body.removeChild(form)
+    }, 500)
   }
 }
 
@@ -298,8 +368,8 @@ onMounted(() => {
 <style scoped>
 .checkout-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  padding: 2rem 1rem;
+  background: #f8fafc;
+  padding: 1rem;
   position: relative;
 }
 
@@ -309,7 +379,7 @@ onMounted(() => {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.9);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -324,10 +394,10 @@ onMounted(() => {
 }
 
 .spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #2E7D32;
+  width: 32px;
+  height: 32px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #2E7D32;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -338,98 +408,99 @@ onMounted(() => {
 }
 
 .checkout-wrapper {
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
 }
 
 .checkout-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .checkout-header h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #5D4037;
-  margin-bottom: 0.5rem;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 0.25rem;
 }
 
 .checkout-subtitle {
-  color: #666;
-  font-size: 1.1rem;
+  color: #64748b;
+  font-size: 0.95rem;
 }
 
 .error-message {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1rem 1.5rem;
-  background: #ffebee;
-  border: 1px solid #ffcdd2;
-  border-radius: 0.75rem;
-  color: #c62828;
-  margin-bottom: 2rem;
-}
-
-.error-icon {
-  font-size: 1.5rem;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 0.5rem;
+  color: #dc2626;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
 }
 
 .close-error {
   margin-left: auto;
   background: none;
   border: none;
-  font-size: 1.5rem;
-  color: #c62828;
+  font-size: 1.25rem;
+  color: #dc2626;
   cursor: pointer;
-  transition: color 0.2s;
-}
-
-.close-error:hover {
-  color: #b71c1c;
 }
 
 .checkout-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-bottom: 2rem;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .order-summary,
 .customer-info,
 .payment-info {
   background: #fff;
-  border-radius: 0.75rem;
-  padding: 1.5rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+  border: 1px solid #e2e8f0;
 }
 
 .order-summary {
   grid-column: 1 / -1;
 }
 
+.order-summary h3,
+.customer-info h3,
+.payment-info h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 1rem 0;
+}
+
 .cart-items {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
 }
 
 .cart-item {
   display: flex;
-  gap: 1rem;
-  background: #f8f9fa;
-  border-radius: 0.75rem;
-  padding: 1rem;
-  border: 1px solid #e9ecef;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: #f8fafc;
+  border-radius: 0.5rem;
+  border: 1px solid #f1f5f9;
 }
 
 .item-image {
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   object-fit: cover;
-  border-radius: 0.5rem;
+  border-radius: 0.375rem;
   flex-shrink: 0;
 }
 
@@ -438,144 +509,202 @@ onMounted(() => {
 }
 
 .item-name {
+  font-size: 0.9rem;
   font-weight: 600;
-  color: #333;
-  margin: 0 0 0.5rem 0;
+  color: #1e293b;
+  margin: 0 0 0.375rem 0;
 }
 
-.item-price,
-.item-quantity,
-.item-subtotal {
-  font-size: 0.9rem;
-  color: #666;
-  margin: 0.25rem 0;
+.item-info {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  color: #64748b;
 }
 
 .order-totals {
-  border-top: 1px solid #ddd;
-  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 0.75rem;
 }
 
 .total-row {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.375rem;
+  font-size: 0.9rem;
 }
 
 .total-final {
   font-weight: 700;
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: #2E7D32;
-  border-top: 1px solid #ddd;
-  padding-top: 0.5rem;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 0.375rem;
 }
 
 .customer-card {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .customer-header {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .customer-avatar {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   background: #2E7D32;
   color: #fff;
   font-weight: bold;
-  font-size: 1.2rem;
+  font-size: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
 }
 
-.customer-details h3 {
+.customer-details h4 {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 600;
+  color: #1e293b;
 }
 
 .customer-details p {
   margin: 0.25rem 0 0 0;
-  color: #666;
+  color: #64748b;
+  font-size: 0.85rem;
 }
 
 .customer-data {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.375rem;
 }
 
 .data-row {
   display: flex;
   justify-content: space-between;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 .data-label {
-  font-weight: 600;
-  color: #555;
+  font-weight: 500;
+  color: #475569;
 }
 
-.payment-methods {
-  margin-bottom: 1rem;
-}
-
+/* Payment Section - Minimal Design */
 .payment-method {
-  display: flex;
-  gap: 1rem;
-  border: 2px solid #2E7D32;
-  border-radius: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
   padding: 1rem;
+  background: #fff;
+}
+
+.payment-method.active {
+  border-color: #2E7D32;
+}
+
+.method-header {
+  display: flex;
   align-items: center;
-  background: #f1f8f4;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
 }
 
-.method-icon img {
-  height: 40px;
+.epayco-logo {
+  height: 28px;
+  width: auto;
 }
 
-.method-details h4 {
-  margin: 0 0 0.25rem 0;
+.method-text h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1e293b;
 }
 
-.method-details p {
-  margin: 0 0 0.5rem 0;
-  color: #666;
-  font-size: 0.9rem;
+.method-text p {
+  margin: 0.125rem 0 0 0;
+  color: #64748b;
+  font-size: 0.8rem;
 }
 
+/* Payment Icons - Minimal */
 .payment-badges {
   display: flex;
-  gap: 0.5rem;
   flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
 }
 
-.badge {
-  background: #eee;
-  padding: 0.2rem 0.5rem;
+.payment-icon {
+  height: 24px;
+  width: auto;
+  max-width: 40px;
+  object-fit: contain;
   border-radius: 0.25rem;
-  font-size: 0.75rem;
+  border: 1px solid #e2e8f0;
+  padding: 0.25rem;
+  background: #fff;
+}
+
+.visa-icon {
+  background: #1a1f71;
+  color: white;
+}
+
+.mc-icon {
+  background: #eb001b;
+  color: white;
+}
+
+.pse-icon {
+  background: #00a651;
+  color: white;
+}
+
+.efecty-icon {
+  background: #ff6b35;
+  color: white;
+}
+
+.nequi-icon {
+  background: #642f8c;
+  color: white;
+}
+
+.davi-icon {
+  background: #ff5722;
+  color: white;
+}
+
+.visa-icon, .mc-icon, .pse-icon, .efecty-icon, .nequi-icon, .davi-icon {
+  font-size: 0.65rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 24px;
+  border: none;
+  border-radius: 0.25rem;
 }
 
 .security-info {
   display: flex;
-  flex-wrap: wrap;
   gap: 1rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
 }
 
-.security-item {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-size: 0.9rem;
-  color: #666;
+.security-text {
+  font-size: 0.75rem;
+  color: #64748b;
 }
 
 .checkout-actions {
@@ -587,14 +716,12 @@ onMounted(() => {
 
 .btn-primary,
 .btn-secondary {
-  padding: 0.8rem 1.5rem;
-  border-radius: 0.75rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  font-size: 0.9rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   border: none;
 }
 
@@ -605,7 +732,6 @@ onMounted(() => {
 
 .btn-primary:hover:not(:disabled) {
   background: #1B5E20;
-  transform: translateY(-2px);
 }
 
 .btn-primary:disabled {
@@ -615,17 +741,12 @@ onMounted(() => {
 
 .btn-secondary {
   background: #fff;
-  color: #2E7D32;
-  border: 2px solid #2E7D32;
+  color: #475569;
+  border: 1px solid #d1d5db;
 }
 
 .btn-secondary:hover {
-  background: #f1f8f4;
-}
-
-.btn-icon {
-  width: 20px;
-  height: 20px;
+  background: #f8fafc;
 }
 
 /* Responsive */
@@ -645,8 +766,8 @@ onMounted(() => {
     text-align: center;
   }
   
-  .item-image {
-    align-self: center;
+  .payment-badges {
+    justify-content: center;
   }
 }
 </style>

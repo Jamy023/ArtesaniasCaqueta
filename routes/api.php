@@ -42,6 +42,11 @@ Route::patch('/products/{id}/toggle-active', [ProductController::class, 'toggleA
 // Ruta para subir imágenes de productos
 Route::post('/upload-product-image', [ProductController::class, 'uploadImage']);
 
+// ===== RUTAS DE GESTIÓN DE PEDIDOS (para admin, sin autenticación adicional) =====
+Route::get('/admin/orders', [AdminController::class, 'getAllOrders']);
+Route::get('/admin/orders/{id}', [AdminController::class, 'getOrderDetails']);
+Route::patch('/admin/orders/{id}/status', [AdminController::class, 'updateOrderStatus']);
+
 // ===== RUTAS DE AUTENTICACIÓN =====
 
 // Autenticación de clientes (mantiene Sanctum)
@@ -73,9 +78,6 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 //  RUTAS PÚBLICAS DE EPAYCO (sin autenticación)
-Route::get('/orders/epayco-response', [OrderController::class, 'epaycoResponse']);
-Route::any('/orders/epayco-confirmation', [OrderController::class, 'epaycoConfirmation']);
-
 Route::match(['get', 'post'], '/orders/epayco-response', [OrderController::class, 'epaycoResponse']);
 Route::match(['get', 'post'], '/orders/epayco-confirmation', [OrderController::class, 'epaycoConfirmation']);
 // ===== RUTAS DE ADMINISTRACIÓN =====
@@ -92,11 +94,6 @@ Route::middleware(['admin.auth'])->prefix('admin')->group(function () {
     
     // Dashboard data
     Route::get('/dashboard-stats', [AdminController::class, 'dashboardStats']);
-    
-    //  RUTAS ADMIN PARA GESTIÓN DE PEDIDOS
-    Route::get('/orders', [AdminController::class, 'getAllOrders']);
-    Route::get('/orders/{id}', [AdminController::class, 'getOrderDetails']);
-    Route::patch('/orders/{id}/status', [AdminController::class, 'updateOrderStatus']);
 
 });
 
@@ -113,6 +110,19 @@ Route::put('/users/{id}/change-password', [AdminController::class, 'changeUserPa
 
 
 
+
+// Ruta simple para servir imágenes via API
+Route::get('/image/{filename}', function ($filename) {
+    $decodedFilename = urldecode($filename);
+    
+    // Intentar desde public/storage/products
+    $publicPath = public_path('storage/products/' . $decodedFilename);
+    if (file_exists($publicPath)) {
+        return response()->file($publicPath);
+    }
+    
+    abort(404, 'Image not found');
+});
 
 Route::get('/health-check', function () {
     return response()->json([

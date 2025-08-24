@@ -582,4 +582,113 @@ class AdminController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Obtener todos los pedidos (para admin)
+     */
+    public function getAllOrders(Request $request)
+    {
+        try {
+            $orders = \App\Models\Order::with(['cliente'])
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+
+            return response()->json([
+                'success' => true,
+                'orders' => $orders
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error al obtener pedidos:', [
+                'error' => $e->getMessage()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'No se pudieron obtener los pedidos.'
+            ], 500);
+        }
+    }
+
+    /**
+     * Obtener detalles de un pedido específico
+     */
+    public function getOrderDetails($id)
+    {
+        try {
+            $order = \App\Models\Order::with(['cliente'])->findOrFail($id);
+
+            return response()->json([
+                'success' => true,
+                'order' => $order
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error al obtener detalles del pedido:', [
+                'error' => $e->getMessage(),
+                'order_id' => $id
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Pedido no encontrado.'
+            ], 404);
+        }
+    }
+
+    /**
+     * Actualizar el estado de un pedido
+     */
+    public function updateOrderStatus(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'status' => 'required|in:pending,paid,failed,cancelled',
+                'notes' => 'nullable|string|max:1000'
+            ]);
+
+            $order = \App\Models\Order::findOrFail($id);
+            
+            $oldStatus = $order->status;
+            $order->status = $request->status;
+            
+            if ($request->has('notes')) {
+                $order->notes = $request->notes;
+            }
+            
+            $order->save();
+
+            Log::info('Estado de pedido actualizado por admin:', [
+                'order_id' => $order->id,
+                'order_number' => $order->order_number,
+                'old_status' => $oldStatus,
+                'new_status' => $order->status,
+                'updated_by' => Auth::id()
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Estado del pedido actualizado correctamente',
+                'order' => $order
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error de validación',
+                'errors' => $e->errors()
+            ], 422);
+
+        } catch (\Exception $e) {
+            Log::error('Error al actualizar estado del pedido:', [
+                'error' => $e->getMessage(),
+                'order_id' => $id
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'No se pudo actualizar el estado del pedido.'
+            ], 500);
+        }
+    }
 }

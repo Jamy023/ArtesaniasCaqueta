@@ -1,0 +1,230 @@
+{
+  "_QForm-JNo70XBn.js": {
+    "file": "assets/QForm-JNo70XBn.js",
+    "name": "QForm",
+    "imports": [
+      "resources/js/app.js"
+    ]
+  },
+  "_QList-B1SfmoAm.js": {
+    "file": "assets/QList-B1SfmoAm.js",
+    "name": "QList",
+    "imports": [
+      "resources/js/app.js"
+    ]
+  },
+  "_QSpace-Cs8KuAvs.js": {
+    "file": "assets/QSpace-Cs8KuAvs.js",
+    "name": "QSpace",
+    "imports": [
+      "resources/js/app.js",
+      "_use-quasar-Dl3PSZbC.js",
+      "_QList-B1SfmoAm.js"
+    ]
+  },
+  "_use-quasar-Dl3PSZbC.js": {
+    "file": "assets/use-quasar-Dl3PSZbC.js",
+    "name": "use-quasar",
+    "imports": [
+      "resources/js/app.js"
+    ]
+  },
+  "node_modules/@quasar/extras/fontawesome-v6/fa-brands-400.ttf": {
+    "file": "assets/fa-brands-400-D1LuMI3I.ttf",
+    "src": "node_modules/@quasar/extras/fontawesome-v6/fa-brands-400.ttf"
+  },
+  "node_modules/@quasar/extras/fontawesome-v6/fa-brands-400.woff2": {
+    "file": "assets/fa-brands-400-D_cYUPeE.woff2",
+    "src": "node_modules/@quasar/extras/fontawesome-v6/fa-brands-400.woff2"
+  },
+  "node_modules/@quasar/extras/fontawesome-v6/fa-regular-400.ttf": {
+    "file": "assets/fa-regular-400-DZaxPHgR.ttf",
+    "src": "node_modules/@quasar/extras/fontawesome-v6/fa-regular-400.ttf"
+  },
+  "node_modules/@quasar/extras/fontawesome-v6/fa-regular-400.woff2": {
+    "file": "assets/fa-regular-400-BjRzuEpd.woff2",
+    "src": "node_modules/@quasar/extras/fontawesome-v6/fa-regular-400.woff2"
+  },
+  "node_modules/@quasar/extras/fontawesome-v6/fa-solid-900.ttf": {
+    "file": "assets/fa-solid-900-D0aA9rwL.ttf",
+    "src": "node_modules/@quasar/extras/fontawesome-v6/fa-solid-900.ttf"
+  },
+  "node_modules/@quasar/extras/fontawesome-v6/fa-solid-900.woff2": {
+    "file": "assets/fa-solid-900-CTAAxXor.woff2",
+    "src": "node_modules/@quasar/extras/fontawesome-v6/fa-solid-900.woff2"
+  },
+  "node_modules/@quasar/extras/fontawesome-v6/fa-v4compatibility.ttf": {
+    "file": "assets/fa-v4compatibility-CCth-dXg.ttf",
+    "src": "node_modules/@quasar/extras/fontawesome-v6/fa-v4compatibility.ttf"
+  },
+  "node_modules/@quasar/extras/fontawesome-v6/fa-v4compatibility.woff2": {
+    "file": "assets/fa-v4compatibility-C9RhG_FT.woff2",
+    "src": "node_modules/@quasar/extras/fontawesome-v6/fa-v4compatibility.woff2"
+  },
+  "node_modules/@quasar/extras/material-icons-outlined/web-font/gok-H7zzDkdnRel8-DQ6KAXJ69wP1tGnf4ZGhUcY.woff": {
+    "file": "assets/gok-H7zzDkdnRel8-DQ6KAXJ69wP1tGnf4ZGhUcY-BpWbwl2n.woff",
+    "src": "node_modules/@quasar/extras/material-icons-outlined/web-font/gok-H7zzDkdnRel8-DQ6KAXJ69wP1tGnf4ZGhUcY.woff"
+  },
+  "node_modules/@quasar/extras/material-icons-outlined/web-font/gok-H7zzDkdnRel8-DQ6KAXJ69wP1tGnf4ZGhUcel5euIg.woff2": {
+    "file": "assets/gok-H7zzDkdnRel8-DQ6KAXJ69wP1tGnf4ZGhUcel5euIg-DZhiGvEA.woff2",
+    "src": "node_modules/@quasar/extras/material-icons-outlined/web-font/gok-H7zzDkdnRel8-DQ6KAXJ69wP1tGnf4ZGhUcel5euIg.woff2"
+  },
+  "node_modules/@quasar/extras/material-icons-round/web-font/LDItaoyNOAY6Uewc665JcIzCKsKc_M9flwmJ.woff": {
+    "file": "assets/LDItaoyNOAY6Uewc665JcIzCKsKc_M9flwmJ-BDlwx-sv.woff",
+    "src": "node_modules/@quasar/extras/material-icons-round/web-font/LDItaoyNOAY6Uewc665JcIzCKsKc_M9flwmJ.woff"
+  },
+  "node_modules/@quasar/extras/material-icons-round/web-font/LDItaoyNOAY6Uewc665JcIzCKsKc_M9flwmPq_HTTw.woff2": {
+    "file": "assets/LDItaoyNOAY6Uewc665JcIzCKsKc_M9flwmPq_HTTw-DrirKXBx.woff2",
+    "src": "node_modules/@quasar/extras/material-icons-round/web-font/LDItaoyNOAY6Uewc665JcIzCKsKc_M9flwmPq_HTTw.woff2"
+  },
+  "node_modules/@quasar/extras/material-icons-sharp/web-font/oPWQ_lt5nv4pWNJpghLP75WiFR4kLh3kvmvRImcycg.woff2": {
+    "file": "assets/oPWQ_lt5nv4pWNJpghLP75WiFR4kLh3kvmvRImcycg-gidztirS.woff2",
+    "src": "node_modules/@quasar/extras/material-icons-sharp/web-font/oPWQ_lt5nv4pWNJpghLP75WiFR4kLh3kvmvRImcycg.woff2"
+  },
+  "node_modules/@quasar/extras/material-icons-sharp/web-font/oPWQ_lt5nv4pWNJpghLP75WiFR4kLh3kvmvX.woff": {
+    "file": "assets/oPWQ_lt5nv4pWNJpghLP75WiFR4kLh3kvmvX-CH1KkVu7.woff",
+    "src": "node_modules/@quasar/extras/material-icons-sharp/web-font/oPWQ_lt5nv4pWNJpghLP75WiFR4kLh3kvmvX.woff"
+  },
+  "node_modules/@quasar/extras/material-icons/web-font/flUhRq6tzZclQEJ-Vdg-IuiaDsNa.woff": {
+    "file": "assets/flUhRq6tzZclQEJ-Vdg-IuiaDsNa-Dr0goTwe.woff",
+    "src": "node_modules/@quasar/extras/material-icons/web-font/flUhRq6tzZclQEJ-Vdg-IuiaDsNa.woff"
+  },
+  "node_modules/@quasar/extras/material-icons/web-font/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2": {
+    "file": "assets/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ-D-x-0Q06.woff2",
+    "src": "node_modules/@quasar/extras/material-icons/web-font/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2"
+  },
+  "public/img/fondo.webp": {
+    "file": "assets/fondo-CJBs-I1b.webp",
+    "src": "public/img/fondo.webp"
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-D98dI915.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/img/logo.png": {
+    "file": "assets/logo-CSMIghgx.png",
+    "src": "resources/img/logo.png"
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-78AWIOSd.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "dynamicImports": [
+      "resources/js/components/Admin/AdminDashboard.vue",
+      "resources/js/components/Admin/AdminHome.vue",
+      "resources/js/components/Admin/AdminProductos.vue",
+      "resources/js/components/Admin/AdminCategorias.vue",
+      "resources/js/components/Admin/AdminUsuarios.vue",
+      "resources/js/components/Admin/AdminPedidos.vue"
+    ],
+    "css": [
+      "assets/app-BXgzvFgJ.css"
+    ],
+    "assets": [
+      "assets/logo-CSMIghgx.png",
+      "assets/fondo-CJBs-I1b.webp",
+      "assets/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ-D-x-0Q06.woff2",
+      "assets/flUhRq6tzZclQEJ-Vdg-IuiaDsNa-Dr0goTwe.woff",
+      "assets/gok-H7zzDkdnRel8-DQ6KAXJ69wP1tGnf4ZGhUcel5euIg-DZhiGvEA.woff2",
+      "assets/gok-H7zzDkdnRel8-DQ6KAXJ69wP1tGnf4ZGhUcY-BpWbwl2n.woff",
+      "assets/LDItaoyNOAY6Uewc665JcIzCKsKc_M9flwmPq_HTTw-DrirKXBx.woff2",
+      "assets/LDItaoyNOAY6Uewc665JcIzCKsKc_M9flwmJ-BDlwx-sv.woff",
+      "assets/oPWQ_lt5nv4pWNJpghLP75WiFR4kLh3kvmvRImcycg-gidztirS.woff2",
+      "assets/oPWQ_lt5nv4pWNJpghLP75WiFR4kLh3kvmvX-CH1KkVu7.woff",
+      "assets/fa-brands-400-D_cYUPeE.woff2",
+      "assets/fa-brands-400-D1LuMI3I.ttf",
+      "assets/fa-regular-400-BjRzuEpd.woff2",
+      "assets/fa-regular-400-DZaxPHgR.ttf",
+      "assets/fa-solid-900-CTAAxXor.woff2",
+      "assets/fa-solid-900-D0aA9rwL.ttf",
+      "assets/fa-v4compatibility-C9RhG_FT.woff2",
+      "assets/fa-v4compatibility-CCth-dXg.ttf"
+    ]
+  },
+  "resources/js/components/Admin/AdminCategorias.vue": {
+    "file": "assets/AdminCategorias-2mTQiUEe.js",
+    "name": "AdminCategorias",
+    "src": "resources/js/components/Admin/AdminCategorias.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_QSpace-Cs8KuAvs.js",
+      "_QForm-JNo70XBn.js",
+      "_use-quasar-Dl3PSZbC.js",
+      "_QList-B1SfmoAm.js"
+    ],
+    "css": [
+      "assets/AdminCategorias-BdG0uSUp.css"
+    ]
+  },
+  "resources/js/components/Admin/AdminDashboard.vue": {
+    "file": "assets/AdminDashboard-CRz3in4N.js",
+    "name": "AdminDashboard",
+    "src": "resources/js/components/Admin/AdminDashboard.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_QList-B1SfmoAm.js",
+      "_use-quasar-Dl3PSZbC.js"
+    ]
+  },
+  "resources/js/components/Admin/AdminHome.vue": {
+    "file": "assets/AdminHome-BEYeRL65.js",
+    "name": "AdminHome",
+    "src": "resources/js/components/Admin/AdminHome.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_QList-B1SfmoAm.js"
+    ]
+  },
+  "resources/js/components/Admin/AdminPedidos.vue": {
+    "file": "assets/AdminPedidos-CMi9GxXA.js",
+    "name": "AdminPedidos",
+    "src": "resources/js/components/Admin/AdminPedidos.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_QSpace-Cs8KuAvs.js",
+      "_use-quasar-Dl3PSZbC.js",
+      "_QList-B1SfmoAm.js"
+    ],
+    "css": [
+      "assets/AdminPedidos-CY711e51.css"
+    ]
+  },
+  "resources/js/components/Admin/AdminProductos.vue": {
+    "file": "assets/AdminProductos-kuGEcIKq.js",
+    "name": "AdminProductos",
+    "src": "resources/js/components/Admin/AdminProductos.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_QSpace-Cs8KuAvs.js",
+      "_QForm-JNo70XBn.js",
+      "_use-quasar-Dl3PSZbC.js",
+      "_QList-B1SfmoAm.js"
+    ],
+    "css": [
+      "assets/AdminProductos-D3mULzaE.css"
+    ]
+  },
+  "resources/js/components/Admin/AdminUsuarios.vue": {
+    "file": "assets/AdminUsuarios-DECxQnk6.js",
+    "name": "AdminUsuarios",
+    "src": "resources/js/components/Admin/AdminUsuarios.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.js",
+      "_QSpace-Cs8KuAvs.js",
+      "_QForm-JNo70XBn.js",
+      "_use-quasar-Dl3PSZbC.js",
+      "_QList-B1SfmoAm.js"
+    ],
+    "css": [
+      "assets/AdminUsuarios-BGfWo7Zq.css"
+    ]
+  }
+}

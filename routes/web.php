@@ -8,6 +8,26 @@ Route::get('/', function () {
     return view('app'); // o redirigir a tu frontend Vue
 });
 
+// Ruta para servir imágenes de storage - DEBE IR ANTES de /{any}
+Route::get('/storage/products/{filename}', function ($filename) {
+    // Decodificar la URL para manejar espacios y caracteres especiales
+    $decodedFilename = urldecode($filename);
+    
+    // Primero intentar desde public/storage/products donde están las imágenes
+    $publicPath = public_path('storage/products/' . $decodedFilename);
+    if (file_exists($publicPath)) {
+        return response()->file($publicPath);
+    }
+    
+    // Fallback a storage/app/public/products
+    $storagePath = storage_path('app/public/products/' . $decodedFilename);
+    if (file_exists($storagePath)) {
+        return response()->file($storagePath);
+    }
+    
+    abort(404);
+})->where('filename', '.*');
+
 Route::prefix('admin')->name('admin.')->middleware('web')->group(function () {
     // Correcta: esta ruta queda como "/admin/login" y se llama "admin.login"
     Route::get('/login', [AdminController::class, 'showLogin'])->name('login');
@@ -28,7 +48,7 @@ Route::prefix('admin')->name('admin.')->middleware('web')->group(function () {
     });
 });
 
-// Para todas las demás rutas, servir tu aplicación Vue
+// Para todas las demás rutas, servir tu aplicación Vue - VA AL FINAL
 Route::get('/{any}', function () {
     return view('app'); // Tu vista principal de Vue
 })->where('any', '.*'); // Capturar todas las rutas para Vue

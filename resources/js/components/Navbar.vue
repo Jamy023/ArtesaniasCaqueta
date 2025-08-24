@@ -1,17 +1,16 @@
 <template>
   <nav class="navbar">
+    <DebugAuth />
     <div class="navbar-container">
-      <!-- Logo -->
       <router-link to="/" class="navbar-brand">
         <img src="@img/logo.png" alt="Logo" class="logo">
       </router-link>
 
-      <!-- Navigation Links -->
+      <!-- Desktop Menu -->
       <div class="navbar-menu" :class="{ 'is-active': isMenuOpen }">
-        <router-link to="/" class="navbar-item">Inicio</router-link>
-        <router-link to="/products" class="navbar-item">Productos</router-link>
-        
-        <!-- Categories Dropdown -->
+        <router-link to="/" class="navbar-item" @click="closeMenu">Inicio</router-link>
+        <router-link to="/products" class="navbar-item" @click="closeMenu">Productos</router-link>
+
         <div class="navbar-dropdown" @mouseenter="showDropdown" @mouseleave="hideDropdown">
           <span class="navbar-item">Explorar ⏷</span>
           <div class="dropdown-content" v-show="isDropdownOpen">
@@ -25,11 +24,60 @@
             </button>
           </div>
         </div>
+
+        <!-- Mobile Auth Section (dentro del menú móvil) -->
+        <div class="mobile-auth-section" v-if="isMenuOpen">
+          <div v-if="isLoggedIn" class="mobile-user-menu">
+            <div class="mobile-user-info">
+              <div class="mobile-user-avatar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+              </div>
+              <div class="mobile-user-details">
+                <div class="mobile-user-name">{{ currentUser?.nombre }} {{ currentUser?.apellido }}</div>
+                <div class="mobile-user-email">{{ currentUser?.email }}</div>
+              </div>
+            </div>
+            <div class="mobile-user-actions">
+              <button class="mobile-user-action" @click="goToProfile">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                Mi cuenta
+              </button>
+              <button class="mobile-user-action" @click="goToOrders">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                  <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+                </svg>
+                Mis pedidos
+              </button>
+              <button class="mobile-user-action logout-action" @click="handleLogout">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                  <polyline points="16,17 21,12 16,7"/>
+                  <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+                Cerrar sesión
+              </button>
+            </div>
+          </div>
+          <div v-else class="mobile-auth-actions">
+            <button class="mobile-auth-btn login-btn" @click="openLoginModal">
+              Iniciar Sesión
+            </button>
+            <router-link to="/register" class="mobile-auth-btn register-btn" @click="closeMenu">
+              Registrarse
+            </router-link>
+          </div>
+        </div>
       </div>
 
-      <!-- Actions -->
+      <!-- Desktop Actions -->
       <div class="navbar-actions">
-        <!-- Search Button -->
         <button class="action-btn search-btn" @click="toggleSearch" title="Buscar">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"/>
@@ -37,20 +85,19 @@
           </svg>
         </button>
 
-        <!-- Cart Button -->
-         <button class="action-btn cart-btn" @click="toggleCart" title="Carrito">
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" 
-         viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="8" cy="21" r="1"/>
-      <circle cx="19" cy="21" r="1"/>
-      <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57L20.3 9H5.12"/>
-    </svg>
-    <span class="cart-count" v-if="cartCount > 0">{{ cartCount }}</span>
-  </button>
+        <button class="action-btn cart-btn" @click="toggleCart" title="Carrito">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" 
+               viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="8" cy="21" r="1"/>
+            <circle cx="19" cy="21" r="1"/>
+            <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57L20.3 9H5.12"/>
+          </svg>
+          <span class="cart-count" v-if="cartCount > 0">{{ cartCount }}</span>
+        </button>
 
-        <!-- 🔥 AUTH SECTION - MODERNIZADO -->
-        <div class="auth-section">
+        <!-- Desktop Auth Section -->
+        <div class="auth-section desktop-only">
           <!-- Si está logueado -->
           <div v-if="isLoggedIn" class="user-menu" @mouseenter="showUserMenu" @mouseleave="hideUserMenu">
             <button class="user-button">
@@ -66,7 +113,6 @@
               </svg>
             </button>
 
-            <!-- Dropdown para usuario logueado -->
             <div class="user-dropdown" v-show="isUserMenuOpen">
               <div class="user-infomation">
                 <div class="user-name2">{{ currentUser?.nombre }} {{ currentUser?.apellido }}</div>
@@ -135,15 +181,16 @@
         </div>
 
         <!-- Mobile Menu Toggle -->
-        <button class="menu-toggle" @click="toggleMenu">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="3" y1="6" x2="21" y2="6"/>
-            <line x1="3" y1="12" x2="21" y2="12"/>
-            <line x1="3" y1="18" x2="21" y2="18"/>
-          </svg>
+        <button class="menu-toggle" @click="toggleMenu" :class="{ 'is-active': isMenuOpen }">
+          <span></span>
+          <span></span>
+          <span></span>
         </button>
       </div>
     </div>
+
+    <!-- Overlay para cerrar menú móvil -->
+    <div v-if="isMenuOpen" class="mobile-menu-overlay" @click="closeMenu"></div>
 
     <!-- Search Bar (Collapsible) -->
     <transition name="search-slide">
@@ -199,7 +246,7 @@ export default {
   name: 'Navbar',
   components: {
     CartSidebar,
-    LoginModal
+    LoginModal,
   },
   setup() {
     const router = useRouter();
@@ -223,26 +270,28 @@ export default {
     const currentUser = computed(() => authStore.currentUser);
     const authLoading = computed(() => authStore.loading);
     
-
     // Computed para obtener solo el nombre de pila
     const userName = computed(() => {
       if (!currentUser.value) return '';
       return currentUser.value.nombre || 'Usuario';
     });
 
-    // 🔥 NUEVA FUNCIÓN PARA FILTRAR POR CATEGORÍA
+    // Función para cerrar el menú móvil
+    const closeMenu = () => {
+      isMenuOpen.value = false;
+    };
+
+    // Filtrar por categoría
     const filterByCategory = (categorySlug) => {
-      // Cerrar el dropdown
       isDropdownOpen.value = false;
+      closeMenu(); // Cerrar menú móvil también
       
-      // Si no estamos en la página de productos, navegar allí con el filtro
       if (router.currentRoute.value.name !== 'Products') {
         router.push({
           name: 'Products',
           query: { category: categorySlug }
         });
       } else {
-        // Si ya estamos en productos, solo actualizar la query
         router.push({
           name: 'Products',
           query: { 
@@ -253,20 +302,18 @@ export default {
       }
     };
 
-    // 🔥 FUNCIÓN DE BÚSQUEDA CORREGIDA
+    // Función de búsqueda
     const performSearch = () => {
       if (searchQuery.value.trim()) {
-        // Cerrar la barra de búsqueda
         isSearchOpen.value = false;
+        closeMenu(); // Cerrar menú móvil también
         
-        // Si no estamos en la página de productos, navegar allí con la búsqueda
         if (router.currentRoute.value.name !== 'Products') {
           router.push({
             name: 'Products',
             query: { search: searchQuery.value.trim() }
           });
         } else {
-          // Si ya estamos en productos, actualizar la query
           router.push({
             name: 'Products',
             query: { 
@@ -276,7 +323,6 @@ export default {
           });
         }
         
-        // Limpiar el campo de búsqueda después de buscar
         searchQuery.value = '';
       }
     };
@@ -284,6 +330,13 @@ export default {
     // Funciones existentes
     const toggleMenu = () => {
       isMenuOpen.value = !isMenuOpen.value;
+      // Cerrar otros menús cuando se abre el móvil
+      if (isMenuOpen.value) {
+        isDropdownOpen.value = false;
+        isAuthDropdownOpen.value = false;
+        isUserMenuOpen.value = false;
+        isSearchOpen.value = false;
+      }
     };
 
     const showDropdown = () => {
@@ -312,6 +365,7 @@ export default {
 
     const toggleSearch = async () => {
       isSearchOpen.value = !isSearchOpen.value;
+      closeMenu(); // Cerrar menú móvil
       if (isSearchOpen.value) {
         await nextTick();
         if (searchInput.value) {
@@ -329,11 +383,13 @@ export default {
 
     const toggleCart = () => {
       isCartOpen.value = !isCartOpen.value;
+      closeMenu(); // Cerrar menú móvil
     };
 
     const openLoginModal = () => {
       isLoginModalOpen.value = true;
       isAuthDropdownOpen.value = false;
+      closeMenu(); // Cerrar menú móvil
     };
 
     const closeLoginModal = () => {
@@ -344,6 +400,7 @@ export default {
       try {
         await authStore.logout();
         isUserMenuOpen.value = false;
+        closeMenu(); // Cerrar menú móvil
         if (router.currentRoute.value.path !== '/') {
           router.push('/');
         }
@@ -357,16 +414,20 @@ export default {
       console.log('Login exitoso!');
     };
 
-  const goToProfile = () => {
-  router.push('/account'); 
-  isUserMenuOpen.value = false;
-};
-  const goToOrders = () => {
- 
-};
+    const goToProfile = () => {
+      router.push('/account'); 
+      isUserMenuOpen.value = false;
+      closeMenu(); // Cerrar menú móvil
+    };
+
+    const goToOrders = () => {
+      closeMenu(); // Cerrar menú móvil
+    };
+
     const goToSettings = () => {
       router.push('/settings');
       isUserMenuOpen.value = false;
+      closeMenu(); // Cerrar menú móvil
     };
 
     const fetchCategories = async () => {
@@ -384,12 +445,12 @@ export default {
       }
     };
 
- const cartCount = computed(() => cartStore.itemCount)
+    const cartCount = computed(() => cartStore.itemCount);
 
-onMounted(() => {
-  cartStore.loadFromLocalStorage()
-  fetchCategories()
-})
+    onMounted(() => {
+      cartStore.loadFromLocalStorage();
+      fetchCategories();
+    });
 
     return {
       // Estados
@@ -413,6 +474,7 @@ onMounted(() => {
       
       // Funciones
       toggleMenu,
+      closeMenu,
       showDropdown,
       hideDropdown,
       showAuthDropdown,
@@ -421,8 +483,8 @@ onMounted(() => {
       hideUserMenu,
       toggleSearch,
       clearSearch,
-      performSearch, // 🔥 Función corregida
-      filterByCategory, // 🔥 Nueva función
+      performSearch,
+      filterByCategory,
       toggleCart,
       openLoginModal,
       closeLoginModal,
@@ -464,7 +526,7 @@ onMounted(() => {
 }
 
 .logo {
-  width: 90;
+  width: 90px;
   height: 90px;
   object-fit: cover;
   border-radius: 8px;
@@ -526,6 +588,11 @@ onMounted(() => {
   text-decoration: none;
   transition: background-color 0.3s ease;
   font-size: 14px;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
 }
 
 .dropdown-item:hover {
@@ -561,13 +628,28 @@ onMounted(() => {
   transform: translateY(-2px);
 }
 
+.cart-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ff4757;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 11px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+}
 
-
-auth-section {
+/* Desktop Auth Styles */
+.auth-section {
   position: relative;
 }
 
-/* Estilos para usuario logueado */
 .user-menu {
   position: relative;
 }
@@ -582,17 +664,17 @@ auth-section {
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
-  color: #374151;
+  color: white;
 }
 
 .user-button:hover {
-  background: #f3f4f6;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .user-avatar {
   width: 32px;
   height: 32px;
-  background: #3b82f6;
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -630,7 +712,6 @@ auth-section {
 .user-infomation {
   padding: 0.75rem 1rem;
   border-bottom: 1px solid #e5e7eb;
-
 }
 
 .user-name2 {
@@ -682,7 +763,7 @@ auth-section {
   background: #fef2f2;
 }
 
-/* Estilos para usuario NO logueado */
+/* Auth dropdown para no logueados */
 .auth-dropdown {
   position: relative;
 }
@@ -697,11 +778,11 @@ auth-section {
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
-  color: #374151;
+  color: white;
 }
 
 .auth-btn:hover {
-  background: #f3f4f6;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .auth-text {
@@ -776,101 +857,176 @@ auth-section {
   background: #e5e7eb;
 }
 
-/* Loading spinner */
-.auth-loading {
+/* Hamburger Menu Styles */
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 24px;
+  height: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1001;
+}
+
+.menu-toggle span {
+  width: 24px;
+  height: 3px;
+  background: white;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.menu-toggle.is-active span:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+
+.menu-toggle.is-active span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-toggle.is-active span:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Mobile Menu Overlay */
+.mobile-menu-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  backdrop-filter: blur(2px);
+}
+
+/* Mobile Auth Styles */
+.mobile-auth-section {
+  width: 100%;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  margin-top: 20px;
+  padding-top: 20px;
+}
+
+.mobile-user-menu {
+  width: 100%;
+}
+
+.mobile-user-info {
   display: flex;
   align-items: center;
-  justify-content: center;
-  z-index: 9999;
-}
-
-.loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid #f3f4f6;
-  border-top: 4px solid #3b82f6;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .user-greeting,
-  .auth-text {
-    display: none;
-  }
-  
-  .user-button,
-  .auth-btn {
-    padding: 0.5rem;
-  }
-  
-  .navbar-menu {
-    display: none;
-  }
-  
-  .menu-toggle {
-    display: block;
-  }
-}
-
-/* Dropdown transitions */
-.user-dropdown,
-.auth-dropdown-content {
-  transform: translateY(-10px);
-  opacity: 0;
-  transition: all 0.2s ease;
-  pointer-events: none;
-}
-
-.user-menu:hover .user-dropdown,
-.auth-dropdown:hover .auth-dropdown-content {
-  transform: translateY(0);
-  opacity: 1;
-  pointer-events: auto;
-}
-.cart-count {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  background: #ff4757;
-  color: white;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  font-size: 11px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid white;
-}
-.menu-toggle {
-  display: none;
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 6px;
-  transition: background-color 0.3s ease;
-}
-
-.menu-toggle:hover {
+  gap: 15px;
+  padding: 15px 20px;
   background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  margin-bottom: 15px;
 }
 
+.mobile-user-avatar {
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.mobile-user-details {
+  flex: 1;
+}
+
+.mobile-user-name {
+  font-weight: 600;
+  color: white;
+  margin-bottom: 4px;
+}
+
+.mobile-user-email {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.mobile-user-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mobile-user-action {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+}
+
+.mobile-user-action:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.mobile-user-action.logout-action {
+  background: rgba(220, 38, 38, 0.2);
+}
+
+.mobile-user-action.logout-action:hover {
+  background: rgba(220, 38, 38, 0.3);
+}
+
+.mobile-auth-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 20px;
+}
+
+.mobile-auth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.mobile-auth-btn.login-btn {
+  background: white;
+  color: #388E3C;
+}
+
+.mobile-auth-btn.login-btn:hover {
+  background: #f8f9fa;
+}
+
+.mobile-auth-btn.register-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.mobile-auth-btn.register-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Search Bar Styles */
 .search-bar {
   background: rgba(255, 255, 255, 0.1);
   border-top: 1px solid rgba(255, 255, 255, 0.2);
@@ -955,6 +1111,34 @@ auth-section {
   transform: translateY(-1px);
 }
 
+/* Loading spinner */
+.auth-loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f4f6;
+  border-top: 4px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 /* Animaciones */
 .search-slide-enter-active,
 .search-slide-leave-active {
@@ -972,43 +1156,106 @@ auth-section {
   transform: translateY(-10px);
 }
 
-/* Responsive */
+/* Dropdown transitions */
+.user-dropdown,
+.auth-dropdown-content {
+  transform: translateY(-10px);
+  opacity: 0;
+  transition: all 0.2s ease;
+  pointer-events: none;
+}
+
+.user-menu:hover .user-dropdown,
+.auth-dropdown:hover .auth-dropdown-content {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
   .navbar-container {
-    height: 60px;
-  }
-
-  .navbar-menu {
-    position: fixed;
-    top: 60px;
-    left: -100%;
-    width: 100%;
-    height: calc(100vh - 60px);
-    background: linear-gradient(135deg, #388E3C 0%, #2E7D32 100%);
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    padding-top: 50px;
-    transition: left 0.3s ease;
-    backdrop-filter: blur(10px);
-  }
-
-  .navbar-menu.is-active {
-    left: 0;
-  }
-
-  .menu-toggle {
-    display: block;
-  }
-
-  .navbar-item {
-    font-size: 18px;
-    margin: 10px 0;
+    height: 70px;
+    padding: 0 15px;
   }
 
   .logo {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
+  }
+
+  /* Mostrar el botón hamburguesa */
+  .menu-toggle {
+    display: flex;
+  }
+
+  /* Ocultar auth section en desktop en móvil */
+  .desktop-only {
+    display: none;
+  }
+
+  /* Navbar menu móvil */
+  .navbar-menu {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    width: 80%;
+    max-width: 320px;
+    height: calc(100vh - 70px);
+    background: linear-gradient(135deg, #388E3C 0%, #2E7D32 100%);
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    padding: 30px 0 20px 0;
+    transition: transform 0.3s ease;
+    transform: translateX(-100%);
+    z-index: 999;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+  }
+
+  .navbar-menu.is-active {
+    transform: translateX(0);
+  }
+
+  .navbar-item {
+    font-size: 16px;
+    margin: 8px 20px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    display: block;
+  }
+
+  .navbar-dropdown {
+    margin: 8px 20px;
+  }
+
+  .navbar-dropdown .navbar-item {
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .dropdown-content {
+    position: static;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: none;
+    border: none;
+    border-radius: 8px;
+    margin-top: 8px;
+  }
+
+  .dropdown-item {
+    color: white;
+    padding: 8px 15px;
+  }
+
+  .dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+
+  .navbar-actions {
+    gap: 8px;
   }
 
   .action-btn {
@@ -1016,13 +1263,15 @@ auth-section {
     height: 40px;
   }
 
-  .navbar-actions {
-    gap: 8px;
+  .user-greeting,
+  .auth-text {
+    display: none;
   }
 
   .search-container {
     flex-direction: column;
     gap: 15px;
+    padding: 15px;
   }
 
   .search-input-wrapper {
@@ -1032,26 +1281,15 @@ auth-section {
   .search-submit-btn {
     width: 100%;
   }
-
-  .dropdown-content,
-  .auth-dropdown-content {
-    position: fixed;
-    top: 60px;
-    left: 0;
-    right: 0;
-    min-width: auto;
-    margin: 0;
-    border-radius: 0;
-  }
 }
 
 @media (max-width: 480px) {
   .navbar-container {
-    padding: 0 15px;
+    padding: 0 10px;
   }
 
   .navbar-actions {
-    gap: 5px;
+    gap: 6px;
   }
 
   .action-btn {
@@ -1059,8 +1297,12 @@ auth-section {
     height: 36px;
   }
 
+  .navbar-menu {
+    width: 85%;
+  }
+
   .search-container {
-    padding: 12px 15px;
+    padding: 12px 10px;
   }
 }
 </style>

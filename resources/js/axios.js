@@ -1,8 +1,13 @@
 // resources/js/axios.js
 import axios from 'axios';
 
-// Configuración base de Axios
-axios.defaults.baseURL = window.location.origin;
+// Configuración base de Axios dinámica
+const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const baseURL = isDevelopment 
+  ? 'http://127.0.0.1:8000'  // Local
+  : window.location.origin; // Ngrok o producción
+
+axios.defaults.baseURL = baseURL;
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 axios.defaults.withCredentials = true;
 

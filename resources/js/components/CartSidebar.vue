@@ -18,7 +18,7 @@
         </div>
 
         <!-- Carrito con productos -->
-        <div v-else>
+        <div v-else class="cart-full">
           <div class="cart-items">
             <div v-for="product in productSelect" :key="product.id" class="cart-item">
               <img 
@@ -171,7 +171,7 @@ const handleImageError = (event) => {
   top: 0;
   right: 0;
   width: 420px;
-  height: 100%;
+  height: 100vh; /* Asegurar altura completa */
   background: white;
   border-left: 1px solid #e9ecef;
   box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
@@ -187,6 +187,7 @@ const handleImageError = (event) => {
   justify-content: space-between;
   align-items: center;
   background: #f8f9fa;
+  flex-shrink: 0; /* Evitar que se encoja */
 }
 
 .cart-header h2 {
@@ -219,7 +220,7 @@ const handleImageError = (event) => {
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  min-height: 0; /* Importante para el scroll */
 }
 
 /* Empty Cart Styles */
@@ -265,11 +266,42 @@ const handleImageError = (event) => {
   background: #1B5E20;
 }
 
-/* Cart Items */
+/* Cart Full - Contenedor cuando hay productos */
+.cart-full {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* Importante para el scroll */
+}
+
+/* Cart Items - Zona scrolleable */
 .cart-items {
   flex: 1;
-  overflow-y: auto;
+  overflow-y: auto; /* Habilitar scroll vertical */
   padding: 1rem;
+  min-height: 0; /* Importante para que funcione el scroll */
+  /* Estilos personalizados para la scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: #2E7D32 #f1f1f1;
+}
+
+/* Webkit scrollbar para Chrome, Safari, Edge */
+.cart-items::-webkit-scrollbar {
+  width: 6px;
+}
+
+.cart-items::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.cart-items::-webkit-scrollbar-thumb {
+  background: #2E7D32;
+  border-radius: 3px;
+}
+
+.cart-items::-webkit-scrollbar-thumb:hover {
+  background: #1B5E20;
 }
 
 .cart-item {
@@ -281,6 +313,7 @@ const handleImageError = (event) => {
   margin-bottom: 1rem;
   background: #f8f9fa;
   position: relative;
+  flex-shrink: 0; /* Evitar que los items se encojan */
 }
 
 .item-image {
@@ -372,11 +405,12 @@ const handleImageError = (event) => {
   transform: scale(1.1);
 }
 
-/* Cart Summary */
+
 .cart-summary {
   padding: 1rem 1.5rem;
   border-top: 2px solid #f8f9fa;
   background: #f8f9fa;
+  flex-shrink: 0; /* Evitar que se encoja */
 }
 
 .summary-row {
@@ -395,12 +429,13 @@ const handleImageError = (event) => {
   margin-top: 0.5rem;
 }
 
-/* Cart Actions */
+
 .cart-actions {
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  flex-shrink: 0; 
 }
 
 .checkout-btn {
@@ -460,7 +495,7 @@ const handleImageError = (event) => {
   transform: translateX(100%);
 }
 
-/* Responsive */
+
 @media (max-width: 768px) {
   .cart-sidebar {
     width: 100%;
@@ -476,5 +511,4 @@ const handleImageError = (event) => {
     height: 60px;
   }
 }
-
 </style>
