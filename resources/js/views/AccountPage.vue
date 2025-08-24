@@ -2,7 +2,7 @@
   <div class="account-page">
   
     <div class="account-header">
-      <img :src="fondoImage" alt="Fondo Amazonía" class="account-header-bg-img" />
+      <img src="https://res.cloudinary.com/dbjmhh4wr/image/upload/v1756001294/fondo_y3qqeq.png" alt="Fondo Amazonía" class="account-header-bg-img" />
       <div class="account-header-overlay"></div>
       <div class="container">
         <div class="header-content">

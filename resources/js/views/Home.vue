@@ -2,7 +2,7 @@
   <div class="bg-white min-h-screen w-full overflow-x-hidden">
     <!-- HERO - SE MANTIENE IGUAL -->
     <section class="hero hero-enhanced">
-      <img :src="fondoImage" alt="Fondo Amazonía" class="hero-bg-img" />
+      <img src="https://res.cloudinary.com/dbjmhh4wr/image/upload/v1756001294/fondo_y3qqeq.png" alt="Fondo Amazonía" class="hero-bg-img" />
       <div class="hero-overlay"></div>
       <div class="hero-content">
         <div class="hero-text fade-in-up">

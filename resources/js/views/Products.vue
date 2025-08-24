@@ -2,7 +2,9 @@
   <div class="products-page">
     <!-- Header -->
     <div class="page-header">
-      <img :src="fondoImage" alt="Fondo Amazonía" class="page-header-bg-img" />
+      <img src="https://res.cloudinary.com/dbjmhh4wr/image/upload/v1756001294/fondo_y3qqeq.png" alt="Fondo Amazonía" 
+      
+      class="page-header-bg-img" />
       <h1 class="page-title">Catálogo de Artesanías</h1>
       <p class="page-subtitle">Descubre la riqueza cultural de la Amazonía a través de nuestras artesanías únicas</p>
     </div>
