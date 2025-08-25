@@ -3,7 +3,7 @@
     <DebugAuth />
     <div class="navbar-container">
       <router-link to="/" class="navbar-brand">
-        <img src="@img/logo.png" alt="Logo" class="logo">
+        <img src="https://res.cloudinary.com/dbjmhh4wr/image/upload/v1756150169/logo_owmfw1.webp" alt="Logo" class="logo">
       </router-link>
 
       <!-- Desktop Menu -->

@@ -22,7 +22,7 @@
           </router-link>
         </div>
         <div class="hero-image fade-in-up delay-1">
-          <img src="/img/hero.webp" alt="Artesanías amazónicas" class="hero-img" />
+          <img src="https://res.cloudinary.com/dbjmhh4wr/image/upload/v1756001148/hero_amhs4l.webp" alt="Artesanías amazónicas" class="hero-img" />
         </div>
       </div>
     </section>

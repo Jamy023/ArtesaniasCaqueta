@@ -8,6 +8,10 @@
       <h1 class="page-title">Catálogo de Artesanías</h1>
       <p class="page-subtitle">Descubre la riqueza cultural de la Amazonía a través de nuestras artesanías únicas</p>
     </div>
+     <!-- Botón flotante de WhatsApp -->
+    <a href="https://wa.me/573105867601" class="whatsapp-float" target="_blank" rel="noopener noreferrer">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" />
+    </a>
 
     <div class="filters-section">
       <div class="filters-container">
@@ -370,6 +374,34 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+
+.whatsapp-float {
+  position: fixed;
+  width: 60px;
+  height: 60px;
+  bottom: 20px;
+  right: 20px;
+  background-color: #25D366;
+  color: white;
+  border-radius: 50%;
+  text-align: center;
+  font-size: 30px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.whatsapp-float img {
+  width: 35px;
+  height: 35px;
+}
+
+.whatsapp-float:hover {
+  transform: scale(1.1);
+}
 .products-page {
   background: #fff;
   min-height: 100vh;

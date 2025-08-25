@@ -351,6 +351,63 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
+    // Registro de usuario
+    async register(userData) {
+      console.log('📝 === INICIANDO REGISTRO ===')
+      
+      this.loading = true
+      this.errors = {}
+
+      try {
+        console.log('📤 Enviando datos de registro:', {
+          nombre: userData.nombre,
+          apellido: userData.apellido,
+          email: userData.email,
+          tipo_documento: userData.tipo_documento,
+          numero_documento: userData.numero_documento
+        })
+        
+        const response = await axios.post('/clientes/register', userData)
+
+        console.log('📥 Respuesta del registro:', {
+          status: response.status,
+          hasToken: !!response.data?.token,
+          hasCliente: !!response.data?.cliente,
+          tokenStart: response.data?.token?.substring(0, 20) + '...'
+        })
+
+        const { cliente, token } = response.data
+
+        // Establecer todos los datos
+        this.cliente = cliente
+        this.token = token
+        this.isAuthenticated = true
+        this.setAxiosToken(token)
+
+        console.log('✅ REGISTRO EXITOSO:', {
+          user: cliente?.nombre,
+          email: cliente?.email,
+          isLoggedIn: this.isLoggedIn
+        })
+
+        return response.data
+        
+      } catch (error) {
+        console.error('❌ ERROR EN REGISTRO:', {
+          status: error.response?.status,
+          message: error.response?.data?.message,
+          errors: error.response?.data?.errors
+        })
+        
+        this.errors = error.response?.data?.errors || { 
+          general: [error.response?.data?.message || 'Error de conexión'] 
+        }
+        throw error
+      } finally {
+        this.loading = false
+      }
+    },
+
     async forceReauth() {
       console.log('🔄 Forzando re-autenticación...')
       this.initialized = false
