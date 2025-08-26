@@ -3,7 +3,7 @@
     <div class="row items-center justify-between q-mb-xl">
       <div class="col">
         <div class="text-h5 text-weight-light text-primary q-mb-sm">
-          Gestión de Usuarios
+          Gestión de Usuarioshsgdgd
         </div>
         <p class="text-grey-6 text-body1">Administra los usuarios del sistema</p>
       </div>
@@ -209,7 +209,7 @@
           <!-- Mensaje cuando no hay datos -->
           <template v-slot:no-data>
             <div class="full-width row flex-center text-grey-5 q-gutter-sm q-pa-lg">
-              <q-icon size="3em" name="people" />
+              <q-icon size="3em" name="bi-people" />
               <div class="text-center">
                 <div class="text-h6">No se encontraron usuarios</div>
                 <div class="text-body2">Intenta ajustar los filtros o agrega un nuevo usuario</div>
@@ -252,7 +252,7 @@
               :rules="[val => !!val || 'El nombre es obligatorio']"
             >
               <template v-slot:prepend>
-                <q-icon name="person" />
+                <q-icon name="bi-person" />
               </template>
             </q-input>
 
@@ -269,7 +269,7 @@
               ]"
             >
               <template v-slot:prepend>
-                <q-icon name="email" />
+                <q-icon name="bi-envelope" />
               </template>
             </q-input>
 
@@ -286,11 +286,11 @@
               ]"
             >
               <template v-slot:prepend>
-                <q-icon name="lock" />
+                <q-icon name="bi-lock" />
               </template>
               <template v-slot:append>
                 <q-icon
-                  :name="showPassword ? 'visibility_off' : 'visibility'"
+                  :name="showPassword ? 'bi-eye-slash' : 'bi-eye'"
                   class="cursor-pointer"
                   @click="showPassword = !showPassword"
                 />
@@ -310,7 +310,7 @@
               ]"
             >
               <template v-slot:prepend>
-                <q-icon name="lock" />
+                <q-icon name="bi-lock" />
               </template>
             </q-input>
 
@@ -323,7 +323,7 @@
                 color="positive"
               />
               <q-icon 
-                name="help_outline" 
+                name="bi-question-circle" 
                 color="grey-6" 
                 size="sm"
               >
@@ -399,7 +399,7 @@
             >
               <template v-slot:append>
                 <q-icon
-                  :name="showNewPassword ? 'visibility_off' : 'visibility'"
+                  :name="showNewPassword ? 'bi-eye-slash' : 'bi-eye'"
                   class="cursor-pointer"
                   @click="showNewPassword = !showNewPassword"
                 />

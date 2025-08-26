@@ -182,7 +182,7 @@
           <!-- Mensaje cuando no hay datos -->
           <template v-slot:no-data>
             <div class="full-width row flex-center text-grey-5 q-gutter-sm q-pa-lg">
-              <q-icon size="3em" name="category" />
+              <q-icon size="3em" name="bi-tags" />
               <div class="text-center">
                 <div class="text-h6">No se encontraron categorías</div>
                 <div class="text-body2">Intenta ajustar los filtros o agrega una nueva categoría</div>
@@ -230,7 +230,7 @@
                   @input="generateSlug"
                 >
                   <template v-slot:prepend>
-                    <q-icon name="title" />
+                    <q-icon name="bi-type" />
                   </template>
                 </q-input>
 
@@ -243,7 +243,7 @@
                   hint="Se genera automáticamente basado en el nombre"
                 >
                   <template v-slot:prepend>
-                    <q-icon name="link" />
+                    <q-icon name="bi-link" />
                   </template>
                 </q-input>
 
@@ -259,7 +259,7 @@
                   maxlength="1000"
                 >
                   <template v-slot:prepend>
-                    <q-icon name="description" />
+                    <q-icon name="bi-textarea-resize" />
                   </template>
                 </q-input>
 
@@ -272,7 +272,7 @@
                   hint="URL de la imagen representativa de la categoría"
                 >
                   <template v-slot:prepend>
-                    <q-icon name="image" />
+                    <q-icon name="bi-image" />
                   </template>
                 </q-input>
 
@@ -285,7 +285,7 @@
                     color="positive"
                   />
                   <q-icon 
-                    name="help_outline" 
+                    name="bi-question-circle" 
                     color="grey-6" 
                     size="sm"
                   >

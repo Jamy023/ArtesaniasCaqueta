@@ -15,7 +15,7 @@
 
     
 
-        <!-- Columna derecha - Formulario -->
+        <!-- Sección del Formulario -->
         <div class="form-section">
           <div class="form-container">
             <div class="form-header">
@@ -151,27 +151,37 @@
 
                 <div class="form-row">
                   <div class="form-group">
-                    <label for="ciudad">Ciudad</label>
-                    <input 
-                      id="ciudad"
-                      v-model="form.ciudad" 
-                      type="text"
-                      placeholder="Tu ciudad"
-                      :class="{ 'error': errors.ciudad }"
+                    <label for="departamento">Departamento *</label>
+                    <select 
+                      id="departamento"
+                      v-model="form.departamento" 
+                      @change="onDepartmentChange"
+                      required
+                      :class="{ 'error': errors.departamento }"
                     >
-                    <span v-if="errors.ciudad" class="error-message">{{ errors.ciudad[0] }}</span>
+                      <option value="">Selecciona tu departamento</option>
+                      <option v-for="departamento in departamentos" :key="departamento.id" :value="departamento.id">
+                        {{ departamento.nombre }}
+                      </option>
+                    </select>
+                    <span v-if="errors.departamento" class="error-message">{{ errors.departamento[0] }}</span>
                   </div>
 
                   <div class="form-group">
-                    <label for="departamento">Departamento</label>
-                    <input 
-                      id="departamento"
-                      v-model="form.departamento" 
-                      type="text"
-                      placeholder="Tu departamento"
-                      :class="{ 'error': errors.departamento }"
+                    <label for="ciudad">Ciudad *</label>
+                    <select 
+                      id="ciudad"
+                      v-model="form.ciudad" 
+                      :disabled="!form.departamento || ciudades.length === 0"
+                      required
+                      :class="{ 'error': errors.ciudad }"
                     >
-                    <span v-if="errors.departamento" class="error-message">{{ errors.departamento[0] }}</span>
+                      <option value="">{{ !form.departamento ? 'Primero selecciona un departamento' : 'Selecciona tu ciudad' }}</option>
+                      <option v-for="ciudad in ciudades" :key="ciudad.id" :value="ciudad.id">
+                        {{ ciudad.nombre }}
+                      </option>
+                    </select>
+                    <span v-if="errors.ciudad" class="error-message">{{ errors.ciudad[0] }}</span>
                   </div>
                 </div>
               </div>
@@ -298,6 +308,249 @@ export default {
       password: '',
       password_confirmation: ''
     })
+    
+    // Datos de departamentos y ciudades de Colombia
+    const departamentos = ref([
+      { id: 1, nombre: 'Antioquia' },
+      { id: 2, nombre: 'Atlántico' },
+      { id: 3, nombre: 'Bogotá D.C.' },
+      { id: 4, nombre: 'Bolívar' },
+      { id: 5, nombre: 'Boyacá' },
+      { id: 6, nombre: 'Caldas' },
+      { id: 7, nombre: 'Caquetá' },
+      { id: 8, nombre: 'Cauca' },
+      { id: 9, nombre: 'César' },
+      { id: 10, nombre: 'Córdoba' },
+      { id: 11, nombre: 'Cundinamarca' },
+      { id: 12, nombre: 'Chocó' },
+      { id: 13, nombre: 'Huila' },
+      { id: 14, nombre: 'La Guajira' },
+      { id: 15, nombre: 'Magdalena' },
+      { id: 16, nombre: 'Meta' },
+      { id: 17, nombre: 'Nariño' },
+      { id: 18, nombre: 'Norte de Santander' },
+      { id: 19, nombre: 'Quindío' },
+      { id: 20, nombre: 'Risaralda' },
+      { id: 21, nombre: 'Santander' },
+      { id: 22, nombre: 'Sucre' },
+      { id: 23, nombre: 'Tolima' },
+      { id: 24, nombre: 'Valle del Cauca' },
+      { id: 25, nombre: 'Arauca' },
+      { id: 26, nombre: 'Casanare' },
+      { id: 27, nombre: 'Putumayo' },
+      { id: 28, nombre: 'San Andrés y Providencia' },
+      { id: 29, nombre: 'Amazonas' },
+      { id: 30, nombre: 'Guainía' },
+      { id: 31, nombre: 'Guaviare' },
+      { id: 32, nombre: 'Vaupés' },
+      { id: 33, nombre: 'Vichada' }
+    ])
+
+    const ciudadesPorDepartamento = {
+      1: [ // Antioquia
+        { id: 1, nombre: 'Medellín' },
+        { id: 2, nombre: 'Bello' },
+        { id: 3, nombre: 'Itagüí' },
+        { id: 4, nombre: 'Envigado' },
+        { id: 5, nombre: 'Apartadó' },
+        { id: 6, nombre: 'Turbo' },
+        { id: 7, nombre: 'Rionegro' },
+        { id: 8, nombre: 'Sabaneta' },
+        { id: 9, nombre: 'Caucasia' },
+        { id: 10, nombre: 'Copacabana' }
+      ],
+      2: [ // Atlántico
+        { id: 11, nombre: 'Barranquilla' },
+        { id: 12, nombre: 'Soledad' },
+        { id: 13, nombre: 'Malambo' },
+        { id: 14, nombre: 'Sabanagrande' },
+        { id: 15, nombre: 'Puerto Colombia' },
+        { id: 16, nombre: 'Galapa' },
+        { id: 17, nombre: 'Baranoa' }
+      ],
+      3: [ // Bogotá D.C.
+        { id: 18, nombre: 'Bogotá' },
+        { id: 19, nombre: 'Suba' },
+        { id: 20, nombre: 'Kennedy' },
+        { id: 21, nombre: 'Engativá' },
+        { id: 22, nombre: 'Ciudad Bolívar' },
+        { id: 23, nombre: 'Bosa' },
+        { id: 24, nombre: 'San Cristóbal' },
+        { id: 25, nombre: 'Usme' }
+      ],
+      4: [ // Bolívar
+        { id: 26, nombre: 'Cartagena' },
+        { id: 27, nombre: 'Magangué' },
+        { id: 28, nombre: 'Turbaco' },
+        { id: 29, nombre: 'El Carmen de Bolívar' },
+        { id: 30, nombre: 'Arjona' }
+      ],
+      5: [ // Boyacá
+        { id: 31, nombre: 'Tunja' },
+        { id: 32, nombre: 'Duitama' },
+        { id: 33, nombre: 'Sogamoso' },
+        { id: 34, nombre: 'Chiquinquirá' },
+        { id: 35, nombre: 'Paipa' }
+      ],
+      6: [ // Caldas
+        { id: 36, nombre: 'Manizales' },
+        { id: 37, nombre: 'La Dorada' },
+        { id: 38, nombre: 'Chinchiná' },
+        { id: 39, nombre: 'Riosucio' },
+        { id: 40, nombre: 'Anserma' }
+      ],
+      7: [ // Caquetá
+        { id: 41, nombre: 'Florencia' },
+        { id: 42, nombre: 'San Vicente del Caguán' },
+        { id: 43, nombre: 'Puerto Rico' },
+        { id: 44, nombre: 'El Paujil' }
+      ],
+      8: [ // Cauca
+        { id: 45, nombre: 'Popayán' },
+        { id: 46, nombre: 'Santander de Quilichao' },
+        { id: 47, nombre: 'Puerto Tejada' },
+        { id: 48, nombre: 'Guapi' }
+      ],
+      9: [ // César
+        { id: 49, nombre: 'Valledupar' },
+        { id: 50, nombre: 'Aguachica' },
+        { id: 51, nombre: 'Codazzi' },
+        { id: 52, nombre: 'La Paz' }
+      ],
+      10: [ // Córdoba
+        { id: 53, nombre: 'Montería' },
+        { id: 54, nombre: 'Cereté' },
+        { id: 55, nombre: 'Sahagún' },
+        { id: 56, nombre: 'Lorica' }
+      ],
+      11: [ // Cundinamarca
+        { id: 57, nombre: 'Soacha' },
+        { id: 58, nombre: 'Girardot' },
+        { id: 59, nombre: 'Zipaquirá' },
+        { id: 60, nombre: 'Facatativá' },
+        { id: 61, nombre: 'Chía' },
+        { id: 62, nombre: 'Mosquera' },
+        { id: 63, nombre: 'Fusagasugá' }
+      ],
+      12: [ // Chocó
+        { id: 64, nombre: 'Quibdó' },
+        { id: 65, nombre: 'Istmina' },
+        { id: 66, nombre: 'Condoto' },
+        { id: 67, nombre: 'Tadó' }
+      ],
+      13: [ // Huila
+        { id: 68, nombre: 'Neiva' },
+        { id: 69, nombre: 'Pitalito' },
+        { id: 70, nombre: 'Garzón' },
+        { id: 71, nombre: 'La Plata' }
+      ],
+      14: [ // La Guajira
+        { id: 72, nombre: 'Riohacha' },
+        { id: 73, nombre: 'Maicao' },
+        { id: 74, nombre: 'Uribia' },
+        { id: 75, nombre: 'Fonseca' }
+      ],
+      15: [ // Magdalena
+        { id: 76, nombre: 'Santa Marta' },
+        { id: 77, nombre: 'Ciénaga' },
+        { id: 78, nombre: 'Fundación' },
+        { id: 79, nombre: 'El Banco' }
+      ],
+      16: [ // Meta
+        { id: 80, nombre: 'Villavicencio' },
+        { id: 81, nombre: 'Acacías' },
+        { id: 82, nombre: 'Granada' },
+        { id: 83, nombre: 'Puerto López' }
+      ],
+      17: [ // Nariño
+        { id: 84, nombre: 'Pasto' },
+        { id: 85, nombre: 'Tumaco' },
+        { id: 86, nombre: 'Ipiales' },
+        { id: 87, nombre: 'Samaniego' }
+      ],
+      18: [ // Norte de Santander
+        { id: 88, nombre: 'Cúcuta' },
+        { id: 89, nombre: 'Ocaña' },
+        { id: 90, nombre: 'Villa del Rosario' },
+        { id: 91, nombre: 'Los Patios' }
+      ],
+      19: [ // Quindío
+        { id: 92, nombre: 'Armenia' },
+        { id: 93, nombre: 'Calarcá' },
+        { id: 94, nombre: 'La Tebaida' },
+        { id: 95, nombre: 'Montenegro' }
+      ],
+      20: [ // Risaralda
+        { id: 96, nombre: 'Pereira' },
+        { id: 97, nombre: 'Dosquebradas' },
+        { id: 98, nombre: 'Santa Rosa de Cabal' },
+        { id: 99, nombre: 'La Virginia' }
+      ],
+      21: [ // Santander
+        { id: 100, nombre: 'Bucaramanga' },
+        { id: 101, nombre: 'Floridablanca' },
+        { id: 102, nombre: 'Girón' },
+        { id: 103, nombre: 'Piedecuesta' },
+        { id: 104, nombre: 'Barrancabermeja' }
+      ],
+      22: [ // Sucre
+        { id: 105, nombre: 'Sincelejo' },
+        { id: 106, nombre: 'Corozal' },
+        { id: 107, nombre: 'Sampués' },
+        { id: 108, nombre: 'San Marcos' }
+      ],
+      23: [ // Tolima
+        { id: 109, nombre: 'Ibagué' },
+        { id: 110, nombre: 'Espinal' },
+        { id: 111, nombre: 'Melgar' },
+        { id: 112, nombre: 'Honda' }
+      ],
+      24: [ // Valle del Cauca
+        { id: 113, nombre: 'Cali' },
+        { id: 114, nombre: 'Palmira' },
+        { id: 115, nombre: 'Buenaventura' },
+        { id: 116, nombre: 'Tuluá' },
+        { id: 117, nombre: 'Cartago' },
+        { id: 118, nombre: 'Buga' }
+      ],
+      25: [ // Arauca
+        { id: 119, nombre: 'Arauca' },
+        { id: 120, nombre: 'Saravena' },
+        { id: 121, nombre: 'Fortul' }
+      ],
+      26: [ // Casanare
+        { id: 122, nombre: 'Yopal' },
+        { id: 123, nombre: 'Aguazul' },
+        { id: 124, nombre: 'Villanueva' }
+      ],
+      27: [ // Putumayo
+        { id: 125, nombre: 'Mocoa' },
+        { id: 126, nombre: 'Puerto Asís' },
+        { id: 127, nombre: 'Orito' }
+      ],
+      28: [ // San Andrés y Providencia
+        { id: 128, nombre: 'San Andrés' },
+        { id: 129, nombre: 'Providencia' }
+      ],
+      29: [ // Amazonas
+        { id: 130, nombre: 'Leticia' },
+        { id: 131, nombre: 'Puerto Nariño' }
+      ],
+      30: [ // Guainía
+        { id: 132, nombre: 'Inírida' }
+      ],
+      31: [ // Guaviare
+        { id: 133, nombre: 'San José del Guaviare' }
+      ],
+      32: [ // Vaupés
+        { id: 134, nombre: 'Mitú' }
+      ],
+      33: [ // Vichada
+        { id: 135, nombre: 'Puerto Carreño' }
+      ]
+    }
+
+    const ciudades = ref([])
     
     const showPassword = ref(false)
     const showPasswordConfirm = ref(false)
@@ -491,6 +744,19 @@ export default {
       clearFieldError('numero_documento')
     }
 
+    // Función para manejar cambio de departamento
+    const onDepartmentChange = () => {
+      const departamentoId = parseInt(form.value.departamento)
+      form.value.ciudad = '' // Limpiar ciudad seleccionada
+      clearFieldError('ciudad')
+      
+      if (departamentoId && ciudadesPorDepartamento[departamentoId]) {
+        ciudades.value = ciudadesPorDepartamento[departamentoId]
+      } else {
+        ciudades.value = []
+      }
+    }
+
     // Watchers para validación en tiempo real y formateo
     watch(() => form.value.email, (newVal) => {
       if (newVal) {
@@ -610,6 +876,10 @@ export default {
       loading,
       errors,
       
+      // Datos geográficos
+      departamentos,
+      ciudades,
+      
       // Funciones originales
       register,
       openLoginModal,
@@ -620,6 +890,7 @@ export default {
       clearAllErrors,
       resetForm,
       handleDocumentTypeChange,
+      onDepartmentChange,
       
       // Funciones de utilidad
       formatPhoneNumber,
@@ -636,9 +907,10 @@ export default {
 
 .register-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  background: linear-gradient(135deg, #125705 0%, #0b6d08 100%);
   position: relative;
   overflow-x: hidden;
+  padding: 20px 0;
 }
 
 .register-page::before {
@@ -649,17 +921,17 @@ export default {
   right: 0;
   bottom: 0;
   background-image: 
-    radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 40% 80%, rgba(245, 101, 101, 0.1) 0%, transparent 50%);
-  background-size: 100% 100%;
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" opacity="0.1"><path d="M0,0 Q250,50 500,0 T1000,0 L1000,300 Q750,250 500,300 T0,300 Z" fill="%23ffffff"/><path d="M0,700 Q250,750 500,700 T1000,700 L1000,1000 L0,1000 Z" fill="%23ffffff"/></svg>'),
+    radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+  background-size: 100% 100%, cover, cover;
   pointer-events: none;
 }
 
 .register-container {
-  max-width: 85%;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 0 20px;
   position: relative;
   z-index: 1;
 }
@@ -792,15 +1064,28 @@ export default {
 /* Sección del formulario */
 .form-section {
   padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: calc(100vh - 100px);
 }
 
 .form-container {
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 20px;
-  padding: 40px;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 24px;
+  padding: 48px;
+  box-shadow: 0 32px 64px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(20px);
+  width: 100%;
+  max-width: 800px;
+  margin: 20px 0;
+  transform: translateY(0);
+  transition: transform 0.3s ease;
+}
+
+.form-container:hover {
+  transform: translateY(-4px);
 }
 
 .form-header {
@@ -809,16 +1094,22 @@ export default {
 }
 
 .form-header h2 {
-  font-size: 28px;
-  font-weight: 700;
-  color: #1f2937;
-  margin: 0 0 8px 0;
+  font-size: 32px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #076e32 0%, #176308 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 12px 0;
+  text-align: center;
 }
 
 .form-header p {
-  color: #6b7280;
-  font-size: 16px;
+  color: #64748b;
+  font-size: 18px;
   margin: 0;
+  font-weight: 400;
+  line-height: 1.6;
 }
 
 .register-form {
@@ -837,21 +1128,26 @@ export default {
 }
 
 .group-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #374151;
-  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 24px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+  position: relative;
+  padding-left: 20px;
 }
 
 .group-title::before {
   content: '';
-  width: 4px;
-  height: 20px;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  border-radius: 2px;
+  position: absolute;
+  left: 0;
+  width: 5px;
+  height: 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 3px;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
 }
 
 .form-row {
@@ -876,25 +1172,36 @@ export default {
 .form-group input,
 .form-group select {
   width: 100%;
-  padding: 14px 16px;
-  border: 1px solid #d1d5db;
-  border-radius: 10px;
-  font-size: 14px;
-  transition: all 0.2s ease;
-  background: white;
+  padding: 16px 20px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  background: #ffffff;
+  font-family: inherit;
+  position: relative;
 }
 
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #10b981;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+  border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+  transform: translateY(-2px);
 }
 
 .form-group input.error,
 .form-group select.error {
   border-color: #ef4444;
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
+  background-color: #fef2f2;
+}
+
+.form-group select:disabled {
+  background-color: #f9fafb;
+  color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .password-input-wrapper {
@@ -934,27 +1241,29 @@ export default {
 
 .register-btn {
   width: 100%;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: linear-gradient(135deg, #057226 0%, #088d13 100%);
   color: white;
   border: none;
-  padding: 16px 24px;
-  border-radius: 12px;
-  font-size: 16px;
-  font-weight: 600;
+  padding: 18px 32px;
+  border-radius: 16px;
+  font-size: 17px;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  min-height: 56px;
-  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+  gap: 10px;
+  min-height: 64px;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .register-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #059669 0%, #047857 100%);
-  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
-  transform: translateY(-2px);
+  background: linear-gradient(135deg, #013516 0%, 013516 100%);
+  box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
+  transform: translateY(-4px);
 }
 
 .register-btn:disabled {
@@ -1013,59 +1322,58 @@ export default {
 }
 
 .login-link {
-  color: #10b981;
+  color: #667eea;
   text-decoration: none;
   font-weight: 600;
-  transition: color 0.2s ease;
+  transition: all 0.3s ease;
+  position: relative;
 }
 
 .login-link:hover {
-  color: #059669;
+  color: #1b8d04;
+}
+
+.login-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background: linear-gradient(135deg, #1b8d04 0%, #1b8d04 100%);
+  transition: width 0.3s ease;
+}
+
+.login-link:hover::after {
+  width: 100%;
 }
 
 /* Responsive Design */
 @media (max-width: 1200px) {
-  .register-content {
-    gap: 40px;
-  }
-  
   .form-container {
-    padding: 32px;
+    max-width: 700px;
+    padding: 40px;
   }
 }
 
-@media (max-width: 968px) {
-  .register-content {
-    grid-template-columns: 1fr;
-    gap: 32px;
-  }
-  
-  .info-section {
-    order: 2;
-    padding: 32px 0;
-  }
-  
-  .form-section {
-    order: 1;
-  }
-  
-  .brand-section h1 {
-    font-size: 32px;
-  }
-  
-  .features-list {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .register-container {
-    padding: 16px;
+    padding: 0 15px;
   }
   
   .form-container {
-    padding: 24px;
-    border-radius: 16px;
+    max-width: 100%;
+    padding: 32px 24px;
+    border-radius: 20px;
+    margin: 10px 0;
+  }
+  
+  .form-header h2 {
+    font-size: 28px;
+  }
+  
+  .form-header p {
+    font-size: 16px;
   }
   
   .form-row {
@@ -1073,50 +1381,80 @@ export default {
     gap: 0;
   }
   
+  .group-title {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 640px) {
+  .register-page {
+    padding: 10px 0;
+  }
+  
+  .register-container {
+    padding: 0 10px;
+  }
+  
+  .form-container {
+    padding: 24px 20px;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  }
+  
   .form-header h2 {
     font-size: 24px;
   }
   
-  .brand-section h1 {
-    font-size: 28px;
-  }
-  
-  .brand-logo {
-    width: 56px;
-    height: 56px;
-    font-size: 28px;
+  .form-header p {
+    font-size: 15px;
   }
   
   .back-link {
     padding: 8px 12px;
     font-size: 13px;
+    margin-bottom: 20px;
   }
   
-  .feature-item {
-    padding: 16px;
+  .form-group input,
+  .form-group select {
+    padding: 14px 16px;
+    font-size: 14px;
   }
   
-  .feature-icon {
-    width: 40px;
-    height: 40px;
+  .register-btn {
+    padding: 16px 24px;
+    font-size: 16px;
+    min-height: 56px;
+  }
+  
+  .group-title {
+    font-size: 17px;
+    margin-bottom: 20px;
   }
 }
 
 @media (max-width: 480px) {
-  .register-content {
-    gap: 24px;
+  .form-container {
+    padding: 20px 16px;
   }
   
-  .info-section {
-    padding: 24px 0;
+  .form-header h2 {
+    font-size: 22px;
   }
   
-  .brand-section {
-    margin-bottom: 32px;
+  .form-header p {
+    font-size: 14px;
   }
   
-  .features-list {
-    gap: 16px;
+  .register-btn {
+    font-size: 15px;
+    padding: 14px 20px;
+    min-height: 52px;
+  }
+  
+  .form-group input,
+  .form-group select {
+    padding: 12px 14px;
   }
 }
 </style>

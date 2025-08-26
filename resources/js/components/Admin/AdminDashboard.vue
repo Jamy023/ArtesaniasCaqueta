@@ -54,7 +54,7 @@
         <q-item 
           clickable
           :to="{ name: 'admin-productos' }"
-          active-class="bg-teal-1 text-teal-8"
+          exact-active-class="bg-teal-1 text-teal-8"
           @click="closeDrawerOnMobile"
         >
           <q-item-section avatar>
@@ -70,7 +70,7 @@
         <q-item 
           clickable
           :to="{ name: 'admin-categorias' }"
-          active-class="bg-teal-1 text-teal-8"
+          exact-active-class="bg-teal-1 text-teal-8"
           @click="closeDrawerOnMobile"
         >
           <q-item-section avatar>
@@ -86,7 +86,7 @@
         <q-item 
           clickable
           :to="{ name: 'admin-usuarios' }"
-          active-class="bg-teal-1 text-teal-8"
+          exact-active-class="bg-teal-1 text-teal-8"
           @click="closeDrawerOnMobile"
         >
           <q-item-section avatar>
@@ -98,11 +98,27 @@
           </q-item-section>
         </q-item>
 
+        <!-- Clientes -->
+        <q-item 
+          clickable
+          :to="{ name: 'admin-clientes' }"
+          exact-active-class="bg-teal-1 text-teal-8"
+          @click="closeDrawerOnMobile"
+        >
+          <q-item-section avatar>
+            <q-icon name="bi-person-heart" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Clientes</q-item-label>
+            <q-item-label caption>Gestión de clientes</q-item-label>
+          </q-item-section>
+        </q-item>
+
         <!-- Pedidos -->
         <q-item 
           clickable
           :to="{ name: 'admin-pedidos' }"
-          active-class="bg-teal-1 text-teal-8"
+          exact-active-class="bg-teal-1 text-teal-8"
           @click="closeDrawerOnMobile"
         >
           <q-item-section avatar>

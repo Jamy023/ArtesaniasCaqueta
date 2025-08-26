@@ -3,7 +3,7 @@
     <DebugAuth />
     <div class="navbar-container">
       <router-link to="/" class="navbar-brand">
-        <img src="https://res.cloudinary.com/dbjmhh4wr/image/upload/v1756150169/logo_owmfw1.webp" alt="Logo" class="logo">
+        <img src="https://videos.openai.com/vg-assets/assets%2Ftask_01k3hvaxqffgdbba1j02hqpjg7%2F1756167083_img_1.webp?st=2025-08-25T22%3A26%3A23Z&se=2025-08-31T23%3A26%3A23Z&sks=b&skt=2025-08-25T22%3A26%3A23Z&ske=2025-08-31T23%3A26%3A23Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=Vfiy7QgrlCLPpYMO4mtaRiMEuEC1igIpnLcq6rUYLgE%3D&az=oaivgprodscus" alt="Logo" class="logo">
       </router-link>
 
       <!-- Desktop Menu -->
@@ -526,9 +526,9 @@ export default {
 }
 
 .logo {
-  width: 90px;
-  height: 90px;
-  object-fit: cover;
+  width: 180px;
+  height: 100px;
+  object-fit: contain;
   border-radius: 8px;
   transition: transform 0.3s ease;
 }
@@ -1281,6 +1281,13 @@ export default {
   .search-submit-btn {
     width: 100%;
   }
+   .logo{
+    width: 200px;
+    height: 90px;
+      object-fit: contain;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1303,6 +1310,13 @@ export default {
 
   .search-container {
     padding: 12px 10px;
+  }
+  .logo{
+    width: 200px;
+    height: 90px;
+      object-fit: contain;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
   }
 }
 </style>

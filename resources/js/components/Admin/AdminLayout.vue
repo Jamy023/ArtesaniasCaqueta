@@ -8,7 +8,7 @@
           round
           @click="toggleLeftDrawer"
           aria-label="Menu"
-          icon="menu"
+          icon="bi-list"
         />
         
         <q-toolbar-title>
@@ -18,7 +18,7 @@
         <!-- Botón de logout -->
         <q-btn 
           flat
-          icon="logout"
+          icon="bi-box-arrow-right"
           @click="logout"
           label="Salir"
         />
@@ -41,7 +41,7 @@
           :class="{ 'bg-teal-1 text-teal-8': currentView === 'dashboard' }"
         >
           <q-item-section avatar>
-            <q-icon name="dashboard" />
+            <q-icon name="bi-speedometer2" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Dashboard</q-item-label>
@@ -55,7 +55,7 @@
           :class="{ 'bg-teal-1 text-teal-8': currentView === 'productos' }"
         >
           <q-item-section avatar>
-            <q-icon name="inventory" />
+            <q-icon name="bi-box" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Productos</q-item-label>
@@ -69,7 +69,7 @@
           :class="{ 'bg-teal-1 text-teal-8': currentView === 'categorias' }"
         >
           <q-item-section avatar>
-            <q-icon name="category" />
+            <q-icon name="bi-tags" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Categorías</q-item-label>
@@ -83,10 +83,24 @@
           :class="{ 'bg-teal-1 text-teal-8': currentView === 'usuarios' }"
         >
           <q-item-section avatar>
-            <q-icon name="people" />
+            <q-icon name="bi-people" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Usuarios</q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <!-- Clientes -->
+        <q-item 
+          clickable
+          @click="setCurrentView('clientes')"
+          :class="{ 'bg-teal-1 text-teal-8': currentView === 'clientes' }"
+        >
+          <q-item-section avatar>
+            <q-icon name="bi-person-heart" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Clientes</q-item-label>
           </q-item-section>
         </q-item>
 
@@ -97,7 +111,7 @@
           :class="{ 'bg-teal-1 text-teal-8': currentView === 'pedidos' }"
         >
           <q-item-section avatar>
-            <q-icon name="shopping_cart" />
+            <q-icon name="bi-cart" />
           </q-item-section>
           <q-item-section>
             <q-item-label>Pedidos</q-item-label>
@@ -125,6 +139,7 @@ import AdminDashboard from './AdminDashboard.vue'
 import AdminProductos from './AdminProductos.vue'
 import AdminCategorias from './AdminCategorias.vue'
 import AdminUsuarios from './AdminUsuarios.vue'
+import AdminClientes from './AdminClientes.vue'
 import AdminPedidos from './AdminPedidos.vue'
 
 const leftDrawerOpen = ref(false)
@@ -140,6 +155,7 @@ const viewComponents = {
   productos: AdminProductos,
   categorias: AdminCategorias,
   usuarios: AdminUsuarios,
+  clientes: AdminClientes,
   pedidos: AdminPedidos
 }
 
@@ -154,10 +170,10 @@ function toggleLeftDrawer() {
 
 function setCurrentView(view) {
   currentView.value = view
-  // Opcional: actualizar la URL sin recargar la página
-  const routeName = `admin-${view}`
-  if (router.currentRoute.value.name !== routeName) {
-    router.replace({ name: routeName })
+  // Actualizar la URL sin recargar la página
+  const routePath = `/admin/${view}`
+  if (router.currentRoute.value.path !== routePath) {
+    router.push({ path: routePath })
   }
 }
 

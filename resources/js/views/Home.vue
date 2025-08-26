@@ -243,15 +243,15 @@
 
           <div class="story-visual-content">
             <div class="story-image-main-new">
-              <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Artesanos trabajando" class="story-main-image">
-              <div class="story-image-badge">Artesanos en acción</div>
+              <img src="https://res.cloudinary.com/dbjmhh4wr/image/upload/v1756171337/tienda_nnc2tb.jpg" alt="Artesanos trabajando" class="story-main-image">
+              
             </div>
             <div class="story-images-grid">
               <div class="story-small-image">
-                <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Proceso artesanal" class="small-img">
+                <img src="https://scontent-mia3-1.xx.fbcdn.net/v/t39.30808-6/515442315_736016622406983_5031074432807981918_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeGlg-yQflW0cLRlp2FPe6LyrX43OB79AUStfjc4Hv0BRIr985WYUtp3MBqvrZjyP546WUN5CopK2tRhxoQwfv3N&_nc_ohc=VXX5ZJ9ioPgQ7kNvwFD9Znx&_nc_oc=Adl0xw5SyuNONgdu58NVNENKMI11fB2fgerMhono0TslfxRM6CGRAHiDqHOpYt5C83k&_nc_zt=23&_nc_ht=scontent-mia3-1.xx&_nc_gid=00iRjP0yw40YX5wMyQfKMw&oh=00_AfX3QnfareQ887Ici6q9eLy-YmcdNAbPOrgqFjP95W1fOw&oe=68B2F3E4" alt="Proceso artesanal" class="small-img">
               </div>
               <div class="story-small-image">
-                <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Productos terminados" class="small-img">
+                <img src="https://scontent-mia3-3.xx.fbcdn.net/v/t39.30808-6/515438783_719272567414722_995562772338509084_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeFb6A365irJpPjlDYDTqRvlCYk4JP83HPEJiTgk_zcc8VbPVNX4b0rg9PDEYh_UT0DOjre-z02AypfCyBep-v3i&_nc_ohc=G9r9hwXfRiUQ7kNvwHPtmNO&_nc_oc=AdnXCfKVr48wXrnJe5SEL9lW2o6LAFGOFuTvlHUwXgzuQ6b_y154L98OsfNZiMANVYY&_nc_zt=23&_nc_ht=scontent-mia3-3.xx&_nc_gid=-_lkcc33XoVvyYYkqeSB2Q&oh=00_AfXOTuotjC43JUqTndy2cFiAegtZb_NnZZMdZbIMVGtczQ&oe=68B2F74F" alt="Productos terminados" class="small-img">
               </div>
             </div>
           </div>
@@ -1174,18 +1174,7 @@ onUnmounted(() => {
   object-fit: cover;
 }
 
-.story-image-badge {
-  position: absolute;
-  bottom: 1.5rem;
-  left: 1.5rem;
-  background: rgba(46, 125, 50, 0.9);
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  backdrop-filter: blur(10px);
-}
+
 
 .story-images-grid {
   display: grid;
@@ -1197,7 +1186,7 @@ onUnmounted(() => {
   border-radius: 1rem;
   overflow: hidden;
   box-shadow: 0 8px 25px rgba(93, 64, 55, 0.1);
-  height: 150px;
+  height: 300px;
 }
 
 .small-img {

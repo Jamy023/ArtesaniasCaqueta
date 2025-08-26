@@ -138,26 +138,31 @@ const routes = [
         name: 'admin-dashboard-home',
         component: () => import('./components/Admin/AdminHome.vue')
       },
-      { 
-        path: 'productos', 
+      {
+        path: 'productos',
         name: 'admin-productos',
-        component: () => import('./components/Admin/AdminProductos.vue') 
+        component: () => import('./components/Admin/AdminProductos.vue')
       },
-      { 
-        path: 'categorias', 
+      {
+        path: 'categorias',
         name: 'admin-categorias',
-        component: () => import('./components/Admin/AdminCategorias.vue') 
+        component: () => import('./components/Admin/AdminCategorias.vue')
       },
-      { 
-        path: 'usuarios', 
+      {
+        path: 'usuarios',
         name: 'admin-usuarios',
-        component: () => import('./components/Admin/AdminUsuarios.vue') 
+        component: () => import('./components/Admin/AdminUsuarios.vue')
       },
-      { 
-        path: 'pedidos', 
+      {
+        path: 'clientes',
+        name: 'admin-clientes',
+        component: () => import('./components/Admin/AdminClientes.vue')
+      },
+      {
+        path: 'pedidos',
         name: 'admin-pedidos',
-        component: () => import('./components/Admin/AdminPedidos.vue') 
-      },
+        component: () => import('./components/Admin/AdminPedidos.vue')
+      }
     ]
   },
   

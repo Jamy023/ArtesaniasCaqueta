@@ -207,7 +207,7 @@
           <!-- Mensaje cuando no hay datos -->
           <template v-slot:no-data>
             <div class="full-width row flex-center text-grey-5 q-gutter-sm">
-              <q-icon size="2em" name="receipt_long" />
+              <q-icon size="2em" name="bi-receipt" />
               <span>No se encontraron pedidos</span>
             </div>
           </template>
@@ -240,7 +240,7 @@
             <!-- Información del pedido -->
             <div class="col-md-6 col-xs-12">
               <div class="text-h6 text-primary q-mb-md">
-                <q-icon name="receipt" class="q-mr-sm" />
+                <q-icon name="bi-receipt" class="q-mr-sm" />
                 Información del Pedido
               </div>
 
@@ -297,7 +297,7 @@
             <!-- Información del cliente -->
             <div class="col-md-6 col-xs-12">
               <div class="text-h6 text-primary q-mb-md">
-                <q-icon name="person" class="q-mr-sm" />
+                <q-icon name="bi-person" class="q-mr-sm" />
                 Información del Cliente
               </div>
 
@@ -343,7 +343,7 @@
           <!-- Productos del pedido -->
           <div class="q-mt-lg">
             <div class="text-h6 text-primary q-mb-md">
-              <q-icon name="shopping_cart" class="q-mr-sm" />
+              <q-icon name="bi-cart" class="q-mr-sm" />
               Productos del Pedido
             </div>
 

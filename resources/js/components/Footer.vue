@@ -5,9 +5,9 @@
         <h3>🎨 Artesanias de la Amazonia</h3>
         <p>Productos únicos hechos a mano con amor y tradición colombiana.</p>
         <div class="social-links">
-          <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
-          <a href="#" class="social-link">📷</a>
-          <a href="#" class="social-link">🐦</a>
+          <a href="https://www.facebook.com/people/Tienda-Artesanal-de-la-Amazonia/100079959559494/" class="social-link"><i class="fab fa-facebook"></i></a>
+          <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-link"><i class="fab fa-x"></i></a>
         </div>
       </div>
       
@@ -40,7 +40,7 @@
     </div>
     
     <div class="footer-bottom">
-      <p>&copy; 2024 Artesanías Colombianas. Todos los derechos reservados.</p>
+      <p>&copy; 2025 Tienda Artesanal de la Amazonia. Todos los derechos reservados.</p>
     </div>
   </footer>
 </template>

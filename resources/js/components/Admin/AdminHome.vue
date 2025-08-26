@@ -15,7 +15,7 @@
                 <div class="text-h4 text-blue-8">{{ stats.productos }}</div>
               </div>
               <div class="col-auto">
-                <q-icon name="inventory" size="48px" class="text-blue-8" />
+                <q-icon name="bi-box" size="48px" class="text-blue-8" />
               </div>
             </div>
           </q-card-section>
@@ -40,7 +40,7 @@
                 <div class="text-h4 text-green-8">{{ stats.usuarios }}</div>
               </div>
               <div class="col-auto">
-                <q-icon name="people" size="48px" class="text-green-8" />
+                <q-icon name="bi-people" size="48px" class="text-green-8" />
               </div>
             </div>
           </q-card-section>
@@ -65,7 +65,7 @@
                 <div class="text-h4 text-orange-8">{{ stats.pedidos }}</div>
               </div>
               <div class="col-auto">
-                <q-icon name="shopping_cart" size="48px" class="text-orange-8" />
+                <q-icon name="bi-cart" size="48px" class="text-orange-8" />
               </div>
             </div>
           </q-card-section>
@@ -90,7 +90,7 @@
                 <div class="text-h4 text-purple-8">{{ stats.categorias }}</div>
               </div>
               <div class="col-auto">
-                <q-icon name="category" size="48px" class="text-purple-8" />
+                <q-icon name="bi-tags" size="48px" class="text-purple-8" />
               </div>
             </div>
           </q-card-section>

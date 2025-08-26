@@ -74,7 +74,7 @@
           <div class="col-md-2 col-sm-6 col-xs-12">
             <q-btn
               flat
-              icon="clear"
+              icon="bi-x-circle"
               label="Limpiar"
               @click="clearFilters"
               :disable="!hasActiveFilters"
@@ -210,7 +210,7 @@
           <!-- Mensaje cuando no hay datos -->
           <template v-slot:no-data>
             <div class="full-width row flex-center text-grey-5 q-gutter-sm">
-              <q-icon size="2em" name="inventory_2" />
+              <q-icon size="2em" name="bi-box" />
               <span>No se encontraron productos</span>
             </div>
           </template>
@@ -247,7 +247,7 @@
                 
                 <!-- Información básica -->
                 <div class="text-h6 text-primary q-mb-md">
-                  <q-icon name="info" class="q-mr-sm" />
+                  <q-icon name="bi-info-circle" class="q-mr-sm" />
                   Información Básica
                 </div>
 
@@ -261,7 +261,7 @@
                   @input="generateSlug"
                 >
                   <template v-slot:prepend>
-                    <q-icon name="title" />
+                    <q-icon name="bi-type" />
                   </template>
                 </q-input>
 
@@ -274,7 +274,7 @@
                   hint="Se genera automáticamente basado en el nombre"
                 >
                   <template v-slot:prepend>
-                    <q-icon name="link" />
+                    <q-icon name="bi-link" />
                   </template>
                 </q-input>
 
@@ -291,7 +291,7 @@
                   maxlength="2000"
                 >
                   <template v-slot:prepend>
-                    <q-icon name="description" />
+                    <q-icon name="bi-textarea-resize" />
                   </template>
                 </q-input>
 
@@ -307,13 +307,13 @@
                   :rules="[val => !!val || 'La categoría es obligatoria']"
                 >
                   <template v-slot:prepend>
-                    <q-icon name="category" />
+                    <q-icon name="bi-tags" />
                   </template>
                 </q-select>
 
                 <!-- Precio y Stock -->
                 <div class="text-h6 text-primary q-mb-md q-mt-lg">
-                  <q-icon name="attach_money" class="q-mr-sm" />
+                  <q-icon name="bi-cash" class="q-mr-sm" />
                   Precio y Stock
                 </div>
 
@@ -332,7 +332,7 @@
                       prefix="$"
                     >
                       <template v-slot:prepend>
-                        <q-icon name="monetization_on" />
+                        <q-icon name="bi-currency-dollar" />
                       </template>
                     </q-input>
                   </div>
@@ -349,7 +349,7 @@
                       :rules="[val => val >= 0 || 'El stock debe ser mayor o igual a 0']"
                     >
                       <template v-slot:prepend>
-                        <q-icon name="inventory" />
+                        <q-icon name="bi-boxes" />
                       </template>
                     </q-input>
                   </div>
@@ -364,13 +364,13 @@
                   hint="Código único del producto"
                 >
                   <template v-slot:prepend>
-                    <q-icon name="qr_code" />
+                    <q-icon name="bi-upc" />
                   </template>
                 </q-input>
 
                 <!-- Dimensiones -->
                 <div class="text-h6 text-primary q-mb-md q-mt-lg">
-                  <q-icon name="straighten" class="q-mr-sm" />
+                  <q-icon name="bi-rulers" class="q-mr-sm" />
                   Dimensiones (opcional)
                 </div>
 
@@ -419,7 +419,7 @@
                     color="positive"
                   />
                   <q-icon 
-                    name="help_outline" 
+                    name="bi-question-circle" 
                     color="grey-6" 
                     size="sm"
                   >
@@ -440,7 +440,7 @@
                     :label="dialogMode === 'create' ? 'Crear Producto' : 'Actualizar Producto'"
                     color="primary"
                     :loading="saving"
-                    icon-right="save"
+                    icon-right="bi-save"
                   />
                 </div>
 
@@ -450,7 +450,7 @@
             <!-- Panel de imágenes -->
             <div class="col-md-4 col-xs-12">
               <div class="text-h6 text-primary q-mb-md">
-                <q-icon name="image" class="q-mr-sm" />
+                <q-icon name="bi-images" class="q-mr-sm" />
                 Imágenes del Producto
               </div>
 
@@ -888,10 +888,12 @@ const saveProductModal = async () => {
     $q.notify({
       type: 'positive',
       message: response.data?.message || 'Operación completada correctamente',
-      icon: 'check_circle'
+      icon: 'bi-check-circle'
     })
 
-    closeProductDialog()
+    closeProductDialog();
+    loadProducts();
+
 
   } catch (error) {
     console.error('Error saving product:', error)
@@ -907,7 +909,7 @@ const saveProductModal = async () => {
     $q.notify({
       type: 'negative',
       message: errorMessage,
-      icon: 'error'
+      icon: 'bi-exclamation-triangle'
     })
   } finally {
     saving.value = false
@@ -1021,7 +1023,7 @@ const deleteProduct = (product) => {
     ok: {
       label: 'Eliminar',
       color: 'negative',
-      icon: 'delete'
+      icon: 'bi-trash'
     },
     cancel: {
       label: 'Cancelar',
@@ -1051,7 +1053,7 @@ const deleteProduct = (product) => {
       $q.notify({
         type: 'positive',
         message: message,
-        icon: 'check_circle'
+        icon: 'bi-check-circle'
       })
       
     } catch (error) {
@@ -1067,7 +1069,7 @@ const deleteProduct = (product) => {
       $q.notify({
         type: 'negative',
         message: errorMessage,
-        icon: 'error'
+        icon: 'bi-exclamation-triangle'
       })
     }
   })
