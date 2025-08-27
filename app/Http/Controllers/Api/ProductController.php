@@ -8,6 +8,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Spatie\LaravelImageOptimizer\Facades\ImageOptimizer;
 use Illuminate\Validation\ValidationException;
 
 class ProductController extends Controller
@@ -259,19 +260,35 @@ class ProductController extends Controller
     {
         try {
             $request->validate([
-                'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5048'
             ]);
             
             $image = $request->file('image');
             
-            // Generar nombre único para la imagen
-            $fileName = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
+            // Convertir extensión a webp para mayor optimización
+            $fileName = time() . '_' . Str::random(10) . '.webp';
             
             // Guardar en storage/app/public/products
             $path = $image->storeAs('products', $fileName, 'public');
             
+            // Optimizar la imagen automáticamente
+            $fullPath = storage_path('app/public/products/' . $fileName);
+            
+            // Convertir a WebP si no lo es ya, y optimizar
+            if ($image->getClientOriginalExtension() !== 'webp') {
+                // Crear imagen WebP optimizada
+                $this->convertToWebP($image->getPathname(), $fullPath);
+            } else {
+                // Solo optimizar si ya es WebP
+                try {
+                    ImageOptimizer::optimize($fullPath);
+                } catch (\Exception $e) {
+                    // Si falla la optimización, continuar
+                }
+            }
+            
             return response()->json([
-                'message' => 'Imagen subida exitosamente',
+                'message' => 'Imagen subida y optimizada exitosamente',
                 'path' => $path,
                 'url' => Storage::url($path)
             ]);
@@ -285,6 +302,58 @@ class ProductController extends Controller
             return response()->json([
                 'message' => 'Error al subir la imagen: ' . $e->getMessage()
             ], 500);
+        }
+    }
+
+    /**
+     * Convierte imagen a formato WebP
+     */
+    private function convertToWebP($sourcePath, $destinationPath, $quality = 80)
+    {
+        try {
+            // Verificar que GD tenga soporte para WebP
+            if (!function_exists('imagewebp')) {
+                // Fallback: solo copiar el archivo
+                copy($sourcePath, $destinationPath);
+                return;
+            }
+
+            // Obtener info de la imagen original
+            $imageInfo = getimagesize($sourcePath);
+            
+            if (!$imageInfo) {
+                copy($sourcePath, $destinationPath);
+                return;
+            }
+
+            // Crear imagen desde el archivo original
+            switch ($imageInfo['mime']) {
+                case 'image/jpeg':
+                    $image = imagecreatefromjpeg($sourcePath);
+                    break;
+                case 'image/png':
+                    $image = imagecreatefrompng($sourcePath);
+                    break;
+                case 'image/gif':
+                    $image = imagecreatefromgif($sourcePath);
+                    break;
+                default:
+                    copy($sourcePath, $destinationPath);
+                    return;
+            }
+
+            if ($image === false) {
+                copy($sourcePath, $destinationPath);
+                return;
+            }
+
+            // Convertir a WebP
+            imagewebp($image, $destinationPath, $quality);
+            imagedestroy($image);
+
+        } catch (\Exception $e) {
+            // En caso de error, copiar el archivo original
+            copy($sourcePath, $destinationPath);
         }
     }
     

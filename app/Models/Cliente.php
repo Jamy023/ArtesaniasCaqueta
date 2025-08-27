@@ -24,12 +24,14 @@ class Cliente extends Authenticatable
         'tipo_documento',
         'numero_documento',
         'email',
+    
         'password',
         'telefono',
         'fecha_nacimiento',
         'direccion',
         'ciudad',
         'departamento',
+        'is_active',
     ];
 
     /**
@@ -51,6 +53,7 @@ class Cliente extends Authenticatable
         'email_verified_at' => 'datetime',
         'fecha_nacimiento' => 'date',
         'password' => 'hashed',
+        'is_active' => 'boolean',
     ];
 
     /**

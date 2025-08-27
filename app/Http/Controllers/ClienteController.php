@@ -12,6 +12,41 @@ use Carbon\Carbon;
 
 class ClienteController extends Controller
 {
+    // Lista todos los clientes para admin
+    public function index(Request $request)
+    {
+        try {
+            $query = Cliente::query();
+            
+            // Aplicar filtros si existen
+            if ($request->has('search') && !empty($request->search)) {
+                $search = $request->search;
+                $query->where(function ($q) use ($search) {
+                    $q->where('nombre', 'like', "%{$search}%")
+                      ->orWhere('apellido', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%")
+                      ->orWhere('numero_documento', 'like', "%{$search}%");
+                });
+            }
+
+            // Ordenar por fecha de creación (más recientes primero)
+            $clientes = $query->orderBy('created_at', 'desc')
+                             ->paginate(15);
+
+            return response()->json([
+                'data' => $clientes->items(),
+                'total' => $clientes->total(),
+                'per_page' => $clientes->perPage(),
+                'current_page' => $clientes->currentPage(),
+                'message' => 'Clientes obtenidos exitosamente'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error obteniendo clientes: ' . $e->getMessage());
+            return response()->json(['message' => 'Error obteniendo clientes'], 500);
+        }
+    }
+
     public function register(Request $request)
     {
         try {
@@ -341,6 +376,140 @@ class ClienteController extends Controller
         } catch (\Exception $e) {
             Log::error('Error obteniendo direcciones: ' . $e->getMessage());
             return response()->json(['message' => 'Error obteniendo direcciones'], 500);
+        }
+    }
+
+    // Método para crear cliente desde admin
+    public function store(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'nombre' => 'required|string|max:255',
+                'apellido' => 'required|string|max:255',
+                'tipo_documento' => 'required|in:CC,TI,CE,PP,NIT',
+                'numero_documento' => 'required|string|unique:clientes,numero_documento',
+                'email' => 'required|string|email|max:255|unique:clientes',
+                'password' => 'required|string|min:8|confirmed',
+                'telefono' => 'nullable|string|max:15',
+                'fecha_nacimiento' => 'nullable|date',
+                'direccion' => 'nullable|string|max:255',
+                'ciudad' => 'nullable|string|max:100',
+                'departamento' => 'nullable|string|max:100',
+                'is_active' => 'boolean',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
+
+            $cliente = Cliente::create([
+                'nombre' => $request->nombre,
+                'apellido' => $request->apellido,
+                'tipo_documento' => $request->tipo_documento,
+                'numero_documento' => $request->numero_documento,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'telefono' => $request->telefono,
+                'fecha_nacimiento' => $request->fecha_nacimiento,
+                'direccion' => $request->direccion,
+                'ciudad' => $request->ciudad,
+                'departamento' => $request->departamento,
+                'is_active' => $request->is_active ?? true,
+            ]);
+
+            return response()->json([
+                'client' => $cliente,
+                'message' => 'Cliente creado exitosamente'
+            ], 201);
+
+        } catch (\Exception $e) {
+            Log::error('Error creando cliente: ' . $e->getMessage());
+            return response()->json(['message' => 'Error al crear cliente'], 500);
+        }
+    }
+
+    // Método para actualizar cliente desde admin
+    public function update(Request $request, $id)
+    {
+        try {
+            $cliente = Cliente::findOrFail($id);
+
+            $validator = Validator::make($request->all(), [
+                'nombre' => 'sometimes|required|string|max:255',
+                'apellido' => 'sometimes|required|string|max:255',
+                'email' => 'sometimes|required|string|email|max:255|unique:clientes,email,' . $id,
+                'telefono' => 'nullable|string|max:15',
+                'fecha_nacimiento' => 'nullable|date',
+                'direccion' => 'nullable|string|max:255',
+                'ciudad' => 'nullable|string|max:100',
+                'departamento' => 'nullable|string|max:100',
+                'is_active' => 'boolean',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
+
+            $cliente->update($request->only([
+                'nombre', 'apellido', 'email', 'telefono', 'fecha_nacimiento',
+                'direccion', 'ciudad', 'departamento', 'is_active'
+            ]));
+
+            return response()->json([
+                'client' => $cliente->fresh(),
+                'message' => 'Cliente actualizado exitosamente'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error actualizando cliente: ' . $e->getMessage());
+            return response()->json(['message' => 'Error al actualizar cliente'], 500);
+        }
+    }
+
+    // Método para cambiar contraseña desde admin
+    public function changePasswordAdmin(Request $request, $id)
+    {
+        try {
+            $cliente = Cliente::findOrFail($id);
+
+            $validator = Validator::make($request->all(), [
+                'password' => 'required|string|min:8|confirmed',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
+
+            $cliente->update([
+                'password' => Hash::make($request->password)
+            ]);
+
+            return response()->json([
+                'message' => 'Contraseña actualizada exitosamente'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error cambiando contraseña de cliente: ' . $e->getMessage());
+            return response()->json(['message' => 'Error al cambiar contraseña'], 500);
+        }
+    }
+
+    // Método para cambiar estado activo/inactivo
+    public function toggleActive($id)
+    {
+        try {
+            $cliente = Cliente::findOrFail($id);
+            $cliente->is_active = !$cliente->is_active;
+            $cliente->save();
+
+            return response()->json([
+                'client' => $cliente,
+                'message' => 'Estado del cliente actualizado exitosamente'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error cambiando estado de cliente: ' . $e->getMessage());
+            return response()->json(['message' => 'Error al cambiar estado del cliente'], 500);
         }
     }
 }

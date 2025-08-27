@@ -777,7 +777,7 @@ const dialogTitle = computed(() => {
 const loadClients = async () => {
   loading.value = true
   try {
-    const response = await api.get('/clients')
+    const response = await api.get('/clientes')
     
     if (response.data?.data) {
       clients.value = response.data.data
@@ -885,7 +885,7 @@ const saveClient = async () => {
     let response
     
     if (dialogMode.value === 'create') {
-      response = await api.post('/clients', clientForm)
+      response = await api.post('/clientes', clientForm)
       
       // Agregar nuevo cliente al array
       if (response.data?.client) {
@@ -895,7 +895,7 @@ const saveClient = async () => {
     } else if (dialogMode.value === 'edit' && selectedClient.value) {
       // Crear copia sin campos de contraseña
       const { password, password_confirmation, ...updateData } = clientForm
-      response = await api.put(`/clients/${selectedClient.value.id}`, updateData)
+      response = await api.put(`/clientes/${selectedClient.value.id}`, updateData)
       
       // Actualizar cliente en el array
       const index = clients.value.findIndex(c => c.id === selectedClient.value.id)
@@ -946,7 +946,7 @@ const changePassword = async () => {
   changingPassword.value = true
   
   try {
-    const response = await api.patch(`/clients/${selectedClient.value.id}/change-password`, {
+    const response = await api.patch(`/clientes/${selectedClient.value.id}/change-password`, {
       password: passwordForm.password,
       password_confirmation: passwordForm.password_confirmation
     })
@@ -986,7 +986,7 @@ const changePassword = async () => {
 const toggleClientStatus = async (client) => {
   client.updating = true
   try {
-    const response = await api.patch(`/clients/${client.id}/toggle-active`)
+    const response = await api.patch(`/clientes/${client.id}/toggle-active`)
     
     // Actualizar el cliente en el array local
     const index = clients.value.findIndex(c => c.id === client.id)

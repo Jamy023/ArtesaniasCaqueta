@@ -47,6 +47,13 @@ Route::get('/admin/orders', [AdminController::class, 'getAllOrders']);
 Route::get('/admin/orders/{id}', [AdminController::class, 'getOrderDetails']);
 Route::patch('/admin/orders/{id}/status', [AdminController::class, 'updateOrderStatus']);
 
+// ===== RUTAS DE GESTIÓN DE CLIENTES (ADMIN) =====
+Route::get('/clientes', [ClienteController::class, 'index']);
+Route::post('/clientes', [ClienteController::class, 'store']);
+Route::put('/clientes/{id}', [ClienteController::class, 'update']);
+Route::patch('/clientes/{id}/change-password', [ClienteController::class, 'changePasswordAdmin']);
+Route::patch('/clientes/{id}/toggle-active', [ClienteController::class, 'toggleActive']);
+
 // ===== RUTAS DE AUTENTICACIÓN =====
 
 // Autenticación de clientes (mantiene Sanctum)
@@ -104,9 +111,9 @@ Route::post('/users', [AdminController::class, 'saveUser']);
 Route::put('/users/{id}', [AdminController::class, 'updateUser']);
 Route::patch('/users/{id}/toggle-active', [AdminController::class, 'toggleUserStatus']);
 Route::delete('/users/{id}', [AdminController::class, 'delete']);
-
-
 Route::put('/users/{id}/change-password', [AdminController::class, 'changeUserPassword']);
+
+// Esta sección fue movida arriba
 
 
 
