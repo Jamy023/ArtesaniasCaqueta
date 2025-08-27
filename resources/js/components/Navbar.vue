@@ -1177,21 +1177,47 @@ export default {
   .navbar-container {
     height: 70px;
     padding: 0 15px;
+    justify-content: space-between;
+    position: relative;
+  }
+
+  /* Logo pegado a la izquierda */
+  .navbar-brand {
+    position: absolute;
+    left: 15px; /* Pegado al lado izquierdo */
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
   }
 
   .logo {
-    width: 50px;
-    height: 50px;
-  }
-
-  /* Mostrar el botón hamburguesa */
-  .menu-toggle {
-    display: flex;
+    width: 200px;
+    height: 90px;
+    object-fit: contain;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
   }
 
   /* Ocultar auth section en desktop en móvil */
   .desktop-only {
     display: none;
+  }
+
+  /* Contenedor de acciones a la derecha */
+  .navbar-actions {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 1001;
+  }
+
+  /* Mostrar el botón hamburguesa dentro de las acciones */
+  .menu-toggle {
+    display: flex;
+    order: 3; /* Último en el orden */
   }
 
   /* Navbar menu móvil */
@@ -1204,7 +1230,7 @@ export default {
     height: calc(100vh - 70px);
     background: linear-gradient(135deg, #388E3C 0%, #2E7D32 100%);
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: stretch;
     padding: 30px 0 20px 0;
     transition: transform 0.3s ease;
@@ -1254,10 +1280,6 @@ export default {
     color: white;
   }
 
-  .navbar-actions {
-    gap: 8px;
-  }
-
   .action-btn {
     width: 40px;
     height: 40px;
@@ -1281,13 +1303,6 @@ export default {
   .search-submit-btn {
     width: 100%;
   }
-   .logo{
-    width: 200px;
-    height: 90px;
-      object-fit: contain;
-  border-radius: 8px;
-  transition: transform 0.3s ease;
-  }
 }
 
 @media (max-width: 480px) {
@@ -1295,7 +1310,12 @@ export default {
     padding: 0 10px;
   }
 
+  .navbar-brand {
+    left: 10px; /* Ajustar para pantallas más pequeñas */
+  }
+
   .navbar-actions {
+    right: 10px; /* Ajustar acciones */
     gap: 6px;
   }
 
@@ -1311,12 +1331,14 @@ export default {
   .search-container {
     padding: 12px 10px;
   }
-  .logo{
-    width: 200px;
+
+  .logo {
+    width: 200px; /* Ligeramente más pequeño en pantallas muy pequeñas */
     height: 90px;
-      object-fit: contain;
-  border-radius: 8px;
-  transition: transform 0.3s ease;
+    object-fit: contain;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+    padding-right: 60px;
   }
 }
 </style>
