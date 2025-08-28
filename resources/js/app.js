@@ -192,6 +192,136 @@ const router = createRouter({
 const pinia = createPinia();
 const app = createApp(App);
 
+// Configuración completa de iconSet para Bootstrap Icons
+const bootstrapIconSet = {
+  name: 'bootstrap-icons',
+  type: {
+    positive: 'bi-check-circle',
+    negative: 'bi-exclamation-triangle',
+    info: 'bi-info-circle',
+    warning: 'bi-exclamation-triangle'
+  },
+  arrow: {
+    up: 'bi-arrow-up',
+    right: 'bi-arrow-right',
+    down: 'bi-arrow-down',
+    left: 'bi-arrow-left',
+    dropdown: 'bi-chevron-down'
+  },
+  chevron: {
+    left: 'bi-chevron-left',
+    right: 'bi-chevron-right'
+  },
+  colorPicker: {
+    spectrum: 'bi-palette2',
+    tune: 'bi-sliders',
+    palette: 'bi-palette'
+  },
+  pullToRefresh: {
+    icon: 'bi-arrow-clockwise'
+  },
+  carousel: {
+    left: 'bi-chevron-left',
+    right: 'bi-chevron-right',
+    up: 'bi-chevron-up',
+    down: 'bi-chevron-down',
+    navigationIcon: 'bi-circle'
+  },
+  chip: {
+    remove: 'bi-x',
+    selected: 'bi-check'
+  },
+  datetime: {
+    arrowLeft: 'bi-chevron-left',
+    arrowRight: 'bi-chevron-right',
+    now: 'bi-clock',
+    today: 'bi-calendar-day'
+  },
+  editor: {
+    bold: 'bi-type-bold',
+    italic: 'bi-type-italic',
+    strikethrough: 'bi-type-strikethrough',
+    underline: 'bi-type-underline',
+    unorderedList: 'bi-list-ul',
+    orderedList: 'bi-list-ol',
+    subscript: 'bi-subscript',
+    superscript: 'bi-superscript',
+    hyperlink: 'bi-link',
+    toggleFullscreen: 'bi-fullscreen',
+    quote: 'bi-quote',
+    left: 'bi-text-left',
+    center: 'bi-text-center',
+    right: 'bi-text-right',
+    justify: 'bi-justify',
+    print: 'bi-printer',
+    outdent: 'bi-text-indent-left',
+    indent: 'bi-text-indent-right',
+    removeFormat: 'bi-eraser',
+    formatting: 'bi-fonts',
+    fontSize: 'bi-fonts',
+    align: 'bi-text-left',
+    hr: 'bi-hr',
+    undo: 'bi-arrow-counterclockwise',
+    redo: 'bi-arrow-clockwise',
+    heading: 'bi-type-h1',
+    code: 'bi-code',
+    size: 'bi-fonts',
+    font: 'bi-fonts',
+    viewSource: 'bi-code-square'
+  },
+  expansionItem: {
+    icon: 'bi-chevron-down',
+    denseIcon: 'bi-chevron-compact-down'
+  },
+  fab: {
+    icon: 'bi-plus',
+    activeIcon: 'bi-x'
+  },
+  field: {
+    clear: 'bi-x-circle',
+    error: 'bi-exclamation-circle'
+  },
+  pagination: {
+    first: 'bi-chevron-double-left',
+    prev: 'bi-chevron-left',
+    next: 'bi-chevron-right',
+    last: 'bi-chevron-double-right'
+  },
+  rating: {
+    icon: 'bi-star'
+  },
+  stepper: {
+    done: 'bi-check',
+    active: 'bi-pencil',
+    error: 'bi-exclamation-triangle'
+  },
+  tabs: {
+    left: 'bi-chevron-left',
+    right: 'bi-chevron-right',
+    up: 'bi-chevron-up',
+    down: 'bi-chevron-down'
+  },
+  table: {
+    arrowUp: 'bi-arrow-up',
+    warning: 'bi-exclamation-triangle',
+    firstPage: 'bi-chevron-double-left',
+    prevPage: 'bi-chevron-left',
+    nextPage: 'bi-chevron-right',
+    lastPage: 'bi-chevron-double-right'
+  },
+  tree: {
+    icon: 'bi-play'
+  },
+  uploader: {
+    done: 'bi-check',
+    clear: 'bi-x',
+    add: 'bi-plus-square',
+    upload: 'bi-cloud-upload',
+    removeQueue: 'bi-x-circle',
+    removeUploaded: 'bi-check-circle'
+  }
+};
+
 // Configuración de Quasar
 app.use(Quasar, {
   plugins: {
@@ -204,9 +334,10 @@ app.use(Quasar, {
       position: 'top-right',
       timeout: 2500,
       textColor: 'white',
-      actions: [{ icon: 'close', color: 'white' }]
+      actions: [{ icon: 'bi-x', color: 'white' }]
     }
-  }
+  },
+  iconSet: bootstrapIconSet
 })
 
 app.use(pinia);

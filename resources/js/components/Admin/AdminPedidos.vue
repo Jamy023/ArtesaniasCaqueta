@@ -80,7 +80,7 @@
           <div class="col-md-2 col-sm-6 col-xs-12">
             <q-btn
               flat
-              icon="clear"
+              icon="bi-x-circle"
               label="Limpiar"
               @click="clearFilters"
               :disable="!hasActiveFilters"
