@@ -1,61 +1,276 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🎨 Sistema de E-commerce para Artesanías
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## 📋 Descripción del Proyecto
 
-## About Laravel
+Sistema web completo de comercio electrónico desarrollado específicamente para la venta de artesanías colombianas. El proyecto combina un frontend moderno en Vue.js con un backend robusto en Laravel, ofreciendo una experiencia de usuario fluida tanto para clientes como para administradores.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### 🎯 Características Principales
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **🛒 Tienda Online Completa**: Catálogo de productos, carrito de compras, sistema de categorías
+- **💳 Pasarela de Pagos**: Integración completa con ePayco para pagos seguros
+- **👨‍💼 Panel de Administración**: Gestión completa de productos, categorías, clientes y pedidos
+- **📱 Diseño Responsivo**: Interfaz adaptable a dispositivos móviles y escritorio
+- **🖼️ Optimización de Imágenes**: Conversión automática a formato WebP para mejor rendimiento
+- **🔐 Sistema de Autenticación**: Login seguro para clientes y administradores
+- **📊 Dashboard Administrativo**: Estadísticas y métricas del negocio
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🛠️ Stack Tecnológico
 
-## Learning Laravel
+### Backend
+- **Framework**: Laravel 12.0
+- **Base de Datos**: MySQL
+- **Autenticación**: Laravel Sanctum
+- **Optimización de Imágenes**: Spatie Laravel Image Optimizer
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Frontend
+- **Framework**: Vue.js 3.5.17
+- **Enrutamiento**: Vue Router 4.5.1
+- **Estado Global**: Pinia 3.0.3
+- **UI Framework**: Quasar 2.18.2
+- **Estilos**: CSS Personalizado + 
+- **Notificaciones**: Vue Toastification
+- **Carrusel**: Swiper.js
+- **Iconos**: Lucide Vue
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Herramientas de Desarrollo
+- **Bundler**: Vite 5.2.11
+- **Package Manager**: NPM
+- **HTTP Client**: Axios
+- **CSS Processing**: PostCSS + Autoprefixer
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 📁 Estructura del Proyecto
 
-## Laravel Sponsors
+```
+Artesanias/
+├── 🗂️ app/
+│   ├── Http/Controllers/     # Controladores de la aplicación
+│   │   ├── AdminController.php
+│   │   ├── ClienteController.php
+│   │   └── Api/             # Controladores de API
+│   │       ├── CategoryController.php
+│   │       ├── ProductController.php
+│   │       └── OrderController.php
+│   ├── Models/              # Modelos Eloquent
+│   │   ├── Category.php
+│   │   ├── Cliente.php
+│   │   ├── Product.php
+│   │   ├── Order.php
+│   │   └── User.php
+│   └── Services/            # Lógica de negocio
+├── 🗃️ database/
+│   ├── migrations/          # Migraciones de base de datos
+│   └── seeders/            # Seeders con datos de prueba
+├── 🎨 resources/
+│   ├── js/
+│   │   ├── components/      # Componentes Vue
+│   │   │   ├── Admin/      # Componentes del panel admin
+│   │   │   └── Auth/       # Componentes de autenticación
+│   │   ├── views/          # Vistas principales
+│   │   └── stores/         # Stores de Pinia
+│   └── css/                # Estilos personalizados
+├── 🌐 routes/
+│   ├── web.php             # Rutas web
+│   └── api.php             # Rutas API
+└── 📦 storage/
+    └── app/public/products/ # Imágenes de productos
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## ⚙️ Instalación y Configuración
 
-### Premium Partners
+### Prerrequisitos
+- PHP >= 8.2
+- Composer
+- Node.js >= 18.x
+- NPM >= 8.0.0
+- MySQL >= 8.0
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 1️⃣ Clonar el Repositorio
+```bash
+git clone [URL_DEL_REPOSITORIO]
+cd Artesanias
+```
 
-## Contributing
+### 2️⃣ Instalar Dependencias PHP
+```bash
+composer install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 3️⃣ Instalar Dependencias Node.js
+```bash
+npm install
+```
 
-## Code of Conduct
+### 4️⃣ Configurar Variables de Entorno
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 5️⃣ Configurar Base de Datos
+```bash
+# Crear base de datos MySQL
+mysql -u root -p -e "CREATE DATABASE artesanias_store;"
 
-## Security Vulnerabilities
+# Ejecutar migraciones y seeders
+php artisan migrate --seed
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 6️⃣ Crear Enlace Simbólico para Storage
+```bash
+php artisan storage:link
+```
 
-## License
+### 7️⃣ Optimizar Imágenes Existentes
+```bash
+php artisan optimize:images
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 🚀 Comandos de Desarrollo
+
+### Desarrollo Completo (Recomendado)
+```bash
+# Ejecuta servidor, queue, logs y vite simultáneamente
+composer run dev
+```
+
+### Comandos Individuales
+```bash
+# Servidor Laravel
+php artisan serve
+
+# Desarrollo Frontend
+npm run dev
+
+# Build para Producción
+npm run build
+
+# Tests
+composer run test
+```
+
+## 🗄️ Base de Datos
+
+### Tablas Principales
+
+#### `categories`
+- Gestión de categorías de productos
+- Campos: id, name, description, image, created_at, updated_at
+
+#### `products`
+- Catálogo de productos con imágenes optimizadas
+- Campos: id, name, description, price, image, category_id, is_active, created_at, updated_at
+
+#### `clientes`
+- Información de clientes registrados
+- Campos: id, name, email, phone, address, city, is_active, created_at, updated_at
+
+#### `orders`
+- Gestión de pedidos y transacciones
+- Campos: id, cliente_id, total, status, transaction_id, epayco_data, created_at, updated_at
+
+#### `users`
+- Usuarios administrativos
+- Campos: id, name, email, password, is_active, created_at, updated_at
+
+## 🔌 API Endpoints
+
+### Productos
+- `GET /api/products` - Lista de productos activos
+- `GET /api/products/{id}` - Detalle de producto
+- `POST /api/products` - Crear producto (Admin)
+- `PUT /api/products/{id}` - Actualizar producto (Admin)
+- `DELETE /api/products/{id}` - Eliminar producto (Admin)
+
+### Categorías
+- `GET /api/categories` - Lista de categorías
+- `POST /api/categories` - Crear categoría (Admin)
+
+### Clientes
+- `POST /api/clientes` - Registro de cliente
+- `POST /api/clientes/login` - Login de cliente
+
+### Pedidos
+- `POST /api/orders` - Crear pedido
+- `GET /api/orders` - Lista de pedidos (Admin)
+
+## 💳 Integración con ePayco
+
+El sistema incluye integración completa con ePayco para procesar pagos:
+
+- **Configuración**: Archivo `EPAYCO_CONFIG.md`
+- **Proceso**: Creación de orden → Redirección a ePayco → Confirmación
+- **Seguridad**: Validación de transacciones y estados
+
+## 👨‍💼 Panel de Administración
+
+Acceso completo a través de `/admin` con las siguientes funcionalidades:
+
+- **Dashboard**: Métricas y estadísticas
+- **Productos**: CRUD completo con manejo de imágenes
+- **Categorías**: Gestión de clasificaciones
+- **Clientes**: Administración de usuarios registrados
+- **Pedidos**: Seguimiento de transacciones
+- **Usuarios**: Gestión de administradores
+
+## 🎨 Funcionalidades del Frontend
+
+### Tienda Online
+- Catálogo paginado con filtros por categoría
+- Vista detallada de productos
+- Carrito de compras persistente
+- Proceso de checkout integrado
+
+### Componentes Principales
+- **Navbar**: Navegación responsive con carrito
+- **CarruselProductos**: Showcase de productos destacados
+- **CartSidebar**: Carrito lateral deslizante
+- **Footer**: Información de contacto
+
+## 📸 Optimización de Imágenes
+
+- **Conversión WebP**: Todas las imágenes se convierten automáticamente
+- **Backup**: Se mantienen copias originales en `products-backup/`
+- **Performance**: Mejora significativa en tiempos de carga
+
+## 🔒 Seguridad
+
+- **Autenticación Sanctum**: Tokens seguros para API
+- **Middleware**: Protección de rutas administrativas
+- **Validación**: Validación robusta en formularios
+- **CORS**: Configuración adecuada para requests cross-origin
+
+## 🧪 Testing
+
+```bash
+# Ejecutar todos los tests
+composer run test
+
+# Tests específicos
+php artisan test --filter=ProductTest
+```
+
+## 🚀 Despliegue
+
+### Railway (Configurado)
+El proyecto incluye `railway.json` para despliegue automático en Railway.
+
+### Variables de Entorno Producción
+```env
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://tu-dominio.com
+DB_CONNECTION=mysql
+DB_HOST=localhost
+DB_PORT=3306
+DB_DATABASE=artesanias_store
+DB_USERNAME=tu_usuario
+DB_PASSWORD=tu_password
+```
+
+## 👥 Créditos
+
+Proyecto desarrollado como material educativo para estudiantes, implementando las mejores prácticas de desarrollo web moderno con Laravel y Vue.js.
+
+## 📄 Licencia
+
+Este proyecto está bajo la licencia MIT.

@@ -36,7 +36,7 @@
           <q-card-section>
             <div class="row items-center">
               <div class="col">
-                <div class="text-h6">Usuarios</div>
+                <div class="text-h6">Clientes</div>
                 <div class="text-h4 text-green-8">{{ stats.usuarios }}</div>
               </div>
               <div class="col-auto">
@@ -48,8 +48,8 @@
             <q-btn 
               flat 
               color="green-8" 
-              label="Ver usuarios"
-              :to="{ name: 'admin-usuarios' }"
+              label="Ver Clientes"
+              :to="{ name: 'admin-clientes' }"
             />
           </q-card-actions>
         </q-card>
@@ -106,34 +106,14 @@
       </div>
     </div>
 
-    <!-- Actividad reciente -->
-    <div class="q-mt-xl">
-      <div class="text-h5 q-mb-md">Actividad Reciente</div>
-      <q-card>
-        <q-card-section>
-          <q-list separator>
-            <q-item v-for="activity in recentActivity" :key="activity.id">
-              <q-item-section avatar>
-                <q-icon :name="activity.icon" :color="activity.color" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>{{ activity.title }}</q-item-label>
-                <q-item-label caption>{{ activity.description }}</q-item-label>
-              </q-item-section>
-              <q-item-section side>
-                <q-item-label caption>{{ activity.time }}</q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-card-section>
-      </q-card>
-    </div>
+
   </q-page>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
-// import axios from 'axios' // Descomenta cuando tengas la API
+
+import api from '../../axios'
 
 const stats = ref({
   productos: 0,
@@ -142,52 +122,62 @@ const stats = ref({
   categorias: 0
 })
 
-const recentActivity = ref([
-  {
-    id: 1,
-    icon: 'add_shopping_cart',
-    color: 'green',
-    title: 'Nuevo pedido recibido',
-    description: 'Pedido #1234 por $150.000',
-    time: 'Hace 2 horas'
-  },
-  {
-    id: 2,
-    icon: 'person_add',
-    color: 'blue',
-    title: 'Nuevo usuario registrado',
-    description: 'Juan Pérez se registró',
-    time: 'Hace 4 horas'
-  },
-  {
-    id: 3,
-    icon: 'inventory_2',
-    color: 'orange',
-    title: 'Producto actualizado',
-    description: 'Hamaca Wayuu - stock actualizado',
-    time: 'Hace 6 horas'
+
+
+
+
+const fetchProductos = async () => {
+  try {
+    const res = await api.get('/products')
+    stats.value.productos = res.data.data ? res.data.data.length : 0
+  } catch (error) {
+    console.error('Error al cargar estadísticas:', error)
   }
-])
+}
+
+const fetchClientes = async () => {
+  try{
+    const res = await api.get('/clientes')
+    
+    stats.value.usuarios = res.data.data ? res.data.data.length : 0
+
+  }catch(error){
+    console.error('Error al cargar los usuarios:', error)
+  }
+}
+
+const fetchOrders = async ()=>{
+  try{
+    const res = await api.get('/admin/orders');
+    // El endpoint devuelve { success: true, orders: [...] }
+    stats.value.pedidos = res.data.orders ? res.data.orders.length : 0
+
+  }catch(error){
+    console.error('Error al cargar los pedidos:', error)
+  }
+}
+
+const fetchCategories = async ()=>{
+  try{
+    const res = await api.get('/categories');
+    stats.value.categorias = res.data.length
+
+  }catch(error){
+    console.error('Error al cargar las categorias:', error)
+  }
+}
+
+
+const loadStats = async () => {
+  await Promise.all([
+    fetchProductos(),
+    fetchClientes(),
+    fetchOrders(),
+    fetchCategories()
+  ])
+}
 
 onMounted(async () => {
   await loadStats()
 })
-
-async function loadStats() {
-  try {
-    // Aquí harías las llamadas a tu API para obtener las estadísticas reales
-    // const response = await axios.get('/admin/stats')
-    // stats.value = response.data
-    
-    // Por ahora, datos de ejemplo:
-    stats.value = {
-      productos: 45,
-      usuarios: 128,
-      pedidos: 23,
-      categorias: 8
-    }
-  } catch (error) {
-    console.error('Error cargando estadísticas:', error)
-  }
-}
 </script>

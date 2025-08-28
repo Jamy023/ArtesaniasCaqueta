@@ -34,8 +34,11 @@
       <div class="footer-section">
         <h4>Contacto</h4>
         <p>📍 Florencia, Caquetá, Colombia</p>
-        <p>📧 info@artesaniascolombianas.com</p>
-        <p>📱 +57 300 123 4567</p>
+        <p>🏠Carrera 12 # 12 -63 barrio centro. 
+</p>
+        <p>📧 artesaniascaqueta@gmail.com
+</p>
+        <p>📱 +57 322 8815953</p>
       </div>
     </div>
     

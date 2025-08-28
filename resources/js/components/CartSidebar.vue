@@ -133,6 +133,8 @@ const goToCheckout = () => {
   closeSidebar();
 };
 
+// Formatear precios
+
 const formatPrice = (price) => {
   return new Intl.NumberFormat('es-CO', { 
     style: 'currency', 
@@ -140,6 +142,8 @@ const formatPrice = (price) => {
     minimumFractionDigits: 0
   }).format(price);
 };
+
+//metodo mara manejar las imagenes de los productos , por si se guardan de diferentes formas en el backend
 
 const getProductImageUrl = (main_image) => {
   if (!main_image) return '/img/logo.png';

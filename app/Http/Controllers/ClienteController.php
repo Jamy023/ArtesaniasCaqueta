@@ -140,6 +140,15 @@ class ClienteController extends Controller
                 ], 401);
             }
 
+            // Verificar si el cliente está activo
+            if (!$cliente->is_active) {
+                Log::warning('Cliente inactivo intentando hacer login', ['cliente_id' => $cliente->id, 'email' => $request->email]);
+                return response()->json([
+                    'message' => 'Cuenta deshabilitada',
+                    'errors' => ['account' => ['Su cuenta ha sido deshabilitada. Contacte con el administrador.']]
+                ], 403);
+            }
+
             // Eliminar tokens anteriores (opcional)
             $cliente->tokens()->delete();
 
@@ -304,7 +313,7 @@ class ClienteController extends Controller
         }
     }
 
-    // 🔥 NUEVO: Eliminar cuenta
+    //  Eliminar cuenta
     public function deleteAccount(Request $request)
     {
         try {
@@ -348,7 +357,7 @@ class ClienteController extends Controller
         }
     }
 
-    // 🔥 NUEVO: Obtener direcciones (placeholder para futuro)
+    //  Obtener direcciones (placeholder para futuro)
     public function getAddresses(Request $request)
     {
         try {

@@ -1,11 +1,11 @@
+
+//importaciones y configuraciones
 import './bootstrap';
 import '../css/app.css';
 import { createApp } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import { createPinia } from 'pinia';
 import axios from 'axios';
-
-
 import { Quasar, Notify, Dialog, Loading } from 'quasar'
 import 'quasar/dist/quasar.css'
 import '@quasar/extras/material-icons/material-icons.css'
@@ -51,6 +51,7 @@ import AdminLogin from './components/Admin/AdminLogin.vue'
 
 
 const routes = [
+  //rutas de cliente
   {
     path: '/',
     name: 'Home',
@@ -216,87 +217,41 @@ import { useAdminAuthStore } from './stores/adminAuthStore';
 import { useAuthStore } from './stores/authStore';
 import { useCartStore } from './stores/cartStore';
 
-// 🔥 INTERCEPTOR DE AXIOS CON DEBUG MEJORADO
+// Interceptor de axios para manejo de errores de autenticación
 let interceptorActive = false;
 
-axios.interceptors.request.use(
-  (config) => {
-    console.log('📤 Request:', {
-      url: config.url,
-      method: config.method?.toUpperCase(),
-      hasAuth: !!config.headers.Authorization
-    });
-    return config;
-  },
-  (error) => {
-    console.error('❌ Request Error:', error);
-    return Promise.reject(error);
-  }
-);
-
 axios.interceptors.response.use(
-  (response) => {
-    console.log('📥 Response:', {
-      url: response.config.url,
-      status: response.status,
-      statusText: response.statusText
-    });
-    return response;
-  },
+  (response) => response,
   async (error) => {
-    console.log('🔴 === ERROR DE RESPUESTA ===');
-    console.log('🔍 Detalles del error:', {
-      url: error.config?.url,
-      method: error.config?.method?.toUpperCase(),
-      status: error.response?.status,
-      statusText: error.response?.statusText,
-      message: error.response?.data?.message
-    });
-
     // Evitar bucle infinito
     if (interceptorActive) {
-      console.log('⚠️ Interceptor ya activo, evitando bucle');
       return Promise.reject(error);
     }
 
     if (error.response?.status === 401) {
-      console.log('🔴 Error 401 detectado');
       interceptorActive = true;
       
       try {
         const currentRoute = router.currentRoute.value.path;
-        console.log('📍 Ruta actual:', currentRoute);
         
         // Si hay error 401 en rutas de admin, cerrar sesión admin
         if (currentRoute.startsWith('/admin')) {
-          console.log('🔴 Error 401 en admin - cerrando sesión admin');
           const adminAuthStore = useAdminAuthStore();
           adminAuthStore.clearAuthData();
           router.push('/admin/login');
         } 
         // Si hay error 401 en rutas de cliente, cerrar sesión cliente
         else {
-          console.log('🔴 Error 401 en cliente - verificando estado');
           const authStore = useAuthStore();
-          
-          console.log('📊 Estado actual del cliente:', {
-            isLoggedIn: authStore.isLoggedIn,
-            hasToken: !!authStore.token,
-            isAuthenticated: authStore.isAuthenticated,
-            url: error.config?.url
-          });
           
           // Solo limpiar si realmente está logueado
           if (authStore.isLoggedIn) {
-            console.log('🔴 Cliente logueado - cerrando sesión');
-            authStore.clearAuthData();
+            authStore.clearAuthData(false); // No resetear initialized para permitir re-auth
             
             // Solo redirigir si no estamos en páginas públicas
             if (currentRoute !== '/' && currentRoute !== '/products' && !currentRoute.startsWith('/products/')) {
               router.push('/register');
             }
-          } else {
-            console.log('ℹ️ Cliente no estaba logueado, ignorando 401');
           }
         }
       } finally {
@@ -310,11 +265,8 @@ axios.interceptors.response.use(
   }
 );
 
-// 🔥 GUARDS DE NAVEGACIÓN CON DEBUG DETALLADO
+// Guards de navegación para manejo de autenticación
 router.beforeEach(async (to, from, next) => {
-  console.log('🧭 === NAVEGACIÓN ===');
-  console.log('📍 De:', from.path, '→ A:', to.path);
-  
   const adminAuthStore = useAdminAuthStore();
   const authStore = useAuthStore();
   const cartStore = useCartStore();
@@ -324,16 +276,14 @@ router.beforeEach(async (to, from, next) => {
     const initPromises = [];
     
     if (!adminAuthStore.initialized) {
-      console.log('🔧 Inicializando auth de admin...');
       initPromises.push(adminAuthStore.initAuth().catch(err => {
-        console.error('❌ Error init admin:', err);
+        console.error('Error inicializando admin auth:', err);
       }));
     }
     
     if (!authStore.initialized) {
-      console.log('🔧 Inicializando auth de cliente...');
       initPromises.push(authStore.initAuth().catch(err => {
-        console.error('❌ Error init cliente:', err);
+        console.error('Error inicializando client auth:', err);
       }));
     }
     
@@ -345,57 +295,34 @@ router.beforeEach(async (to, from, next) => {
     // Cargar carrito
     cartStore.loadFromLocalStorage();
 
-    // Debug del estado final
-    console.log('📊 Estado después de inicialización:', {
-      ruta: to.path,
-      requiresAuth: to.meta.requiresAuth,
-      cliente: {
-        isLoggedIn: authStore.isLoggedIn,
-        isAuthenticated: authStore.isAuthenticated,
-        hasToken: !!authStore.token,
-        initialized: authStore.initialized
-      },
-      admin: {
-        isLoggedIn: adminAuthStore.isLoggedIn,
-        initialized: adminAuthStore.initialized
-      }
-    });
-
     // Verificar rutas que requieren autenticación de cliente
     if (to.meta.requiresAuth && !to.path.startsWith('/admin')) {
       if (!authStore.isLoggedIn) {
-        console.log('❌ Ruta protegida de cliente sin autenticación');
-        console.log('📍 Redirigiendo a registro con redirect:', to.path);
         return next({ 
           name: 'Registro', 
           query: { redirect: to.path } 
         });
       }
-      console.log('✅ Cliente autenticado para ruta protegida');
     }
 
     // Verificar rutas que requieren autenticación de admin
     if (to.meta.requiresAuth && to.path.startsWith('/admin')) {
       if (!adminAuthStore.isLoggedIn) {
-        console.log('❌ Ruta protegida de admin sin autenticación');
         return next({ name: 'admin-login' });
       }
-      console.log('✅ Admin autenticado para ruta protegida');
     }
 
     // Verificar rutas que requieren NO estar autenticado
     if (to.meta.requiresGuest) {
       if (adminAuthStore.isLoggedIn) {
-        console.log('⚠️ Admin ya autenticado en ruta de invitado');
         return next({ name: 'admin-dashboard' });
       }
     }
 
-    console.log('✅ Navegación permitida');
     next();
     
   } catch (error) {
-    console.error('❌ Error en guard de navegación:', error);
+    console.error('Error en guard de navegación:', error);
     next();
   }
 });
@@ -425,63 +352,35 @@ app.config.errorHandler = (error, instance, info) => {
 };
 
 
+/**
+ * Inicializa la aplicación Vue
+ * Configura los stores de autenticación y monta la app
+ */
 const initializeApp = async () => {
-  console.log(' === INICIANDO APLICACIÓN ===');
-  
   try {
     // Obtener stores
     const adminAuthStore = useAdminAuthStore();
     const authStore = useAuthStore();
     const cartStore = useCartStore();
     
-    // Debug inicial
-    console.log('🔍 Estado inicial:', {
-      localStorage: {
-        authToken: localStorage.getItem('auth_token') ? 'EXISTS' : 'NULL',
-        adminToken: localStorage.getItem('admin_token') ? 'EXISTS' : 'NULL'
-      },
-      stores: {
-        authStoreToken: authStore.token ? 'EXISTS' : 'NULL',
-        adminStoreToken: adminAuthStore.token ? 'EXISTS' : 'NULL'
-      }
-    });
-    
-    // Inicializar todo en paralelo
+    // Inicializar autenticaciones en paralelo
     await Promise.all([
       adminAuthStore.initAuth().catch(err => {
-        console.error('❌ Error init admin auth:', err);
+        console.error('Error inicializando admin auth:', err);
         return null;
       }),
       authStore.initAuth().catch(err => {
-        console.error('❌ Error init client auth:', err);
+        console.error('Error inicializando client auth:', err);
         return null;
       }),
     ]);
     
-    // Cargar carrito
+    // Cargar carrito desde localStorage
     cartStore.loadFromLocalStorage();
     
-    console.log('✅ === APLICACIÓN INICIALIZADA ===');
-    console.log('📊 Estados finales:', {
-      cliente: {
-        isLoggedIn: authStore.isLoggedIn,
-        isAuthenticated: authStore.isAuthenticated,
-        hasToken: !!authStore.token,
-        user: authStore.currentUser?.nombre || 'N/A'
-      },
-      admin: {
-        isLoggedIn: adminAuthStore.isLoggedIn,
-        user: adminAuthStore.currentUser?.name || 'N/A'
-      },
-      cart: {
-        itemCount: cartStore.itemCount
-      }
-    });
-    
   } catch (error) {
-    console.error('❌ Error durante inicialización:', error);
+    console.error('Error durante inicialización:', error);
   } finally {
-    console.log('🏁 Montando aplicación...');
     app.mount('#app');
   }
 };

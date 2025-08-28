@@ -344,7 +344,14 @@
             <p>Revisa el estado de tus compras</p>
           </div>
           
-          <div class="empty-state">
+          <!-- Loading estado -->
+          <div v-if="ordersLoading" class="loading-state">
+            <Loader class="spinning" />
+            <p>Cargando pedidos...</p>
+          </div>
+          
+          <!-- Estado vacío -->
+          <div v-else-if="orders.length === 0" class="empty-state">
             <Package class="empty-icon" />
             <h3>Aún no has realizado pedidos</h3>
             <p>¡Explora nuestras hermosas artesanías amazónicas y haz tu primera compra!</p>
@@ -353,8 +360,178 @@
               Explorar productos
             </button>
           </div>
+          
+          <!-- Lista de pedidos -->
+          <div v-else class="orders-list">
+            <div v-for="order in validOrders" :key="order.id" class="order-card">
+              <!-- Encabezado del pedido -->
+              <div class="order-header">
+                <div class="order-info">
+                  <h3 class="order-number">Pedido #{{ order.id }}</h3>
+                  <p class="order-date">{{ formatDate(order.created_at) }}</p>
+                </div>
+                <div class="order-status">
+                  <span :class="['status-badge', getStatusClass(order.status)]">
+                    {{ getStatusText(order.status) }}
+                  </span>
+                </div>
+              </div>
+              
+              <!-- Detalles del pedido -->
+              <div class="order-body">
+                <div class="order-summary">
+                  <div class="summary-item">
+                    <span class="label">Total de productos:</span>
+                    <span class="value">{{ order.items?.length || 0 }} artículo(s)</span>
+                  </div>
+                  <div class="summary-item">
+                    <span class="label">Método de pago:</span>
+                    <span class="value">{{ order.payment_method || 'No especificado' }}</span>
+                  </div>
+                  <div class="summary-item">
+                    <span class="label">Total pagado:</span>
+                    <span class="value total">${{ formatNumber(order.total_amount || 0) }}</span>
+                  </div>
+                </div>
+                
+                <!-- Dirección de envío -->
+                <div v-if="order.direccion_envio" class="shipping-address">
+                  <h4>Dirección de envío</h4>
+                  <p>{{ order.direccion_envio.direccion }}</p>
+                  <p>{{ order.direccion_envio.ciudad }}, {{ order.direccion_envio.departamento }}</p>
+                </div>
+              </div>
+              
+              <!-- Acciones del pedido -->
+              <div class="order-actions">
+                <button @click="viewOrderDetails(order)" class="btn-outline-sm">
+                  <Package />
+                  Ver detalles
+                </button>
+                <button 
+                  v-if="canCancelOrder(order)" 
+                  @click="cancelOrder(order.id)" 
+                  class="btn-danger-sm"
+                >
+                  <X />
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
+      </div>
+    </div>
+
+    <!-- Modal de Detalles del Pedido -->
+    <div v-if="showOrderDetailsModal" class="modal-overlay" @click="showOrderDetailsModal = false">
+      <div class="modal-content order-details-modal" @click.stop>
+        <div class="modal-header">
+          <h3>Detalles del Pedido #{{ selectedOrder?.id }}</h3>
+          <button @click="showOrderDetailsModal = false" class="modal-close">
+            <X />
+          </button>
+        </div>
+        
+        <div class="modal-body" v-if="selectedOrder">
+          <!-- Información general del pedido -->
+          <div class="order-details-section">
+            <h4>Información General</h4>
+            <div class="details-grid">
+              <div class="detail-item">
+                <span class="detail-label">Número de pedido:</span>
+                <span class="detail-value">#{{ selectedOrder.id }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Fecha:</span>
+                <span class="detail-value">{{ formatDate(selectedOrder.created_at) }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Estado:</span>
+                <span :class="['detail-badge', getStatusClass(selectedOrder.status)]">
+                  {{ getStatusText(selectedOrder.status) }}
+                </span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Método de pago:</span>
+                <span class="detail-value">{{ selectedOrder.payment_method || 'No especificado' }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Total:</span>
+                <span class="detail-value total">${{ formatNumber(selectedOrder.total_amount || 0) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Productos del pedido -->
+          <div class="order-details-section" v-if="selectedOrder.items && selectedOrder.items.length > 0">
+            <h4>Productos ({{ selectedOrder.items.length }})</h4>
+            <div class="products-list">
+              <div v-for="item in selectedOrder.items" :key="item.id" class="product-item">
+                <div class="product-image">
+                  <img v-if="item.image" 
+                       :src="getProductImageUrl(item.image)" 
+                       :alt="item.name"
+                       @error="handleImageError" />
+                  <div v-else class="no-image">
+                    <Package />
+                  </div>
+                </div>
+                <div class="product-info">
+                  <h5>{{ item.name || 'Producto no disponible' }}</h5>
+                  <p class="product-description">{{ item.description || '' }}</p>
+                  <div class="product-details">
+                    <span class="quantity">Cantidad: {{ item.quantity }}</span>
+                    <span class="price">${{ formatNumber(item.price || 0) }} c/u</span>
+                    <span class="subtotal">${{ formatNumber((item.quantity || 0) * (item.price || 0)) }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dirección de envío -->
+          <div class="order-details-section" v-if="selectedOrder.direccion_envio">
+            <h4>Dirección de Envío</h4>
+            <div class="shipping-details">
+              <p><strong>Dirección:</strong> {{ selectedOrder.direccion_envio.direccion }}</p>
+              <p><strong>Ciudad:</strong> {{ selectedOrder.direccion_envio.ciudad }}</p>
+              <p><strong>Departamento:</strong> {{ selectedOrder.direccion_envio.departamento }}</p>
+              <p v-if="selectedOrder.direccion_envio.codigo_postal">
+                <strong>Código Postal:</strong> {{ selectedOrder.direccion_envio.codigo_postal }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Historial de estados (si existe) -->
+          <div class="order-details-section" v-if="selectedOrder.historial_estados && selectedOrder.historial_estados.length > 0">
+            <h4>Historial de Estados</h4>
+            <div class="status-timeline">
+              <div v-for="estado in selectedOrder.historial_estados" :key="estado.id" class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                  <span class="timeline-status">{{ getStatusText(estado.estado) }}</span>
+                  <span class="timeline-date">{{ formatDate(estado.created_at) }}</span>
+                  <p v-if="estado.comentario" class="timeline-comment">{{ estado.comentario }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-actions">
+          <button @click="showOrderDetailsModal = false" class="btn-outline">
+            Cerrar
+          </button>
+          <button 
+            v-if="canCancelOrder(selectedOrder)" 
+            @click="cancelOrderFromModal(selectedOrder.id)" 
+            class="btn-danger"
+          >
+            Cancelar Pedido
+          </button>
+        </div>
       </div>
     </div>
 
@@ -441,6 +618,7 @@ import {
   Edit3, Trash2, Plus, X, CheckCircle, AlertTriangle,
   Clock, DollarSign, Loader
 } from 'lucide-vue-next';
+import { getProductImageUrl, handleImageError } from '../utils/imageUtils.js';
 
 export default {
   name: 'AccountPage',
@@ -459,12 +637,16 @@ export default {
     const profileLoading = ref(false);
     const passwordLoading = ref(false);
     const deleteLoading = ref(false);
+    const ordersLoading = ref(false); // Estado de carga específico para pedidos
     const showDeleteModal = ref(false);
     const showAddressModal = ref(false);
+    const showOrderDetailsModal = ref(false); // Modal para detalles del pedido
     
     // Datos
     const accountData = ref(null);
     const addresses = ref([]);
+    const orders = ref([]); // Array para almacenar los pedidos del cliente
+    const selectedOrder = ref(null); // Pedido seleccionado para ver detalles
     
     // Formularios
     const profileForm = reactive({
@@ -504,6 +686,22 @@ export default {
     // Computed
     const currentUser = computed(() => authStore.currentUser);
     
+    /**
+     * Computed que filtra solo los pedidos válidos (no null y con id)
+     * Previene errores de renderizado cuando hay datos corruptos
+     */
+    const validOrders = computed(() => {
+      if (!Array.isArray(orders.value)) return [];
+      
+      return orders.value.filter(order => {
+        // Verificar que el pedido existe y tiene las propiedades mínimas requeridas
+        return order && 
+               order.id && 
+               typeof order.id !== 'undefined' &&
+               order.id !== null;
+      });
+    });
+    
     // Configuración de tabs
     const tabs = [
       { id: 'overview', label: 'Resumen', icon: 'User' },
@@ -530,6 +728,55 @@ export default {
         addresses.value = response.data.addresses;
       } catch (error) {
         console.error('Error cargando direcciones:', error);
+      }
+    };
+    
+    /**
+     * Carga los pedidos del cliente autenticado
+     * Realiza una petición GET al endpoint de pedidos del cliente
+     */
+    const loadOrders = async () => {
+      ordersLoading.value = true;
+      try {
+        console.log('🔄 Iniciando carga de pedidos...');
+        
+        // Realizar petición al endpoint correcto de pedidos del cliente autenticado
+        const response = await axios.get('/orders');
+        
+        console.log('📦 Respuesta completa del servidor:', response);
+        console.log('📦 Datos de la respuesta:', response.data);
+        
+        // Almacenar los pedidos en el estado reactivo
+        // El endpoint /orders devuelve los pedidos en formato paginado de Laravel
+        let ordersData = response.data.orders?.data || response.data.data || response.data.orders || response.data || [];
+        
+        // Asegurar que ordersData es un array
+        if (!Array.isArray(ordersData)) {
+          console.warn('⚠️ Los datos de pedidos no son un array:', ordersData);
+          ordersData = [];
+        }
+        
+        // Filtrar pedidos válidos antes de asignar
+        const validOrdersData = ordersData.filter(order => order && order.id);
+        
+        orders.value = validOrdersData;
+        
+        console.log('✅ Pedidos válidos cargados:', orders.value.length, 'de', ordersData.length);
+        console.log('📋 Pedidos detallados:', orders.value);
+        
+      } catch (error) {
+        console.error('❌ Error cargando pedidos:', error);
+        console.error('❌ Respuesta del error:', error.response?.data);
+        
+        // Si hay un error, mostrar notificación al usuario
+        showNotification('Error cargando el historial de pedidos', 'error');
+        
+        // Asegurar que orders esté vacío en caso de error
+        orders.value = [];
+      } finally {
+        // Siempre detener el estado de carga
+        ordersLoading.value = false;
+        console.log('🏁 Carga de pedidos completada');
       }
     };
     
@@ -634,6 +881,137 @@ export default {
       return new Intl.NumberFormat('es-CO').format(number);
     };
     
+    /**
+     * Formatea una fecha para mostrarla de manera amigable
+     * @param {string} dateString - Fecha en formato ISO
+     * @returns {string} Fecha formateada
+     */
+    const formatDate = (dateString) => {
+      if (!dateString) return 'N/A';
+      
+      try {
+        const date = new Date(dateString);
+        return new Intl.DateTimeFormat('es-CO', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        }).format(date);
+      } catch (error) {
+        console.error('Error formateando fecha:', error);
+        return 'Fecha inválida';
+      }
+    };
+    
+    /**
+     * Obtiene el texto legible para el estado del pedido
+     * @param {string} status - Estado del pedido
+     * @returns {string} Texto del estado
+     */
+    const getStatusText = (status) => {
+      const statusMap = {
+        'pending': 'Pendiente',
+        'paid': 'Pagado',
+        'failed': 'Fallido',
+        'cancelled': 'Cancelado'
+      };
+      
+      return statusMap[status] || 'Estado desconocido';
+    };
+    
+    /**
+     * Obtiene la clase CSS para el badge de estado
+     * @param {string} status - Estado del pedido
+     * @returns {string} Clase CSS
+     */
+    const getStatusClass = (status) => {
+      const classMap = {
+        'pending': 'pending',
+        'paid': 'delivered',
+        'failed': 'failed',
+        'cancelled': 'cancelled'
+      };
+      
+      return classMap[status] || 'unknown';
+    };
+    
+    /**
+     * Determina si un pedido puede ser cancelado
+     * @param {Object} order - Objeto del pedido
+     * @returns {boolean} True si puede ser cancelado
+     */
+    const canCancelOrder = (order) => {
+      // Solo pedidos pendientes pueden ser cancelados
+      const cancelableStatuses = ['pending'];
+      return cancelableStatuses.includes(order.status);
+    };
+    
+    /**
+     * Ver detalles completos de un pedido
+     * Abre el modal de detalles con la información completa del pedido
+     * @param {Object} order - Objeto del pedido
+     */
+    const viewOrderDetails = async (order) => {
+      try {
+        console.log('🔍 Cargando detalles del pedido:', order.id);
+        
+        // Si el pedido ya tiene todos los detalles, usar esos datos
+        if (order.items && order.items.length > 0) {
+          selectedOrder.value = order;
+          showOrderDetailsModal.value = true;
+          return;
+        }
+        
+        // Si no tiene detalles completos, cargar desde el servidor
+        const response = await axios.get(`/orders/${order.id}`);
+        selectedOrder.value = response.data.order || response.data;
+        showOrderDetailsModal.value = true;
+        
+        console.log('✅ Detalles del pedido cargados:', selectedOrder.value);
+        
+      } catch (error) {
+        console.error('❌ Error cargando detalles del pedido:', error);
+        showNotification('Error cargando los detalles del pedido', 'error');
+      }
+    };
+    
+    /**
+     * Cancelar pedido desde el modal de detalles
+     * @param {number} orderId - ID del pedido a cancelar
+     */
+    const cancelOrderFromModal = async (orderId) => {
+      await cancelOrder(orderId);
+      showOrderDetailsModal.value = false;
+      selectedOrder.value = null;
+    };
+    
+    
+    /**
+     * Cancelar un pedido específico
+     * @param {number} orderId - ID del pedido a cancelar
+     */
+    const cancelOrder = async (orderId) => {
+      try {
+        // Confirmar cancelación con el usuario
+        if (!confirm('¿Estás seguro de que deseas cancelar este pedido?')) {
+          return;
+        }
+        
+        // Realizar petición para cancelar el pedido usando el endpoint correcto
+        await axios.patch(`/orders/${orderId}/cancel`);
+        
+        // Recargar los pedidos para reflejar el cambio
+        await loadOrders();
+        
+        showNotification('Pedido cancelado exitosamente', 'success');
+        
+      } catch (error) {
+        console.error('Error cancelando pedido:', error);
+        showNotification('Error al cancelar el pedido', 'error');
+      }
+    };
+    
     const editAddress = (address) => {
       // Implementar edición de dirección
       console.log('Editar dirección:', address);
@@ -644,19 +1022,47 @@ export default {
       console.log('Eliminar dirección:', addressId);
     };
     
+    /**
+     * Inicializar la tab activa basada en query parameters
+     * Permite navegar directamente a una sección específica
+     */
+    const initializeActiveTab = () => {
+      // Obtener el query parameter 'tab' de la URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const tabFromUrl = urlParams.get('tab');
+      
+      // Si existe un tab en la URL y es válido, usarlo
+      const validTabs = ['overview', 'profile', 'security', 'addresses', 'orders'];
+      if (tabFromUrl && validTabs.includes(tabFromUrl)) {
+        activeTab.value = tabFromUrl;
+        console.log(`🎯 Tab inicializada desde URL: ${tabFromUrl}`);
+      }
+    };
+
     // Lifecycle
     onMounted(async () => {
       loading.value = true;
       
       try {
+        // Inicializar la tab activa basada en query parameters ANTES de cargar datos
+        initializeActiveTab();
+        
+        // Cargar datos de cuenta y direcciones de manera paralela
         await Promise.all([
           loadAccountData(),
           loadAddresses()
         ]);
         
+        // Inicializar formulario de perfil con datos del usuario actual
         initializeProfileForm();
+        
+        // Cargar pedidos de manera independiente (pueden tomar más tiempo)
+        // Se ejecuta después de que la página principal haya cargado
+        loadOrders();
+        
       } catch (error) {
         console.error('Error inicializando página:', error);
+        showNotification('Error cargando algunos datos de la cuenta', 'error');
       } finally {
         loading.value = false;
       }
@@ -669,13 +1075,18 @@ export default {
       profileLoading,
       passwordLoading,
       deleteLoading,
+      ordersLoading, // Estado de carga para pedidos
       showDeleteModal,
       showAddressModal,
+      showOrderDetailsModal, // Estado del modal de detalles del pedido
       
       // Datos
       currentUser,
       accountData,
       addresses,
+      orders, // Array de pedidos del cliente
+      selectedOrder, // Pedido seleccionado para detalles
+      validOrders, // Computed para pedidos válidos filtrados
       tabs,
       fondoImage,
       
@@ -692,7 +1103,7 @@ export default {
       // Notificaciones
       notification,
       
-      // Métodos
+      // Métodos de perfil y cuenta
       updateProfile,
       changePassword,
       deleteAccount,
@@ -700,7 +1111,21 @@ export default {
       hideNotification,
       formatNumber,
       editAddress,
-      deleteAddress
+      deleteAddress,
+      
+      // Métodos específicos para pedidos
+      loadOrders, // Función para recargar pedidos
+      formatDate, // Formateador de fechas
+      getStatusText, // Obtener texto del estado
+      getStatusClass, // Obtener clase CSS del estado
+      canCancelOrder, // Verificar si se puede cancelar
+      viewOrderDetails, // Ver detalles del pedido
+      cancelOrder, // Cancelar pedido
+      cancelOrderFromModal, // Cancelar pedido desde modal
+      
+      // Utilidades de imagen importadas
+      getProductImageUrl, // Función de utilidad para URLs de imagen
+      handleImageError // Función de utilidad para errores de imagen
     };
   }
 }

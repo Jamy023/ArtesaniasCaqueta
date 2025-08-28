@@ -1,4 +1,4 @@
-// stores/authStore.js - VERSIÓN CON DEBUG INTENSIVO
+// stores/authStore.js - Store de autenticación de clientes con Sanctum
 import { defineStore } from 'pinia'
 import axios from 'axios'
 
@@ -13,138 +13,82 @@ export const useAuthStore = defineStore('auth', {
   }),
 
   getters: {
+    // Verifica si el cliente está completamente autenticado
     isLoggedIn: (state) => {
-      const result = !!state.token && !!state.cliente && state.isAuthenticated
-      console.log('🔍 isLoggedIn getter:', {
-        hasToken: !!state.token,
-        hasCliente: !!state.cliente,
-        isAuthenticated: state.isAuthenticated,
-        result
-      })
-      return result
+      return !!state.token && !!state.cliente && state.isAuthenticated
     },
     currentUser: (state) => state.cliente,
     hasErrors: (state) => Object.keys(state.errors).length > 0
   },
 
   actions: {
-    // Configurar axios con el token
+    /**
+     * Configura el token de autenticación en axios y localStorage
+     * @param {string|null} token - Token de Sanctum o null para limpiar
+     */
     setAxiosToken(token) {
       if (token) {
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
         localStorage.setItem('auth_token', token)
-        console.log('✅ Token configurado:', {
-          tokenStart: token.substring(0, 20) + '...',
-          savedInLocalStorage: localStorage.getItem('auth_token') ? 'YES' : 'NO',
-          axiosHeaderSet: !!axios.defaults.headers.common['Authorization']
-        })
       } else {
         delete axios.defaults.headers.common['Authorization']
         localStorage.removeItem('auth_token')
-        console.log('🗑️ Token eliminado de axios y localStorage')
       }
     },
 
-    // 🔥 INICIALIZACIÓN CON DEBUG DETALLADO
+    /**
+     * Inicializa la autenticación del cliente
+     * Verifica si hay un token guardado y lo valida con el servidor
+     */
     async initAuth() {
-      console.log('🚀 === INICIANDO AUTENTICACIÓN ===')
-      
-      if (this.initialized) {
-        console.log('⚠️ Auth ya inicializado, saltando...')
-        console.log('📊 Estado actual:', {
-          token: this.token ? 'EXISTS' : 'NULL',
-          cliente: this.cliente?.nombre || 'NULL',
-          isAuthenticated: this.isAuthenticated
-        })
+      // Si ya está inicializado y autenticado correctamente, no hacer nada
+      if (this.initialized && this.isAuthenticated && this.cliente) {
         return
       }
       
-      console.log('🔧 Inicializando autenticación por primera vez...')
       this.initialized = true
       
-      // Verificar localStorage directamente
+      // Sincronizar token del localStorage si existe y es diferente
       const storedToken = localStorage.getItem('auth_token')
-      console.log('🔍 Verificando localStorage:', {
-        storedToken: storedToken ? `${storedToken.substring(0, 20)}...` : 'NULL',
-        stateToken: this.token ? `${this.token.substring(0, 20)}...` : 'NULL',
-        tokensMatch: storedToken === this.token
-      })
+      if (storedToken && storedToken !== this.token) {
+        this.token = storedToken
+      }
       
       // Si no hay token, usuario no autenticado
       if (!this.token) {
-        console.log('❌ No hay token guardado - usuario no autenticado')
+        this.isAuthenticated = false
+        this.cliente = null
         return
       }
 
-      // Verificar validez del token
-      const isValid = this.isValidToken()
-      const isExpired = this.isTokenExpired()
-      
-      console.log('🔍 Validación de token:', {
-        isValid,
-        isExpired,
-        tokenLength: this.token.length,
-        tokenParts: this.token.split('.').length
-      })
-      
-      if (!isValid || isExpired) {
-        console.log('❌ Token inválido/expirado, limpiando...')
-        this.clearAuthData()
-        return
-      }
-
-      // Configurar axios inmediatamente
+      // Configurar axios con el token existente
       this.setAxiosToken(this.token)
       this.loading = true
       
       try {
-        console.log('📡 Verificando token con servidor...')
-        console.log('🔗 URL de verificación:', axios.defaults.baseURL + '/clientes/profile')
-        console.log('🔑 Token enviado:', `Bearer ${this.token.substring(0, 20)}...`)
+        // Verificar token con el servidor obteniendo el perfil
+        await this.getProfile()
         
-        const response = await this.getProfile()
-        
-        // Marcar como autenticado si el perfil se obtuvo correctamente
+        // Si llegamos aquí, el token es válido
         this.isAuthenticated = true
         
-        console.log('✅ ¡AUTENTICACIÓN EXITOSA!', {
-          user: this.cliente?.nombre,
-          email: this.cliente?.email,
-          isLoggedIn: this.isLoggedIn
-        })
-        
       } catch (error) {
-        console.error('❌ ERROR EN VERIFICACIÓN:', {
-          message: error.message,
-          status: error.response?.status,
-          statusText: error.response?.statusText,
-          url: error.config?.url,
-          headers: error.config?.headers
-        })
-        
-        // Si error 401/403, token no válido
+        // Si error 401/403, el token no es válido
         if (error.response && [401, 403].includes(error.response.status)) {
-          console.log('🔴 Token rechazado por servidor - limpiando datos')
-          this.clearAuthData()
-        } else {
-          console.log('⚠️ Error de servidor/red - manteniendo token para retry')
+          this.clearAuthData(true) // resetear initialized porque el token es inválido
         }
+        // Para otros errores, mantener el token para reintentar después
         
       } finally {
         this.loading = false
-        console.log('🏁 Inicialización completada. Estado final:', {
-          isAuthenticated: this.isAuthenticated,
-          isLoggedIn: this.isLoggedIn,
-          hasToken: !!this.token,
-          hasCliente: !!this.cliente
-        })
       }
     },
 
-    // Obtener perfil del usuario
+    /**
+     * Obtiene el perfil del cliente autenticado desde el servidor
+     * @returns {Object} Respuesta del servidor con los datos del cliente
+     */
     async getProfile() {
-      console.log('📋 Obteniendo perfil de usuario...')
-      
       if (!this.token) {
         throw new Error('No hay token disponible')
       }
@@ -152,80 +96,48 @@ export const useAuthStore = defineStore('auth', {
       try {
         const response = await axios.get('/clientes/profile')
         
-        console.log('📋 Respuesta del perfil:', {
-          status: response.status,
-          hasCliente: !!response.data?.cliente,
-          clienteName: response.data?.cliente?.nombre
-        })
-        
         this.cliente = response.data.cliente
         this.isAuthenticated = true
         
         return response.data
       } catch (error) {
-        console.error('❌ Error obteniendo perfil:', {
-          status: error.response?.status,
-          message: error.response?.data?.message || error.message
-        })
-        
-        // Si es 401/403, limpiar datos de auth
+        // Si es 401/403, limpiar datos de auth porque el token no es válido
         if (error.response && [401, 403].includes(error.response.status)) {
-          console.log('🔴 Perfil rechazado - token inválido')
-          this.clearAuthData()
+          this.clearAuthData(true) // resetear initialized porque el token es inválido
         }
         
         throw error
       }
     },
 
-    // Login con debug
+    /**
+     * Autentica un cliente con email y password
+     * @param {Object} credentials - Credenciales del cliente
+     * @param {string} credentials.email - Email del cliente
+     * @param {string} credentials.password - Password del cliente
+     * @returns {Object} Respuesta del servidor con cliente y token
+     */
     async login(credentials) {
-      console.log('🔐 === INICIANDO LOGIN ===')
-      
       this.loading = true
       this.errors = {}
 
       try {
-        console.log('📤 Enviando credenciales:', {
-          email: credentials.email,
-          passwordLength: credentials.password?.length
-        })
-        
         const response = await axios.post('/clientes/login', {
           email: credentials.email,
           password: credentials.password
         })
 
-        console.log('📥 Respuesta del login:', {
-          status: response.status,
-          hasToken: !!response.data?.token,
-          hasCliente: !!response.data?.cliente,
-          tokenStart: response.data?.token?.substring(0, 20) + '...'
-        })
-
         const { cliente, token } = response.data
 
-        // Establecer todos los datos
+        // Establecer todos los datos de autenticación
         this.cliente = cliente
         this.token = token
         this.isAuthenticated = true
         this.setAxiosToken(token)
 
-        console.log('✅ LOGIN EXITOSO:', {
-          user: cliente?.nombre,
-          email: cliente?.email,
-          isLoggedIn: this.isLoggedIn
-        })
-
         return response.data
         
       } catch (error) {
-        console.error('❌ ERROR EN LOGIN:', {
-          status: error.response?.status,
-          message: error.response?.data?.message,
-          errors: error.response?.data?.errors
-        })
-        
         this.errors = error.response?.data?.errors || { 
           general: [error.response?.data?.message || 'Error de conexión'] 
         }
@@ -235,59 +147,58 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    // Logout con debug
+    /**
+     * Cierra la sesión del cliente
+     * Invalida el token en el servidor y limpia los datos locales
+     */
     async logout() {
-      console.log('🚪 === INICIANDO LOGOUT ===')
-      
       this.loading = true
 
       try {
+        // Intentar invalidar el token en el servidor si es válido
         if (this.token && this.isValidToken()) {
-          console.log('📤 Enviando logout al servidor...')
           await axios.post('/clientes/logout')
-          console.log('✅ Logout exitoso en servidor')
         }
       } catch (error) {
+        // Si hay error 401, el token ya no era válido
+        // Para otros errores, continuamos con la limpieza local
         if (error.response?.status !== 401) {
-          console.error('⚠️ Error en logout servidor:', error)
-        } else {
-          console.log('⚠️ Token ya inválido en servidor (401)')
+          console.error('Error en logout del servidor:', error)
         }
       } finally {
-        this.clearAuthData()
+        // Limpiar datos locales (no resetear initialized para permitir re-auth)
+        this.clearAuthData(false)
         this.loading = false
-        console.log('✅ Logout completado localmente')
       }
     },
 
-    // Limpiar datos con debug
-    clearAuthData() {
-      console.log('🧹 === LIMPIANDO DATOS DE AUTH ===')
-      console.log('📊 Estado antes de limpiar:', {
-        hasToken: !!this.token,
-        hasCliente: !!this.cliente,
-        isAuthenticated: this.isAuthenticated,
-        initialized: this.initialized
-      })
-      
+    /**
+     * Limpia todos los datos de autenticación
+     * @param {boolean} resetInitialized - Si debe resetear la flag initialized
+     *                                   - true: para tokens inválidos (fuerza re-inicialización)
+     *                                   - false: para logout normal (permite re-auth en recarga)
+     */
+    clearAuthData(resetInitialized = false) {
       this.cliente = null
       this.token = null
       this.isAuthenticated = false
-      this.initialized = false
       this.errors = {}
       
-      this.setAxiosToken(null)
+      // Solo resetear initialized si se especifica explícitamente
+      // Esto permite que la app se re-inicialice en recarga de página
+      if (resetInitialized) {
+        this.initialized = false
+      }
       
-      console.log('✅ Datos limpiados. Estado después:', {
-        hasToken: !!this.token,
-        hasCliente: !!this.cliente,
-        isAuthenticated: this.isAuthenticated,
-        initialized: this.initialized,
-        localStorageToken: localStorage.getItem('auth_token')
-      })
+      // Limpiar token de axios y localStorage
+      this.setAxiosToken(null)
     },
 
-    // Resto de métodos sin cambios...
+    /**
+     * Actualiza el perfil del cliente autenticado
+     * @param {Object} profileData - Datos del perfil a actualizar
+     * @returns {Object} Respuesta del servidor con el cliente actualizado
+     */
     async updateProfile(profileData) {
       this.loading = true
       this.errors = {}
@@ -297,7 +208,6 @@ export const useAuthStore = defineStore('auth', {
         this.cliente = response.data.cliente
         return response.data
       } catch (error) {
-        console.error('Error actualizando perfil:', error)
         this.errors = error.response?.data?.errors || { general: ['Error de conexión'] }
         throw error
       } finally {
@@ -305,100 +215,54 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
+    /**
+     * Limpia todos los errores del store
+     */
     clearErrors() {
       this.errors = {}
     },
 
+    /**
+     * Verifica si el token es válido
+     * Para tokens de Sanctum, solo verificamos que exista y tenga longitud suficiente
+     * @returns {boolean} True si el token es válido
+     */
     isValidToken() {
-      if (!this.token) return false
-      
-      try {
-        const parts = this.token.split('.')
-        if (parts.length !== 3) return false
-        
-        JSON.parse(atob(parts[1]))
-        return true
-      } catch (error) {
-        console.error('Token formato inválido:', error)
-        return false
-      }
+      return !!this.token && this.token.length > 40
     },
 
+    /**
+     * Verifica si el token está expirado
+     * Los tokens de Sanctum no tienen expiración por defecto (son permanentes hasta logout)
+     * La expiración se maneja en el backend
+     * @returns {boolean} Siempre false para tokens de Sanctum
+     */
     isTokenExpired() {
-      if (!this.token || !this.isValidToken()) return true
-      
-      try {
-        const payload = JSON.parse(atob(this.token.split('.')[1]))
-        const currentTime = Date.now() / 1000
-        
-        if (!payload.exp) return false
-        
-        const isExpired = payload.exp < (currentTime + 300)
-        
-        if (isExpired) {
-          const timeLeft = payload.exp - currentTime
-          console.log('⏰ Token expirado:', {
-            exp: new Date(payload.exp * 1000).toLocaleString(),
-            current: new Date().toLocaleString(),
-            timeLeft: Math.round(timeLeft) + ' segundos'
-          })
-        }
-        
-        return isExpired
-      } catch (error) {
-        console.error('Error verificando expiración:', error)
-        return true
-      }
+      return false
     },
 
-    // Registro de usuario
+    /**
+     * Registra un nuevo cliente
+     * @param {Object} userData - Datos del cliente a registrar
+     * @returns {Object} Respuesta del servidor con cliente y token
+     */
     async register(userData) {
-      console.log('📝 === INICIANDO REGISTRO ===')
-      
       this.loading = true
       this.errors = {}
 
       try {
-        console.log('📤 Enviando datos de registro:', {
-          nombre: userData.nombre,
-          apellido: userData.apellido,
-          email: userData.email,
-          tipo_documento: userData.tipo_documento,
-          numero_documento: userData.numero_documento
-        })
-        
         const response = await axios.post('/clientes/register', userData)
-
-        console.log('📥 Respuesta del registro:', {
-          status: response.status,
-          hasToken: !!response.data?.token,
-          hasCliente: !!response.data?.cliente,
-          tokenStart: response.data?.token?.substring(0, 20) + '...'
-        })
-
         const { cliente, token } = response.data
 
-        // Establecer todos los datos
+        // Establecer todos los datos de autenticación
         this.cliente = cliente
         this.token = token
         this.isAuthenticated = true
         this.setAxiosToken(token)
 
-        console.log('✅ REGISTRO EXITOSO:', {
-          user: cliente?.nombre,
-          email: cliente?.email,
-          isLoggedIn: this.isLoggedIn
-        })
-
         return response.data
         
       } catch (error) {
-        console.error('❌ ERROR EN REGISTRO:', {
-          status: error.response?.status,
-          message: error.response?.data?.message,
-          errors: error.response?.data?.errors
-        })
-        
         this.errors = error.response?.data?.errors || { 
           general: [error.response?.data?.message || 'Error de conexión'] 
         }
@@ -408,8 +272,11 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
+    /**
+     * Fuerza una re-autenticación completa
+     * Útil cuando se necesita refrescar el estado de autenticación
+     */
     async forceReauth() {
-      console.log('🔄 Forzando re-autenticación...')
       this.initialized = false
       await this.initAuth()
     }

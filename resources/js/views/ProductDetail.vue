@@ -308,7 +308,7 @@ const stockPercentage = computed(() => {
 })
 
 const whatsappUrl = computed(() => {
-  if (!product.value) return 'https://wa.me/573105867601'
+  if (!product.value) return 'https://wa.me/573228815953'
   
   const message = `Hola! Me interesa el producto: ${product.value.name} - ${formatPrice(product.value.price)}`
   return `https://wa.me/573105867601?text=${encodeURIComponent(message)}`
