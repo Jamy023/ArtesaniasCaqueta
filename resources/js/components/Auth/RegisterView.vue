@@ -160,7 +160,7 @@
                       :class="{ 'error': errors.departamento }"
                     >
                       <option value="">Selecciona tu departamento</option>
-                      <option v-for="departamento in departamentos" :key="departamento.id" :value="departamento.id">
+                      <option v-for="departamento in departamentos" :key="departamento.id" :value="departamento.nombre">
                         {{ departamento.nombre }}
                       </option>
                     </select>
@@ -177,7 +177,7 @@
                       :class="{ 'error': errors.ciudad }"
                     >
                       <option value="">{{ !form.departamento ? 'Primero selecciona un departamento' : 'Selecciona tu ciudad' }}</option>
-                      <option v-for="ciudad in ciudades" :key="ciudad.id" :value="ciudad.id">
+                      <option v-for="ciudad in ciudades" :key="ciudad.id" :value="ciudad.nombre">
                         {{ ciudad.nombre }}
                       </option>
                     </select>
@@ -746,12 +746,12 @@ export default {
 
     // Función para manejar cambio de departamento
     const onDepartmentChange = () => {
-      const departamentoId = parseInt(form.value.departamento)
+      const departamentoSeleccionado = departamentos.value.find(dep => dep.nombre === form.value.departamento)
       form.value.ciudad = '' // Limpiar ciudad seleccionada
       clearFieldError('ciudad')
       
-      if (departamentoId && ciudadesPorDepartamento[departamentoId]) {
-        ciudades.value = ciudadesPorDepartamento[departamentoId]
+      if (departamentoSeleccionado && ciudadesPorDepartamento[departamentoSeleccionado.id]) {
+        ciudades.value = ciudadesPorDepartamento[departamentoSeleccionado.id]
       } else {
         ciudades.value = []
       }
